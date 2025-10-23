@@ -1,110 +1,20 @@
-# 📊 Dashboard de Engenharia de Qualidade - SolAgora
+# Introduction 
+TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
 
-### 🛤️ Esteira de Cobertura (Gates)
-🔵 **Login** --- 🔵 **Simulação** --- 🔵 **Análise de Crédito** --- 🔵 **Documentação** --- ⚪ **Notas Fiscais** --- ⚪ **Pagamento**
+# Getting Started
+TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
+1.	Installation process
+2.	Software dependencies
+3.	Latest releases
+4.	API references
 
----
+# Build and Test
+TODO: Describe and show how to build your code and run the tests. 
 
-> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 11/03/2026 13:00
+# Contribute
+TODO: Explain how other users and developers can contribute to make your code better. 
 
-## 🏆 Top QAs (Ranking de Commits)
-
-| QA | Total de Pushes (Commits) |
-|:---|:---:|
-| 👨‍💻 **Rafael Cardoso** | 44 |
-| 👨‍💻 **Robô da Qualidade (QA Bot)** | 37 |
-
-## 🚀 Status da Automação
-
-| Categoria | Total |
-| :--- | :---: |
-| 📝 Cenários Totais (incl. Esquemas) | 12 |
-| 📄 Page Objects | 27 |
-| 🧪 Scripts de Teste | 9 |
-
-## 📂 Detalhamento de Negócio (Features)
-
-| Feature | Volume de Testes | Autor Principal | Modificação |
-|:---|:---|:---|:---:|
-| Gate 02 - Simulação de Financiamento (P1) | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
-| Gate 03 - Análise de Crédito e Dados Cadastrais | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
-| Gate 04 - Documentação e Dados Cadastrais Finais | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
-| Gate 07 - Upload de Notas Fiscais e Equipamentos | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
-| Gate 06 - Assinatura Eletrônica da Proposta (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
-| Gate 08 - Confirmação de Entrega e Monitoração (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
-| Gate 05 - Orquestração e Aprovações (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
-| Gate 01 - Controle de Acesso e Autenticação | 5 🟦🟦🟦🟦🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
-
-### 📄 Page Objects Criados
-
-<details>
-<summary><b>Clique para ver a lista de 27 pages</b></summary>
-
-<ul>
-<li><code>Analise_processamento_page</code></li>
-<li><code>Verificacao_notas_fiscais_page</code></li>
-<li><code>admin_page</code></li>
-<li><code>analise_credito_page</code></li>
-<li><code>analise_credito_page</code></li>
-<li><code>conferir_documentacao</code></li>
-<li><code>dashboard_page</code></li>
-<li><code>documentacao_completa_page</code></li>
-<li><code>documentacao_e_comprovantes_page</code></li>
-<li><code>documentacao_page</code></li>
-<li><code>documentacao_pj</code></li>
-<li><code>documentacao_popup_page</code></li>
-<li><code>faturamento_page</code></li>
-<li><code>login_page</code></li>
-<li><code>modal_conta_energia_page</code></li>
-<li><code>modal_conta_energia_page</code></li>
-<li><code>modal_notas_fiscais_page</code></li>
-<li><code>modal_pagamento_page</code></li>
-<li><code>notas_fiscais_page</code></li>
-<li><code>opcoes_parcelamento_page</code></li>
-<li><code>pagamento_processo_iniciado_page</code></li>
-<li><code>politica_renda_page</code></li>
-<li><code>resultado_simulacao_page</code></li>
-<li><code>resultado_simulacao_page</code></li>
-<li><code>simulacao_page</code></li>
-<li><code>simulador_page</code></li>
-<li><code>validacao_valoresv_page</code></li>
-</ul>
-</details>
-
-## 📜 Histórico Recente de Commits
-
-| Data | Autor | Mensagem |
-|:---|:---|:---|
-| 11/03 10:00 | **Rafael Cardoso** | feature: Criaçãio Orquestrador BackEnd, reformulação de todas as chamadas serviços HML |
-| 10/03 03:23 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
-| 10/03 00:23 | **Rafael Cardoso** | feat(automacao): estruturação inicial dos Gates 06 ao 08 (Assinatura, Faturamento e Equipamentos) |
-| 10/03 01:37 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
-| 09/03 22:37 | **Rafael Cardoso** | feat(gate-05): orquestração resiliente de aprovações com validação via banco |
-
-## 🏷️ Cobertura de Tags
-
-| Tag | Usos |
-|---|---|
-| `@fluxo_admin` | 4 |
-| `@auth` | 4 |
-| `@smoke_test` | 3 |
-| `@simulacao` | 2 |
-| `@analise_credito` | 2 |
-| `@documentacao` | 2 |
-| `@gate02` | 1 |
-| `@gate03` | 1 |
-| `@gate04` | 1 |
-| `@faturamento` | 1 |
-| `@gate07` | 1 |
-| `@assinatura` | 1 |
-| `@gate06` | 1 |
-| `@equipamentos` | 1 |
-| `@gate08` | 1 |
-| `@aprovacoes` | 1 |
-| `@gate05` | 1 |
-| `@login` | 1 |
-| `@gate01` | 1 |
-| `@pr_blocker` | 1 |
-| `@login_invalido` | 1 |
-| `@logout` | 1 |
-| `@acesso_negado` | 1 |
+If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
+- [ASP.NET Core](https://github.com/aspnet/Home)
+- [Visual Studio Code](https://github.com/Microsoft/vscode)
+- [Chakra Core](https://github.com/Microsoft/ChakraCore)
