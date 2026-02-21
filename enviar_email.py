@@ -8,7 +8,18 @@ from datetime import datetime
 def enviar_relatorio():
     email_remetente = os.environ.get('EMAIL_USER')
     senha_remetente = os.environ.get('EMAIL_PASS')
-    email_destinatario = "rcardoso1904@gmail.com,edson.oliveira@groove.tech"
+    
+    # Lista de destinatários atualizada
+    destinatarios = [
+        "rcardoso1904@gmail.com",
+        "edson.oliveira@groove.tech",
+        "pedro.vinicius@groove.tech",
+        "agata.oliveira@groove.tech",
+        "andre.nunes@groove.tech",
+        "andre.martins@groove.tech"
+    ]
+    
+    email_destinatario = ", ".join(destinatarios)
     
     try:
         with open('email_dashboard.md', 'r', encoding='utf-8') as f:
@@ -21,8 +32,11 @@ def enviar_relatorio():
         html_final = f"""
         <html>
             <body style="font-family: Arial, sans-serif; color: #333;">
-                <div style="max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 10px;">
+                <div style="max-width: 800px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 10px;">
+                    <h2 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;">📊 Relatório de Qualidade SolAgora</h2>
                     {corpo_html}
+                    <hr style="border: 0; border-top: 1px solid #eee; margin-top: 20px;">
+                    <p style="font-size: 12px; color: #7f8c8d;">Este é um relatório automático gerado pelo Pipeline de QA.</p>
                 </div>
             </body>
         </html>
@@ -39,9 +53,9 @@ def enviar_relatorio():
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
         server.login(email_remetente, senha_remetente)
-        server.send_message(msg)
+        server.sendmail(email_remetente, destinatarios, msg.as_string())
         server.quit()
-        print("✅ E-mail HTML enviado com sucesso!")
+        print(f"✅ E-mail HTML enviado com sucesso para {len(destinatarios)} pessoas!")
     except Exception as e:
         print(f"❌ Erro: {e}")
 
