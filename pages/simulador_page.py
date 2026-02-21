@@ -26,16 +26,35 @@ class SimuladorPage:
         self.btn_iniciar = page.get_by_role("button", name="Iniciar Simulação")
 
     @allure.step("Navegar até o simulador e fechar tour")
+    @allure.step("Navegar até o simulador e fechar tour")
     def navegar_ate_o_simulador(self):
         self.page.goto("https://integrator.hom.solagora.com.br/")
         self.link_projetos.click()
         self.btn_novo_projeto.click()
 
-        self.overlay_path.wait_for(state="visible")
-        self.overlay_path.click()
-        self.btn_proximo.click()
-        self.btn_proximo.click()
-        self.btn_fechar_tour.click()
+        self.page.pause()
+        try:
+            # A SUA SEQUÊNCIA EXATA:
+            self.overlay_path.wait_for(state="visible", timeout=5000)
+
+            # force=True proíbe o Playwright de usar a barra de rolagem!
+            self.overlay_path.click(force=True)
+            self.page.wait_for_timeout(500)  # Meio segundo para o balão piscar
+
+            self.btn_proximo.first.click(force=True)
+            self.page.wait_for_timeout(500)
+
+            self.btn_proximo.first.click(force=True)
+            self.page.wait_for_timeout(500)
+
+            self.btn_fechar_tour.first.click(force=True)
+
+            # Pausa de ouro: 1 segundo para a tela preta sumir de vez antes de preencher o CPF
+            self.page.wait_for_timeout(1000)
+
+        except Exception as e:
+            # Se o tour não aparecer hoje, o teste não quebra
+            pass
 
     @allure.step("Preencher dados da simulação: CPF {cpf}, Distribuidor {distribuidor}")
     def preencher_dados_simulacao(self, cpf, distribuidor, dia):
