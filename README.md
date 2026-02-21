@@ -1,27 +1,29 @@
 # 📊 Dashboard de Engenharia de Qualidade - SolAgora
 
-> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 21/02/2026 07:41
+> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 21/02/2026 22:04
 
 ## 🏆 Top QAs (Ranking de Commits)
 
 | QA | Total de Pushes (Commits) |
 |:---|:---:|
-| 👨‍💻 **Rafael Cardoso** | 13 |
-| 👨‍💻 **Robô da Qualidade (QA Bot)** | 13 |
+| 👨‍💻 **Rafael Cardoso** | 14 |
+| 👨‍💻 **Robô da Qualidade (QA Bot)** | 14 |
 
 ## 🚀 Status da Automação
 
 | Categoria | Total |
 | :--- | :---: |
-| 📝 Cenários BDD | 1 |
+| 📝 Cenários BDD | 3 |
 | 📄 Page Objects | 19 |
-| 🧪 Scripts de Teste | 2 |
+| 🧪 Scripts de Teste | 4 |
 
 ## 📂 Detalhamento de Negócio (Features)
 
 | Feature | Cenários | Autor Principal | Modificação |
 |:---|:---:|:---|:---:|
 | Fluxo de Simulação Solar | 1 | Rafael Cardoso | 21/02/2026 |
+| Gate 01 - Controle de Acesso e Autenticação | 1 | Rafael Cardoso | 21/02/2026 |
+| Gate 02 - Simulação Técnica de Financiamento | 1 | Rafael Cardoso | 21/02/2026 |
 
 ### 📄 Page Objects Criados
 
@@ -54,10 +56,12 @@
 ### 🧪 Scripts de Teste Automatizados
 
 <details>
-<summary><b>Clique para ver os 2 scripts de teste</b></summary>
+<summary><b>Clique para ver os 4 scripts de teste</b></summary>
 
 <ul>
 <li><code>conftest</code></li>
+<li><code>test_gate_01_auth</code></li>
+<li><code>test_gate_02_simulacao</code></li>
 <li><code>test_simulacao</code></li>
 </ul>
 </details>
@@ -66,17 +70,22 @@
 
 | Data | Autor | Mensagem |
 |:---|:---|:---|
+| 21/02 19:04 | **Rafael Cardoso** | Ajustes Features implementação de Gates |
+| 21/02 07:41 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 21/02 04:41 | **Rafael Cardoso** | Correção yml dash |
 | 21/02 07:33 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 21/02 04:33 | **Rafael Cardoso** | Ajuste disparo de email v14 |
-| 21/02 07:28 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
-| 21/02 04:28 | **Rafael Cardoso** | Voltando como era |
 
 ## 🏷️ Cobertura de Tags
 
 | Tag | Usos |
 |---|---|
-| `@simulacao` | 1 |
+| `@simulacao` | 2 |
+| `@pr_blocker` | 2 |
 | `@pf` | 1 |
 | `@aldo_componentes` | 1 |
 | `@regressivo` | 1 |
+| `@gate01` | 1 |
+| `@smoke_test` | 1 |
+| `@auth` | 1 |
+| `@gate02` | 1 |
