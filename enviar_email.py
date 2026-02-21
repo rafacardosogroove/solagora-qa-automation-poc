@@ -12,12 +12,7 @@ def enviar_relatorio():
     # Criamos uma lista real, que é o que o Python e o Google amam
     destinatarios = [
         "rcardoso1904@gmail.com",
-        "edson.oliveira@groove.tech",
-        "pedro.vinicius@groove.tech",
-        "agata.oliveira@groove.tech",
-        "andre.nunes@groove.tech",
-        "andre.martins@groove.tech"
-    ]
+         ]
     
     try:
         with open('email_dashboard.md', 'r', encoding='utf-8') as f:
