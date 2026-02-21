@@ -7,7 +7,7 @@ class AnaliseCreditoPage:
     def __init__(self, page: Page):
         self.page = page
 
-        # Seção: Informações Pessoais
+        # Seção: Informações Pessoais tests disparo
         self.input_nome = page.get_by_placeholder("Nome e Sobrenome do cliente")
         self.input_cpf_readonly = page.locator("input[name='cpf']")  # Geralmente vem preenchido
 
