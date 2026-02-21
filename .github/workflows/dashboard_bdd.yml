@@ -1,0 +1,44 @@
+name: Gerar Dashboard de Qualidade (BDD)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-dashboard:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 📥 Checkout do Repositório
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 🐍 Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: 📊 Rodar o Script e Gerar Markdown
+        # AQUI FOI A CORREÇÃO: Volta para README.md! O Python cria o de e-mail sozinho.
+        run: python gerar_dashboard.py > README.md
+
+      - name: 💾 Fazer o Commit Automático
+        run: |
+          git config --global user.name "Robô da Qualidade (QA Bot)"
+          git config --global user.email "qa-bot@solagora.com.br"
+          git add README.md
+          git diff --quiet && git diff --staged --quiet || (git commit -m "docs: 📊 Atualiza dashboard automático" && git push)
+
+      - name: 📦 Instalar Dependências de E-mail
+        run: pip install markdown
+
+      - name: 📧 Enviar Relatório por E-mail
+        env:
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+        run: python enviar_email.py
