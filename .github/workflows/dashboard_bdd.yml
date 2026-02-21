@@ -23,23 +23,27 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: 📊 Rodar o Script e Gerar Markdown
-        run: python gerar_dashboard.py > README.md
+      - name: 📊 Rodar o Script e Gerar Markdowns
+        # AJUSTE 1: Gera os dois arquivos para não dar erro no script de e-mail
+        run: |
+          python gerar_dashboard.py > README.md
+          python gerar_dashboard.py > email_dashboard.md
 
       - name: 💾 Fazer o Commit Automático
         run: |
           git config --global user.name "Robô da Qualidade (QA Bot)"
           git config --global user.email "qa-bot@solagora.com.br"
-          git add README.md
+          git add README.md email_dashboard.md
           git diff --quiet && git diff --staged --quiet || (git commit -m "docs: 📊 Atualiza dashboard automático" && git push)
 
   enviar-email: # Segundo Job: Espera o primeiro terminar e envia
     runs-on: ubuntu-latest
-    needs: atualizar-dashboard  # <--- ISSO GARANTE QUE O EMAIL ESPERE O DASHBOARD
+    needs: atualizar-dashboard
     steps:
       - name: 📥 Checkout do Repositório (Dados Atualizados)
         uses: actions/checkout@v3
         with:
+          ref: main       # AJUSTE 2: Garante que pegue o arquivo que o Robô acabou de subir
           fetch-depth: 0
 
       - name: 🐍 Configurar Python
