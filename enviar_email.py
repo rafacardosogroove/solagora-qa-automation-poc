@@ -1,6 +1,6 @@
 import smtplib
 import os
-import markdown  # <--- Nova biblioteca
+import markdown
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
@@ -8,40 +8,53 @@ from datetime import datetime
 def enviar_relatorio():
     email_remetente = os.environ.get('EMAIL_USER')
     senha_remetente = os.environ.get('EMAIL_PASS')
-    email_destinatario = "rcardoso1904@gmail.com,edson.oliveira@groove.tech"
+    
+    destinatarios = [
+        "rcardoso1904@gmail.com",
+        "edson.oliveira@groove.tech",
+        "pedro.vinicius@groove.tech",
+        "agata.oliveira@groove.tech",
+        "andre.nunes@groove.tech",
+        "andre.martins@groove.tech"
+    ]
     
     try:
         with open('email_dashboard.md', 'r', encoding='utf-8') as f:
             conteudo_md = f.read()
 
-        # CONVERSÃO: Transforma o texto do GitHub em HTML para o e-mail
         corpo_html = markdown.markdown(conteudo_md, extensions=['tables'])
 
-        # Estilização extra para o e-mail não ficar com fonte feia
         html_final = f"""
         <html>
             <body style="font-family: Arial, sans-serif; color: #333;">
-                <div style="max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 10px;">
+                <div style="max-width: 800px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 10px;">
                     {corpo_html}
                 </div>
             </body>
         </html>
         """
 
-        msg = MIMEMultipart()
-        msg['From'] = email_remetente
-        msg['To'] = email_destinatario
-        msg['Subject'] = f"📊 Relatório de Qualidade SolAgora - {datetime.now().strftime('%d/%m')}"
-
-        # Enviamos como HTML em vez de plain text
-        msg.attach(MIMEText(html_final, 'html'))
-
+        # Conecta uma única vez
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
         server.login(email_remetente, senha_remetente)
-        server.send_message(msg)
+
+        for destino in destinatarios:
+            # CRIAMOS UM NOVO OBJETO MSG PARA CADA DESTINATÁRIO
+            msg = MIMEMultipart()
+            msg['From'] = email_remetente
+            msg['To'] = destino
+            # Mudamos levemente o assunto para evitar o filtro de repetição
+            msg['Subject'] = f"🚀 Status Automação SolAgora - {datetime.now().strftime('%H:%M')}"
+            
+            msg.attach(MIMEText(html_final, 'html'))
+            
+            # Usamos sendmail que é o método mais bruto e eficaz
+            server.sendmail(email_remetente, destino, msg.as_string())
+            print(f"✅ Sucesso total para: {destino}")
+
         server.quit()
-        print("✅ E-mail HTML enviado com sucesso!")
+
     except Exception as e:
         print(f"❌ Erro: {e}")
 
