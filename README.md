@@ -1,13 +1,13 @@
 # 📊 Dashboard de Engenharia de Qualidade - SolAgora
 
-> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 25/02/2026 00:06
+> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 25/02/2026 01:13
 
 ## 🏆 Top QAs (Ranking de Commits)
 
 | QA | Total de Pushes (Commits) |
 |:---|:---:|
-| 👨‍💻 **Rafael Cardoso** | 15 |
-| 👨‍💻 **Robô da Qualidade (QA Bot)** | 15 |
+| 👨‍💻 **Rafael Cardoso** | 16 |
+| 👨‍💻 **Robô da Qualidade (QA Bot)** | 16 |
 
 ## 🚀 Status da Automação
 
@@ -70,11 +70,11 @@
 
 | Data | Autor | Mensagem |
 |:---|:---|:---|
+| 24/02 22:12 | **Rafael Cardoso** | Correção chamada teste gate 2 - Função navega_tour |
+| 25/02 00:06 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 24/02 21:03 | **Rafael Cardoso** | Ajustes modal Proximo tour SolAgora |
 | 21/02 22:04 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 21/02 19:04 | **Rafael Cardoso** | Ajustes Features implementação de Gates |
-| 21/02 07:41 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
-| 21/02 04:41 | **Rafael Cardoso** | Correção yml dash |
 
 ## 🏷️ Cobertura de Tags
 
