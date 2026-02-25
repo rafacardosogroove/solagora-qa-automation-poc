@@ -1,13 +1,13 @@
 # 📊 Dashboard de Engenharia de Qualidade - SolAgora
 
-> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 21/02/2026 22:04
+> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 25/02/2026 00:06
 
 ## 🏆 Top QAs (Ranking de Commits)
 
 | QA | Total de Pushes (Commits) |
 |:---|:---:|
-| 👨‍💻 **Rafael Cardoso** | 14 |
-| 👨‍💻 **Robô da Qualidade (QA Bot)** | 14 |
+| 👨‍💻 **Rafael Cardoso** | 15 |
+| 👨‍💻 **Robô da Qualidade (QA Bot)** | 15 |
 
 ## 🚀 Status da Automação
 
@@ -21,9 +21,9 @@
 
 | Feature | Cenários | Autor Principal | Modificação |
 |:---|:---:|:---|:---:|
-| Fluxo de Simulação Solar | 1 | Rafael Cardoso | 21/02/2026 |
-| Gate 01 - Controle de Acesso e Autenticação | 1 | Rafael Cardoso | 21/02/2026 |
-| Gate 02 - Simulação Técnica de Financiamento | 1 | Rafael Cardoso | 21/02/2026 |
+| Fluxo de Simulação Solar | 1 | Rafael Cardoso | 25/02/2026 |
+| Gate 01 - Controle de Acesso e Autenticação | 1 | Rafael Cardoso | 25/02/2026 |
+| Gate 02 - Simulação Técnica de Financiamento | 1 | Rafael Cardoso | 25/02/2026 |
 
 ### 📄 Page Objects Criados
 
@@ -70,11 +70,11 @@
 
 | Data | Autor | Mensagem |
 |:---|:---|:---|
+| 24/02 21:03 | **Rafael Cardoso** | Ajustes modal Proximo tour SolAgora |
+| 21/02 22:04 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 21/02 19:04 | **Rafael Cardoso** | Ajustes Features implementação de Gates |
 | 21/02 07:41 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 21/02 04:41 | **Rafael Cardoso** | Correção yml dash |
-| 21/02 07:33 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
-| 21/02 04:33 | **Rafael Cardoso** | Ajuste disparo de email v14 |
 
 ## 🏷️ Cobertura de Tags
 
