@@ -26,14 +26,14 @@ def step_preparar_ambiente(page):
 
     with allure.step("Fast-Track: Autenticação e Navegação"):
         # 1. Acesso e Login rápido
-        page.goto("https://integrator.hom.solagora.com.br/") # <--- ESSA FOI A LINHA QUE EU TINHA APAGADO!
+        page.goto("https://integrator.hom.solagora.com.br/")
         login_page.realizar_login_duplo("qaautomacao", "solagora")
         expect(page).to_have_url(re.compile(".*integrator.hom.solagora.com.br.*"), timeout=20000)
 
-        # 2. Chama a função da Page (que lida com o Tour)
+        # 2. Chama a função da Page (que clica nos botões, lida com o Tour e dá os 3 cliques em "Próximo")
         simulador_page.navegar_ate_o_simulador()
 
-        # Garante que chegou na tela certa e o CPF está visível
+        # Garante que chegou na tela certa e o CPF está visível para o próximo step
         expect(simulador_page.input_cpf).to_be_visible(timeout=10000)
 
 
@@ -41,7 +41,7 @@ def step_preparar_ambiente(page):
 def step_preencher_dados_tecnicos(page, distribuidor, vencimento):
     simulador_page = SimuladorPage(page)
 
-    # Gera um CPF dinâmico válido usando o seu arquivo Generators.py!
+    # Gera um CPF dinâmico válido usando o seu arquivo Generators.py
     cpf_dinamico = Generators.cpf()
 
     with allure.step(f"Preenchendo CPF Dinâmico: {cpf_dinamico}"):
@@ -55,7 +55,7 @@ def step_preencher_dados_tecnicos(page, distribuidor, vencimento):
         page.get_by_text(distribuidor).click()
 
     with allure.step("Preenchendo valores de energia e entrada (Mock)"):
-        # Clica nos campos para ativar as máscaras (como estava na sua gravação)
+        # Clica nos campos para ativar as máscaras
         simulador_page.input_energia.click()
         simulador_page.input_energia.fill("500")  # Exemplo de R$ 500,00 de energia
 
