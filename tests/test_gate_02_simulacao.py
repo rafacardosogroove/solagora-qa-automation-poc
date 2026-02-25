@@ -26,19 +26,14 @@ def step_preparar_ambiente(page):
 
     with allure.step("Fast-Track: Autenticação e Navegação"):
         # 1. Acesso e Login rápido
-        page.goto("https://integrator.hom.solagora.com.br/")
+        page.goto("https://integrator.hom.solagora.com.br/") # <--- ESSA FOI A LINHA QUE EU TINHA APAGADO!
         login_page.realizar_login_duplo("qaautomacao", "solagora")
         expect(page).to_have_url(re.compile(".*integrator.hom.solagora.com.br.*"), timeout=20000)
 
-        # 2. Navega para Novo Projeto
-        simulador_page.link_projetos.click()
-        simulador_page.btn_novo_projeto.click()
+        # 2. Chama a função da Page (que lida com o Tour)
+        simulador_page.navegar_ate_o_simulador()
 
-        # O Juiz lida com o Tour se ele aparecer
-        if simulador_page.btn_fechar_tour.is_visible():
-            simulador_page.btn_fechar_tour.click()
-
-        # Garante que chegou na tela certa
+        # Garante que chegou na tela certa e o CPF está visível
         expect(simulador_page.input_cpf).to_be_visible(timeout=10000)
 
 

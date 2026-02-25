@@ -15,7 +15,12 @@ class SimuladorPage:
         # Elementos do 'Tour' (Overlay)
         self.overlay_path = page.locator(".driver-overlay > path")
         self.btn_proximo = page.get_by_role("button", name="Próximo")
-        self.btn_fechar_tour = page.get_by_role("button", name="Fechar")
+
+        self.btn_fechar_tour.first.wait_for(state="visible", timeout=5000)
+        self.btn_fechar_tour.first.click()
+
+        # Pausa de ouro para o balão e a tela escura sumirem antes de preencher o CPF
+        self.page.wait_for_timeout(1000)
 
         # Elementos do Formulário
         self.input_cpf = page.get_by_test_id("document-field")
@@ -25,36 +30,41 @@ class SimuladorPage:
         self.input_vencimento = page.get_by_role("combobox", name="/00/0000")
         self.btn_iniciar = page.get_by_role("button", name="Iniciar Simulação")
 
-    @allure.step("Navegar até o simulador e fechar tour")
-    @allure.step("Navegar até o simulador e fechar tour")
+    @allure.step("Navegar até o simulador e lidar com o Tour")
     def navegar_ate_o_simulador(self):
         self.page.goto("https://integrator.hom.solagora.com.br/")
         self.link_projetos.click()
         self.btn_novo_projeto.click()
 
-        self.page.pause()
         try:
-            # A SUA SEQUÊNCIA EXATA:
-            self.overlay_path.wait_for(state="visible", timeout=5000)
+            # Espera até 5 segundos para o botão 'Próximo' do tour aparecer
+            self.btn_proximo.first.wait_for(state="visible", timeout=5000)
 
-            # force=True proíbe o Playwright de usar a barra de rolagem!
-            self.overlay_path.click(force=True)
-            self.page.wait_for_timeout(500)  # Meio segundo para o balão piscar
-
-            self.btn_proximo.first.click(force=True)
+            # Clique 1
+            self.btn_proximo.first.click()
             self.page.wait_for_timeout(500)
 
-            self.btn_proximo.first.click(force=True)
+            # Clique 2
+            self.btn_proximo.first.click()
             self.page.wait_for_timeout(500)
 
-            self.btn_fechar_tour.first.click(force=True)
+            # Clique 3
+            self.btn_proximo.first.click()
+            self.page.wait_for_timeout(500)
 
-            # Pausa de ouro: 1 segundo para a tela preta sumir de vez antes de preencher o CPF
+            self.btn_fechar_tour.first.wait_for(state="visible", timeout=5000)
+            self.btn_fechar_tour.first.click()
+
+            # Pausa de ouro para o balão e a tela escura sumirem antes de preencher o CPF
+            self.page.wait_for_timeout(1000)
+
+            # Pausa de ouro para o balão e a tela escura sumirem antes de preencher o CPF
             self.page.wait_for_timeout(1000)
 
         except Exception as e:
-            # Se o tour não aparecer hoje, o teste não quebra
-            pass
+            # Se der erro de timeout, significa que o tour não apareceu na tela.
+            # Imprimimos no console e o script segue normalmente.
+            print("Tour não apareceu, seguindo fluxo normal.")
 
     @allure.step("Preencher dados da simulação: CPF {cpf}, Distribuidor {distribuidor}")
     def preencher_dados_simulacao(self, cpf, distribuidor, dia):
