@@ -1,40 +1,41 @@
 # 📊 Dashboard de Engenharia de Qualidade - SolAgora
 
-> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 25/02/2026 01:13
+> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 02/03/2026 23:07
 
 ## 🏆 Top QAs (Ranking de Commits)
 
 | QA | Total de Pushes (Commits) |
 |:---|:---:|
-| 👨‍💻 **Rafael Cardoso** | 16 |
-| 👨‍💻 **Robô da Qualidade (QA Bot)** | 16 |
+| 👨‍💻 **Rafael Cardoso** | 17 |
+| 👨‍💻 **Robô da Qualidade (QA Bot)** | 17 |
 
 ## 🚀 Status da Automação
 
 | Categoria | Total |
 | :--- | :---: |
-| 📝 Cenários BDD | 3 |
-| 📄 Page Objects | 19 |
+| 📝 Cenários BDD | 6 |
+| 📄 Page Objects | 20 |
 | 🧪 Scripts de Teste | 4 |
 
 ## 📂 Detalhamento de Negócio (Features)
 
 | Feature | Cenários | Autor Principal | Modificação |
 |:---|:---:|:---|:---:|
-| Fluxo de Simulação Solar | 1 | Rafael Cardoso | 25/02/2026 |
-| Gate 01 - Controle de Acesso e Autenticação | 1 | Rafael Cardoso | 25/02/2026 |
-| Gate 02 - Simulação Técnica de Financiamento | 1 | Rafael Cardoso | 25/02/2026 |
+| Fluxo de Simulação Solar | 1 | Rafael Cardoso | 02/03/2026 |
+| Gate 02 - Simulação Técnica de Financiamento | 1 | Rafael Cardoso | 02/03/2026 |
+| Gate 01 - Controle de Acesso e Autenticação | 4 | Rafael Cardoso | 02/03/2026 |
 
 ### 📄 Page Objects Criados
 
 <details>
-<summary><b>Clique para ver a lista de 19 pages</b></summary>
+<summary><b>Clique para ver a lista de 20 pages</b></summary>
 
 <ul>
 <li><code>Analise_processamento_page</code></li>
 <li><code>Verificacao_notas_fiscais_page</code></li>
 <li><code>analise_credito_page</code></li>
 <li><code>conferir_documentacao</code></li>
+<li><code>dashboard_page</code></li>
 <li><code>documentacao_completa_page</code></li>
 <li><code>documentacao_e_comprovantes_page</code></li>
 <li><code>documentacao_pj</code></li>
@@ -70,22 +71,25 @@
 
 | Data | Autor | Mensagem |
 |:---|:---|:---|
+| 02/03 20:07 | **Rafael Cardoso** | Inclusão cenários proposta 30 dias atomacao |
+| 25/02 01:13 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 24/02 22:12 | **Rafael Cardoso** | Correção chamada teste gate 2 - Função navega_tour |
 | 25/02 00:06 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 24/02 21:03 | **Rafael Cardoso** | Ajustes modal Proximo tour SolAgora |
-| 21/02 22:04 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
-| 21/02 19:04 | **Rafael Cardoso** | Ajustes Features implementação de Gates |
 
 ## 🏷️ Cobertura de Tags
 
 | Tag | Usos |
 |---|---|
+| `@auth` | 4 |
 | `@simulacao` | 2 |
 | `@pr_blocker` | 2 |
 | `@pf` | 1 |
 | `@aldo_componentes` | 1 |
 | `@regressivo` | 1 |
+| `@gate02` | 1 |
 | `@gate01` | 1 |
 | `@smoke_test` | 1 |
-| `@auth` | 1 |
-| `@gate02` | 1 |
+| `@login_invalido` | 1 |
+| `@logout` | 1 |
+| `@acesso_negado` | 1 |
