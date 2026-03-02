@@ -1,7 +1,7 @@
 import pytest
 import allure
 import re
-from pytest_bdd import scenario, given, when, then, parsers
+from pytest_bdd import scenario, given, when, then, parsers, scenarios
 from playwright.sync_api import expect
 
 # Importações das suas Pages e Utilitários
@@ -10,9 +10,11 @@ from pages.simulador_page import SimuladorPage
 from utils.Generators import Generators
 
 
+scenarios('../features/simulacao/02_simulacao.feature')
+
+
 @allure.feature("Pipeline Gates - PR Blockers")
 @allure.story("Gate 02 - Motor de Simulação")
-@scenario('../features/simulacao/02_simulacao.feature', 'Validar a geração de condições de financiamento com sucesso')
 def test_gate_02_simulacao():
     """Teste crítico: Valida se o motor de cálculo da Aldo está operante."""
     pass
