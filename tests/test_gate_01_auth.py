@@ -95,9 +95,24 @@ def step_validar_logout(page):
 
 @when('o token de sessão do navegador expira')
 def step_simular_sessao_expirada(page):
-    with allure.step("Simulando queda de token limpando os cookies do navegador"):
-        # Truque de mestre do Playwright: limpa os cookies para matar a sessão na hora
+    with allure.step("Simulando expiração: limpando LocalStorage, SessionStorage e Cookies"):
+        # Limpa os cookies clássicos
         page.context.clear_cookies()
+
+        # O pulo do gato: roda um JavaScript na página para limpar os storages modernos
+        page.evaluate("window.localStorage.clear();")
+        page.evaluate("window.sessionStorage.clear();")
+
+
+    # mandamos o Playwright "sequestrar" qualquer requisição que o sistema faça para a API e
+    # responder com um erro 401 Unauthorized, forçando o frontend a te deslogar
+        # @when('o token de sessão do navegador expira')
+        # def step_simular_sessao_expirada(page):
+        #     with allure.step("Simulando expiração: Forçando a API a retornar 401 Unauthorized"):
+        #         # Diz para o Playwright: "Se o navegador tentar falar com qualquer API, barre e devolva erro 401"
+        #         # Ajuste o "api" para o trecho da URL que o backend do Solagora usa (ex: "/api/", "/v1/")
+        #         page.route("**/api/**", lambda route: route.fulfill(status=401, body="Token Expirado"))
+        #
 
 
 @when('e tento acessar a página interna de "Projetos"')
@@ -114,7 +129,9 @@ def step_tentar_acessar_admin(page):
 
 @then('o sistema deve bloquear o acesso e exibir mensagem de permissão negada')
 def step_validar_permissao_negada(page):
-    with allure.step("Validando bloqueio de acesso 403 / Permissão Negada"):
-        # Pode ser que redirecione ou mostre uma tela de erro, ajuste conforme a tela real
-        msg_bloqueio = page.get_by_text(re.compile("acesso negado|sem permissão", re.IGNORECASE))
+    with allure.step("Validando bloqueio de segurança mascarado como Erro 404"):
+        # Como o sistema usa segurança por obscuridade, ele exibe um 404.
+        # Procuramos por "404" ou "não encontrad" (para cobrir "não encontrada" ou "não encontrado")
+        msg_bloqueio = page.get_by_text(re.compile(r"404|não encontrad", re.IGNORECASE)).first
+
         expect(msg_bloqueio).to_be_visible(timeout=5000)
