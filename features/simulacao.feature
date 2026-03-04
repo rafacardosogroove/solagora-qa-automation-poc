@@ -1,15 +1,20 @@
 # language: pt
-# Autor: Rafael Cardoso
 
-Funcionalidade: Fluxo de Simulação Solar
+Funcionalidade: Gate 02 - Simulação de Financiamento (P1)
 
-  @simulacao @pf @aldo_componentes @regressivo
-  Esquema do Cenário: Simulação Aldo PF completa com sucesso
-    Dado que acesso o sistema pela URL de autenticação
-    E realizo o login com usuario "<usuario>" e senha "<senha>"
-    E navego até o simulador de novo projeto
-    Quando preencho os dados do CPF "<cpf>", distribuidor "<distribuidor>" e vencimento "<vencimento>"
+  Contexto: Acessar o sistema
+    Dado que o ambiente de homologação está respondendo na página de login
+    E que executo o fluxo completo de login válido ("qaautomacao", "solagora")
+
+  @simulacao @smoke_test
+  Esquema do Cenário: 1. Processar simulação inicial com diferentes perfis de cliente
+    Quando acesso a área de criação de um novo projeto
+    E preencho os dados com CPF "<cpf>", Renda "<renda>", Valor "<valor>", Distribuidor "<distribuidor>", Energia "<energia>" e Vencimento "<dia>"
+    Então o sistema deve avançar para a próxima etapa da simulação
 
     Exemplos:
-      | cenario            | usuario      | senha    | cpf            | distribuidor                  | vencimento | parcela | escolha_seguro | nome          | email           | celular         | cep       |
-      | Simulacao_Aldo_PF  | qaautomacao  | solagora | 824.539.500-53 | ALDO COMPONENTES ELETRONICOS  | 22         | 25x     | Não            | Rafael Teste  | rafa@email.com  | (11) 99999-9999 | 01310-100 |
+      | perfil                | cpf         | renda  | valor   | distribuidor | energia | dia |
+      | Sucesso - Dinâmico    | GERAR       | 5000   | 50000   | ALDO         | 1000    | 10  |
+      | Sucesso - Fixo (PF)   | 82453950053 | 15000  | 120000  | WEG          | 2500    | 15  |
+      | Limite Mínimo         | GERAR       | 2500   | 15000   | ALDO         | 500     | 05  |
+      | Projeto de Alto Valor | GERAR       | 50000  | 500000  | WEG          | 8000    | 20  |

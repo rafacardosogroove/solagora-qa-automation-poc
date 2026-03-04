@@ -1,5 +1,5 @@
 # language: pt
-# Autor: Rafael Cardoso
+# Autor: Rafael Cardoso Santana Costa
 
 Funcionalidade: Gate 01 - Controle de Acesso e Autenticação
   Como um sistema de controle de qualidade (CI/CD)
