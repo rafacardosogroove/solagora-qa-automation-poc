@@ -5,8 +5,9 @@ from pytest_bdd import scenarios, given, when, then, parsers
 from playwright.sync_api import expect
 from pages.login_page import LoginPage
 from pages.simulacao.simulacao_page import SimulacaoPage
+# IMPORTAÇÃO DA NOVA PAGE
+from pages.simulacao.resultado_simulacao_page import ResultadoSimulacaoPage
 
-# Aponte apenas para a feature de simulação
 scenarios('../features/simulacao/simulacao.feature')
 
 @given('que o ambiente de homologação está respondendo na página de login')
@@ -25,7 +26,6 @@ def step_acessar_nova_simulacao(page):
     simulacao_page = SimulacaoPage(page)
     simulacao_page.acessar_nova_simulacao()
 
-# O decorador foi ajustado para bater com o texto da feature e o tipo lógico 'when'
 @when(parsers.parse('preencho os dados com CPF "{cpf}", Renda "{renda}", Valor "{valor}", Distribuidor "{distribuidor}", Energia "{energia}" e Vencimento "{dia}"'))
 def step_preencher_dados(page, cpf, renda, valor, distribuidor, energia, dia):
     simulacao_page = SimulacaoPage(page)
@@ -34,6 +34,11 @@ def step_preencher_dados(page, cpf, renda, valor, distribuidor, energia, dia):
 @then('o sistema deve avançar para a próxima etapa da simulação')
 def step_validar_avanco(page):
     with allure.step("Validar que o sistema processou a simulação com sucesso"):
-        # Mantendo sua lógica original de contagem de erros
         erros_visiveis = page.locator("text='Campo obrigatório'").count()
         assert erros_visiveis == 0, "O formulário apresentou erros de validação na tela."
+
+# NOVO PASSO ADICIONADO SEM ALTERAR OS ANTERIORES
+@then(parsers.parse('deve exibir a tela de resultados com a mensagem "{mensagem}"'))
+def step_validar_resultado_visual(page, mensagem):
+    resultado_page = ResultadoSimulacaoPage(page)
+    resultado_page.validar_tela_resultados(mensagem)
