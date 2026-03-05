@@ -1,21 +1,21 @@
 # 📊 Dashboard de Engenharia de Qualidade - SolAgora
 
-> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 05/03/2026 21:00
+> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 05/03/2026 21:34
 
 ## 🏆 Top QAs (Ranking de Commits)
 
 | QA | Total de Pushes (Commits) |
 |:---|:---:|
-| 👨‍💻 **Rafael Cardoso** | 22 |
-| 👨‍💻 **Robô da Qualidade (QA Bot)** | 20 |
+| 👨‍💻 **Rafael Cardoso** | 23 |
+| 👨‍💻 **Robô da Qualidade (QA Bot)** | 21 |
 
 ## 🚀 Status da Automação
 
 | Categoria | Total |
 | :--- | :---: |
 | 📝 Cenários BDD | 7 |
-| 📄 Page Objects | 23 |
-| 🧪 Scripts de Teste | 4 |
+| 📄 Page Objects | 25 |
+| 🧪 Scripts de Teste | 5 |
 
 ## 📂 Detalhamento de Negócio (Features)
 
@@ -29,7 +29,7 @@
 ### 📄 Page Objects Criados
 
 <details>
-<summary><b>Clique para ver a lista de 23 pages</b></summary>
+<summary><b>Clique para ver a lista de 25 pages</b></summary>
 
 <ul>
 <li><code>Analise_processamento_page</code></li>
@@ -40,9 +40,11 @@
 <li><code>dashboard_page</code></li>
 <li><code>documentacao_completa_page</code></li>
 <li><code>documentacao_e_comprovantes_page</code></li>
+<li><code>documentacao_page</code></li>
 <li><code>documentacao_pj</code></li>
 <li><code>documentacao_popup_page</code></li>
 <li><code>login_page</code></li>
+<li><code>modal_conta_energia_page</code></li>
 <li><code>modal_conta_energia_page</code></li>
 <li><code>modal_notas_fiscais_page</code></li>
 <li><code>modal_pagamento_page</code></li>
@@ -61,13 +63,14 @@
 ### 🧪 Scripts de Teste Automatizados
 
 <details>
-<summary><b>Clique para ver os 4 scripts de teste</b></summary>
+<summary><b>Clique para ver os 5 scripts de teste</b></summary>
 
 <ul>
 <li><code>conftest</code></li>
 <li><code>test_gate_01_auth</code></li>
 <li><code>test_gate_02_simulacao</code></li>
 <li><code>test_gate_03_analise</code></li>
+<li><code>test_gate_04_documentacao</code></li>
 </ul>
 </details>
 
@@ -75,11 +78,11 @@
 
 | Data | Autor | Mensagem |
 |:---|:---|:---|
+| 05/03 18:34 | **Rafael Cardoso** | Padronização estrutura gate 04 |
+| 05/03 21:00 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 05/03 18:00 | **Rafael Cardoso** | Conclusão Gate 03 - Ajustes Gate 04 iniciado |
 | 05/03 13:56 | **Rafael Cardoso** | Implementação teste gate 03 correções analise de credito |
 | 05/03 13:34 | **Rafael Cardoso** | Implementação fluxo modal resultado simulacao |
-| 04/03 01:25 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
-| 03/03 22:25 | **Rafael Cardoso** | Implementação fluxo Simulação Credito |
 
 ## 🏷️ Cobertura de Tags
 
