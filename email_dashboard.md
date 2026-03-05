@@ -1,38 +1,40 @@
 # 📊 Dashboard de Engenharia de Qualidade - SolAgora
 
-> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 04/03/2026 01:25
+> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 05/03/2026 21:00
 
 ## 🏆 Top QAs (Ranking de Commits)
 
 | QA | Total de Pushes (Commits) |
 |:---|:---:|
-| 👨‍💻 **Rafael Cardoso** | 19 |
-| 👨‍💻 **Robô da Qualidade (QA Bot)** | 19 |
+| 👨‍💻 **Rafael Cardoso** | 22 |
+| 👨‍💻 **Robô da Qualidade (QA Bot)** | 20 |
 
 ## 🚀 Status da Automação
 
 | Categoria | Total |
 | :--- | :---: |
-| 📝 Cenários BDD | 6 |
-| 📄 Page Objects | 21 |
+| 📝 Cenários BDD | 7 |
+| 📄 Page Objects | 23 |
 | 🧪 Scripts de Teste | 4 |
 
 ## 📂 Detalhamento de Negócio (Features)
 
 | Feature | Cenários | Autor Principal | Modificação |
 |:---|:---:|:---|:---:|
-| Gate 02 - Simulação de Financiamento (P1) | 1 | Não identificado | 04/03/2026 |
-| Gate 02 - Simulação Técnica de Financiamento | 1 | Rafael Cardoso | 04/03/2026 |
-| Gate 01 - Controle de Acesso e Autenticação | 4 | Rafael Cardoso Santana Costa | 04/03/2026 |
+| Gate 02 - Simulação de Financiamento (P1) | 1 | Não identificado | 05/03/2026 |
+| Gate 03 - Análise de Crédito e Dados Cadastrais | 1 | Não identificado | 05/03/2026 |
+| Gate 04 - Documentação e Dados Cadastrais Finais | 1 | Não identificado | 05/03/2026 |
+| Gate 01 - Controle de Acesso e Autenticação | 4 | Rafael Cardoso Santana Costa | 05/03/2026 |
 
 ### 📄 Page Objects Criados
 
 <details>
-<summary><b>Clique para ver a lista de 21 pages</b></summary>
+<summary><b>Clique para ver a lista de 23 pages</b></summary>
 
 <ul>
 <li><code>Analise_processamento_page</code></li>
 <li><code>Verificacao_notas_fiscais_page</code></li>
+<li><code>analise_credito_page</code></li>
 <li><code>analise_credito_page</code></li>
 <li><code>conferir_documentacao</code></li>
 <li><code>dashboard_page</code></li>
@@ -49,6 +51,7 @@
 <li><code>pagamento_processo_iniciado_page</code></li>
 <li><code>politica_renda_page</code></li>
 <li><code>resultado_simulacao_page</code></li>
+<li><code>resultado_simulacao_page</code></li>
 <li><code>simulacao_page</code></li>
 <li><code>simulador_page</code></li>
 <li><code>validacao_valoresv_page</code></li>
@@ -64,7 +67,7 @@
 <li><code>conftest</code></li>
 <li><code>test_gate_01_auth</code></li>
 <li><code>test_gate_02_simulacao</code></li>
-<li><code>test_simulacao</code></li>
+<li><code>test_gate_03_analise</code></li>
 </ul>
 </details>
 
@@ -72,22 +75,26 @@
 
 | Data | Autor | Mensagem |
 |:---|:---|:---|
+| 05/03 18:00 | **Rafael Cardoso** | Conclusão Gate 03 - Ajustes Gate 04 iniciado |
+| 05/03 13:56 | **Rafael Cardoso** | Implementação teste gate 03 correções analise de credito |
+| 05/03 13:34 | **Rafael Cardoso** | Implementação fluxo modal resultado simulacao |
+| 04/03 01:25 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 03/03 22:25 | **Rafael Cardoso** | Implementação fluxo Simulação Credito |
-| 03/03 22:53 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
-| 03/03 19:25 | **Rafael Cardoso** | Implementação estrutura pages test e features |
-| 02/03 23:07 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
-| 02/03 20:07 | **Rafael Cardoso** | Inclusão cenários proposta 30 dias atomacao |
 
 ## 🏷️ Cobertura de Tags
 
 | Tag | Usos |
 |---|---|
 | `@auth` | 4 |
-| `@simulacao` | 2 |
-| `@smoke_test` | 2 |
-| `@pr_blocker` | 2 |
+| `@smoke_test` | 3 |
+| `@simulacao` | 1 |
 | `@gate02` | 1 |
+| `@gate03` | 1 |
+| `@analise_credito` | 1 |
+| `@gate04` | 1 |
+| `@documentacao` | 1 |
 | `@gate01` | 1 |
+| `@pr_blocker` | 1 |
 | `@login_invalido` | 1 |
 | `@logout` | 1 |
 | `@acesso_negado` | 1 |
