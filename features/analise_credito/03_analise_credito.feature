@@ -15,5 +15,9 @@ Funcionalidade: Gate 03 - Análise de Crédito e Dados Cadastrais
 
     Exemplos:
       | opcao_seguro | nome            | email                 | celular      | cep      |
-      | COM SEGURO   | Rafael Automacao| rafael@groovetech.com | 11999999999  | 01310100 |
-      | SEM SEGURO   | Jose Teste      | jose@teste.com        | 11888888888  | 04101300 |
+      | COM SEGURO   | Rafael Automacao| GERAR | GERAR  | 01310100 |
+
+
+
+
+    # | SEM SEGURO   | Jose Teste      | jose@teste.com        | 11888888888  | 04101300 |

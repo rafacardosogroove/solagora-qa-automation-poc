@@ -3,9 +3,11 @@ import allure
 from pytest_bdd import scenarios, given, when, then, parsers
 from pages.login_page import LoginPage
 from pages.simulacao.simulacao_page import SimulacaoPage
-from pages.simulacao.analise_credito_page import AnaliseCreditoPage
+from pages.analise_credito.analise_credito_page import AnaliseCreditoPage
+from utils.Generators import  Generators
 
-scenarios('../features/proposta/03_analise_credito.feature')
+
+scenarios('../features/analise_credito/03_analise_credito.feature')
 
 @given('que o ambiente de homologação está respondendo na página de login')
 def step_acessar_login(page):
@@ -36,7 +38,13 @@ def step_tratar_seguro(page, opcao_seguro):
 @when(parsers.parse('preencho os dados do cliente com Nome "{nome}", Email "{email}", Celular "{celular}" e CEP "{cep}"'))
 def step_preencher_cadastro(page, nome, email, celular, cep):
     analise_page = AnaliseCreditoPage(page)
-    analise_page.preencher_dados_cadastrais(nome, email, celular, cep)
+
+    # Se na Feature estiver "GERAR", ele gera um novo. Se não, usa o que você escreveu.
+    email_final = Generators.email() if email.upper() == "GERAR" else email
+    celular_final = Generators.telefone() if celular.upper() == "GERAR" else celular
+
+    # Manda tudo para a Page preencher
+    analise_page.preencher_dados_cadastrais(nome, email_final, celular_final, cep)
 
 @then('o sistema deve habilitar o botão "Enviar para análise de crédito"')
 def step_validar_botao_ativo(page):

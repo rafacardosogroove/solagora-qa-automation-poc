@@ -1,5 +1,6 @@
 import datetime
 import random
+import string
 
 
 class Generators:
@@ -36,3 +37,16 @@ class Generators:
         dias_atras = random.randint(idade_min * 365, idade_max * 365)
         data = datetime.now() - datetime.timedelta(days=dias_atras)
         return data.strftime("%d/%m/%Y")
+
+    @staticmethod
+    def email():
+        """Gera um e-mail aleatório válido para passar na Regex da aplicação"""
+        prefixo = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
+        dominio = random.choice(["groovetech.com.br", "teste.com", "automacao.com"])
+        return f"qa_{prefixo}@{dominio}"
+
+    @staticmethod
+    def telefone():
+        """Gera um celular aleatório no formato 11999999999"""
+        numero = ''.join(random.choices(string.digits, k=8))
+        return f"119{numero}"  # Adicione aspas e parêntese aqui
