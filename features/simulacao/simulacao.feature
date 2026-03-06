@@ -1,4 +1,7 @@
 # language: pt
+# Autor: Rafael Cardoso Santana Costa
+
+
 Funcionalidade: Gate 02 - Simulação de Financiamento (P1)
 
   Contexto: Acessar o sistema

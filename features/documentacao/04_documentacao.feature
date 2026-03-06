@@ -1,4 +1,6 @@
 # language: pt
+# Autor: Rafael Cardoso Santana Costa
+
 Funcionalidade: Gate 04 - Documentação e Dados Cadastrais Finais
 
   Contexto: Cliente aprovado na análise de crédito
