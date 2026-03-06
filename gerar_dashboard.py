@@ -66,9 +66,13 @@ def gerar_metricas_bdd(diretorio='features'):
                 if file.endswith('.feature'):
                     caminho = os.path.join(root, file)
                     data_m = datetime.fromtimestamp(os.path.getmtime(caminho)).strftime('%d/%m/%Y')
-                    total_features += 1
+
+                    # CORREÇÃO: Inicializa as variáveis para evitar NameError
+                    nome_f = file.replace('.feature', '')
+                    autor_f = extrair_autor_do_bdd(caminho)
                     cenarios_f = 0
 
+                    total_features += 1
                     dentro_de_exemplos = False
                     cabecalho_passado = False
 
@@ -76,19 +80,19 @@ def gerar_metricas_bdd(diretorio='features'):
                         for linha in f:
                             l = linha.strip()
                             if not l: continue
+
                             for p in l.split():
                                 if p.startswith('@'): tags_contador[p] += 1
+
                             if l.startswith(('Funcionalidade:', 'Feature:')):
                                 nome_f = l.split(':', 1)[1].strip()
 
-                            # Conta cenários simples
                             if l.startswith(('Cenário:', 'Cenario:', 'Scenario:')) and not l.startswith(
                                     ('Esquema do Cenário', 'Scenario Outline')):
                                 cenarios_f += 1
                                 total_cenarios += 1
                                 dentro_de_exemplos = False
 
-                            # Lógica inteligente para Esquema de Cenários
                             if l.startswith(('Exemplos:', 'Examples:')):
                                 dentro_de_exemplos = True
                                 cabecalho_passado = False
@@ -137,6 +141,7 @@ def montar_relatorio(para_email=False):
     linhas.append("\n| Feature | Volume de Testes | Autor Principal | Modificação |")
     linhas.append("|:---|:---|:---|:---:|")
     for f in lista_features:
+        # Barra visual baseada na quantidade de cenários
         barra = "🟦" * f['qtd'] if f['qtd'] <= 5 else "🟦" * 5 + "🟧" * (f['qtd'] - 5)
         linhas.append(f"| {f['nome']} | {f['qtd']} {barra} | {f['autor']} | {f['data']} |")
 
@@ -167,6 +172,9 @@ def montar_relatorio(para_email=False):
 
 
 if __name__ == '__main__':
+    # 1. Dashboard para e-mail
     with open('email_dashboard.md', 'w', encoding='utf-8') as f:
         f.write(montar_relatorio(para_email=True))
+
+    # 2. Saída para o README (GitHub Action redireciona o print)
     print(montar_relatorio(para_email=False))
