@@ -1,13 +1,13 @@
 # 📊 Dashboard de Engenharia de Qualidade - SolAgora
 
-> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 06/03/2026 06:57
+> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 06/03/2026 07:00
 
 ## 🏆 Top QAs (Ranking de Commits)
 
 | QA | Total de Pushes (Commits) |
 |:---|:---:|
-| 👨‍💻 **Rafael Cardoso** | 27 |
-| 👨‍💻 **Robô da Qualidade (QA Bot)** | 23 |
+| 👨‍💻 **Rafael Cardoso** | 28 |
+| 👨‍💻 **Robô da Qualidade (QA Bot)** | 24 |
 
 ## 🚀 Status da Automação
 
@@ -21,9 +21,9 @@
 
 | Feature | Volume de Testes | Autor Principal | Modificação |
 |:---|:---|:---|:---:|
-| Gate 02 - Simulação de Financiamento (P1) | 1 🟦 | Não identificado | 06/03/2026 |
-| Gate 03 - Análise de Crédito e Dados Cadastrais | 1 🟦 | Não identificado | 06/03/2026 |
-| Gate 04 - Documentação e Dados Cadastrais Finais | 2 🟦🟦 | Não identificado | 06/03/2026 |
+| Gate 02 - Simulação de Financiamento (P1) | 1 🟦 | Rafael Cardoso Santana Costa | 06/03/2026 |
+| Gate 03 - Análise de Crédito e Dados Cadastrais | 1 🟦 | Rafael Cardoso Santana Costa | 06/03/2026 |
+| Gate 04 - Documentação e Dados Cadastrais Finais | 2 🟦🟦 | Rafael Cardoso Santana Costa | 06/03/2026 |
 | Gate 01 - Controle de Acesso e Autenticação | 5 🟦🟦🟦🟦🟦 | Rafael Cardoso Santana Costa | 06/03/2026 |
 
 ### 📄 Page Objects Criados
@@ -64,11 +64,11 @@
 
 | Data | Autor | Mensagem |
 |:---|:---|:---|
+| 06/03 04:00 | **Rafael Cardoso** | fix: correção inclusao author features |
+| 06/03 06:57 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 06/03 03:56 | **Rafael Cardoso** | fix: corrige NameError na geracao do dashboard |
 | 06/03 03:53 | **Rafael Cardoso** | Ajustes Dashboard |
 | 06/03 02:08 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
-| 05/03 23:07 | **Rafael Cardoso** | feat: implementacao do gate 04 e arquivos de teste |
-| 05/03 23:06 | **Rafael Cardoso** | Ajustes modalcontaenergia |
 
 ## 🏷️ Cobertura de Tags
 
