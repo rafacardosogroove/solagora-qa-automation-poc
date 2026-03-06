@@ -122,6 +122,13 @@ def montar_relatorio(para_email=False):
 
     linhas = []
     linhas.append("# 📊 Dashboard de Engenharia de Qualidade - SolAgora\n")
+
+    # Nova seção de Esteira de Desenvolvimento
+    nomes_features = [f['nome'] for f in lista_features]
+    esteira_visual = gerar_esteira_progresso(nomes_features)
+    linhas.append("### 🛤️ Esteira de Cobertura (Gates)")
+    linhas.append(f"{esteira_visual}\n")
+    linhas.append("---\n")
     linhas.append(f"> 👤 **Último Push:** {autor} | 🕒 **Atualizado em:** {datetime.now().strftime('%d/%m/%Y %H:%M')}\n")
 
     linhas.append("## 🏆 Top QAs (Ranking de Commits)")
@@ -178,3 +185,27 @@ if __name__ == '__main__':
 
     # 2. Saída para o README (GitHub Action redireciona o print)
     print(montar_relatorio(para_email=False))
+
+
+    def gerar_esteira_progresso(features_encontradas):
+        # Definimos a ordem oficial das etapas do projeto
+        etapas_obrigatorias = [
+            {"nome": "Login", "tag": "auth"},
+            {"nome": "Simulação", "tag": "simulacao"},
+            {"nome": "Análise de Crédito", "tag": "analise_credito"},
+            {"nome": "Documentação", "tag": "documentacao"},
+            {"nome": "Notas Fiscais", "tag": "notas_fiscais"},
+            {"nome": "Pagamento", "tag": "pagamento"}
+        ]
+
+        esteira = []
+        # Pegamos todas as tags presentes no projeto para saber o que já existe
+        tags_projeto = [f.lower() for f in features_encontradas]
+
+        for i, etapa in enumerate(etapas_obrigatorias):
+            # Verifica se a etapa existe baseada no nome do arquivo ou tag
+            check = "🔵" if any(etapa['tag'] in f for f in tags_projeto) else "⚪"
+            esteira.append(f"{check} **{etapa['nome']}**")
+
+        # Une as bolinhas com uma linha
+        return " --- ".join(esteira)
