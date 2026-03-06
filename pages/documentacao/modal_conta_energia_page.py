@@ -10,6 +10,8 @@ class ModalContaEnergiaPage:
         self.input_file = page.locator("input[type='file']")
         self.btn_confirmar = page.get_by_role("button", name="Confirmar informações")
 
+
+#Ajustar trecho
     @allure.step("Modal: Upload de conta de energia")
     def realizar_upload_energia(self, origem, arquivo):
         # 1. Seleciona Local ou Remoto no combo customizado
