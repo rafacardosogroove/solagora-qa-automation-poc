@@ -1,18 +1,18 @@
 # 📊 Dashboard de Engenharia de Qualidade - SolAgora
 
 ### 🛤️ Esteira de Cobertura (Gates)
-⚪ **Login** --- ⚪ **Simulação** --- ⚪ **Análise de Crédito** --- ⚪ **Documentação** --- ⚪ **Notas Fiscais** --- ⚪ **Pagamento**
+🔵 **Login** --- 🔵 **Simulação** --- 🔵 **Análise de Crédito** --- 🔵 **Documentação** --- ⚪ **Notas Fiscais** --- ⚪ **Pagamento**
 
 ---
 
-> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 06/03/2026 07:25
+> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 06/03/2026 07:30
 
 ## 🏆 Top QAs (Ranking de Commits)
 
 | QA | Total de Pushes (Commits) |
 |:---|:---:|
-| 👨‍💻 **Rafael Cardoso** | 33 |
-| 👨‍💻 **Robô da Qualidade (QA Bot)** | 27 |
+| 👨‍💻 **Rafael Cardoso** | 35 |
+| 👨‍💻 **Robô da Qualidade (QA Bot)** | 28 |
 
 ## 🚀 Status da Automação
 
@@ -69,11 +69,11 @@
 
 | Data | Autor | Mensagem |
 |:---|:---|:---|
+| 06/03 04:30 | **Rafael Cardoso** | fix: ajustes barra de progresso namError |
+| 06/03 04:27 | **Rafael Cardoso** | fix: Correção esteira progresso |
+| 06/03 07:25 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 06/03 04:24 | **Rafael Cardoso** | fix: Ajustes tags principais features - barra de progresso- simulacao |
 | 06/03 04:23 | **Rafael Cardoso** | fix: Ajustes tags principais features - barra de progresso |
-| 06/03 07:16 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
-| 06/03 04:16 | **Rafael Cardoso** | fix: Ajustes de barra de progresso dashboard |
-| 06/03 04:12 | **Rafael Cardoso** | feature: criação de barra de progresso dashboard |
 
 ## 🏷️ Cobertura de Tags
 
