@@ -1,0 +1,1 @@
+{"uuid": "ac681d1b-25f0-41ae-bb21-e00686bdf106", "befores": [{"name": "pytestbdd_stepdef_given_que realizo a análise de crédito completa para o cliente \"{nome}\" com CEP \"{cep}\"", "status": "passed", "start": 1772812050742, "stop": 1772812050743}], "start": 1772812050742, "stop": 1772812066138}

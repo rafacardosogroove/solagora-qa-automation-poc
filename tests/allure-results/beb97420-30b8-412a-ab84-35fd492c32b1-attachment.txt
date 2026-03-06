@@ -1,0 +1,4 @@
+Dia 10 desabilitado. Tentando o próximo...
+Sucesso: Data 11 selecionada.
+Modal de entrada não apareceu, seguindo fluxo.
+Modal de seguro não interceptado.
