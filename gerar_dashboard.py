@@ -3,13 +3,11 @@ import subprocess
 from collections import Counter
 from datetime import datetime
 
-
 def get_last_committer():
     try:
         return subprocess.check_output(["git", "log", "-1", "--format=%an"]).decode(errors='ignore').strip()
     except:
         return "Robô de QA"
-
 
 def get_git_commits(limit=5):
     try:
@@ -20,7 +18,6 @@ def get_git_commits(limit=5):
     except:
         return ["Sem histórico de commits disponível"]
 
-
 def get_top_contributors():
     try:
         output = subprocess.check_output(["git", "log", "--format=%an"]).decode(errors='ignore').strip()
@@ -29,7 +26,6 @@ def get_top_contributors():
         return ranking.most_common(5)
     except:
         return []
-
 
 def detalhar_arquivos(diretorio, extensao):
     lista_arquivos = []
@@ -40,7 +36,6 @@ def detalhar_arquivos(diretorio, extensao):
                     nome_limpo = file.replace(extensao, "")
                     lista_arquivos.append(nome_limpo)
     return sorted(lista_arquivos)
-
 
 def extrair_autor_do_bdd(caminho_arquivo):
     try:
@@ -54,7 +49,6 @@ def extrair_autor_do_bdd(caminho_arquivo):
         pass
     return "Não identificado"
 
-
 def gerar_metricas_bdd(diretorio='features'):
     total_features, total_cenarios = 0, 0
     tags_contador = Counter()
@@ -67,7 +61,6 @@ def gerar_metricas_bdd(diretorio='features'):
                     caminho = os.path.join(root, file)
                     data_m = datetime.fromtimestamp(os.path.getmtime(caminho)).strftime('%d/%m/%Y')
 
-                    # CORREÇÃO: Inicializa as variáveis para evitar NameError
                     nome_f = file.replace('.feature', '')
                     autor_f = extrair_autor_do_bdd(caminho)
                     cenarios_f = 0
@@ -111,6 +104,27 @@ def gerar_metricas_bdd(diretorio='features'):
                     dados_features.append({'nome': nome_f, 'qtd': cenarios_f, 'data': data_m, 'autor': autor_f})
     return total_features, total_cenarios, dados_features, tags_contador
 
+def gerar_esteira_progresso(features_encontradas):
+    """Gera o visual da esteira de Gates"""
+    etapas_obrigatorias = [
+        {"nome": "Login", "tag": "login"},
+        {"nome": "Simulação", "tag": "simulacao"},
+        {"nome": "Análise de Crédito", "tag": "analise_credito"},
+        {"nome": "Documentação", "tag": "documentacao"},
+        {"nome": "Notas Fiscais", "tag": "notas_fiscais"},
+        {"nome": "Pagamento", "tag": "pagamento"}
+    ]
+
+    esteira = []
+    # Cria uma string única com todos os nomes de arquivos para busca
+    projeto_str = " ".join(features_encontradas).lower()
+
+    for etapa in etapas_obrigatorias:
+        # Se a tag/nome da etapa estiver contida em algum arquivo encontrado
+        check = "🔵" if etapa['tag'] in projeto_str else "⚪"
+        esteira.append(f"{check} **{etapa['nome']}**")
+
+    return " --- ".join(esteira)
 
 def montar_relatorio(para_email=False):
     _, total_cenarios, lista_features, tags = gerar_metricas_bdd()
@@ -123,7 +137,7 @@ def montar_relatorio(para_email=False):
     linhas = []
     linhas.append("# 📊 Dashboard de Engenharia de Qualidade - SolAgora\n")
 
-    # Nova seção de Esteira de Desenvolvimento
+    # Chamada da Esteira (agora a função já foi declarada)
     nomes_features = [f['nome'] for f in lista_features]
     esteira_visual = gerar_esteira_progresso(nomes_features)
     linhas.append("### 🛤️ Esteira de Cobertura (Gates)")
@@ -148,7 +162,6 @@ def montar_relatorio(para_email=False):
     linhas.append("\n| Feature | Volume de Testes | Autor Principal | Modificação |")
     linhas.append("|:---|:---|:---|:---:|")
     for f in lista_features:
-        # Barra visual baseada na quantidade de cenários
         barra = "🟦" * f['qtd'] if f['qtd'] <= 5 else "🟦" * 5 + "🟧" * (f['qtd'] - 5)
         linhas.append(f"| {f['nome']} | {f['qtd']} {barra} | {f['autor']} | {f['data']} |")
 
@@ -157,8 +170,7 @@ def montar_relatorio(para_email=False):
         if para_email:
             for p in pages: linhas.append(f"- `{p}`")
         else:
-            linhas.append(
-                f"\n<details>\n<summary><b>Clique para ver a lista de {len(pages)} pages</b></summary>\n\n<ul>")
+            linhas.append(f"\n<details>\n<summary><b>Clique para ver a lista de {len(pages)} pages</b></summary>\n\n<ul>")
             for p in pages: linhas.append(f"<li><code>{p}</code></li>")
             linhas.append("</ul>\n</details>")
 
@@ -177,35 +189,10 @@ def montar_relatorio(para_email=False):
 
     return "\n".join(linhas)
 
-
 if __name__ == '__main__':
     # 1. Dashboard para e-mail
     with open('email_dashboard.md', 'w', encoding='utf-8') as f:
         f.write(montar_relatorio(para_email=True))
 
-    # 2. Saída para o README (GitHub Action redireciona o print)
+    # 2. Saída para o README
     print(montar_relatorio(para_email=False))
-
-
-    def gerar_esteira_progresso(features_encontradas):
-        # Definimos a ordem oficial das etapas do projeto
-        etapas_obrigatorias = [
-            {"nome": "Login", "tag": "auth"},
-            {"nome": "Simulação", "tag": "simulacao"},
-            {"nome": "Análise de Crédito", "tag": "analise_credito"},
-            {"nome": "Documentação", "tag": "documentacao"},
-            {"nome": "Notas Fiscais", "tag": "notas_fiscais"},
-            {"nome": "Pagamento", "tag": "pagamento"}
-        ]
-
-        esteira = []
-        # Pegamos todas as tags presentes no projeto para saber o que já existe
-        tags_projeto = [f.lower() for f in features_encontradas]
-
-        for i, etapa in enumerate(etapas_obrigatorias):
-            # Verifica se a etapa existe baseada no nome do arquivo ou tag
-            check = "🔵" if any(etapa['tag'] in f for f in tags_projeto) else "⚪"
-            esteira.append(f"{check} **{etapa['nome']}**")
-
-        # Une as bolinhas com uma linha
-        return " --- ".join(esteira)
