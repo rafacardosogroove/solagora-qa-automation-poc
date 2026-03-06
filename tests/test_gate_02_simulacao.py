@@ -10,16 +10,16 @@ from pages.simulacao.resultado_simulacao_page import ResultadoSimulacaoPage
 
 scenarios('../features/simulacao/simulacao.feature')
 
-@given('que o ambiente de homologação está respondendo na página de login')
-def step_ambiente_acessivel(page):
-    with allure.step("Verificando disponibilidade do ambiente de homologação"):
-        page.goto("https://integrator.hom.solagora.com.br/")
-        expect(page).to_have_url(re.compile(".*auth.*"), timeout=15000)
-
-@given(parsers.parse('que executo o fluxo completo de login válido ("{usuario}", "{senha}")'))
-def step_macro_login(page, usuario, senha):
-    login_page = LoginPage(page)
-    login_page.realizar_login_completo_e_aguardar_dashboard(usuario, senha)
+# @given('que o ambiente de homologação está respondendo na página de login')
+# def step_ambiente_acessivel(page):
+#     with allure.step("Verificando disponibilidade do ambiente de homologação"):
+#         page.goto("https://integrator.hom.solagora.com.br/")
+#         expect(page).to_have_url(re.compile(".*auth.*"), timeout=15000)
+#
+# @given(parsers.parse('que executo o fluxo completo de login válido ("{usuario}", "{senha}")'))
+# def step_macro_login(page, usuario, senha):
+#     login_page = LoginPage(page)
+#     login_page.realizar_login_completo_e_aguardar_dashboard(usuario, senha)
 
 @when('acesso a área de criação de um novo projeto')
 def step_acessar_nova_simulacao(page):

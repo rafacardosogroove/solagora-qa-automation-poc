@@ -15,11 +15,11 @@ scenarios('../features/login/01_auth.feature')
 # PASSOS ORIGINAIS (GATE 01 - SUCESSO)
 # ==========================================
 
-@given('que o ambiente de homologação está respondendo na página de login')
-def step_ambiente_acessivel(page):
-    with allure.step("Verificando disponibilidade do ambiente de homologação"):
-        page.goto("https://integrator.hom.solagora.com.br/")
-        expect(page).to_have_url(re.compile(".*auth.*"), timeout=15000)
+# @given('que o ambiente de homologação está respondendo na página de login')
+# def step_ambiente_acessivel(page):
+#     with allure.step("Verificando disponibilidade do ambiente de homologação"):
+#         page.goto("https://integrator.hom.solagora.com.br/")
+#         expect(page).to_have_url(re.compile(".*auth.*"), timeout=15000)
 
 
 @when(parsers.parse('o processo de autenticação é submetido com credenciais válidas ("{usuario}" e "{senha}")'))
@@ -74,11 +74,9 @@ def step_validar_mensagem_erro(page, mensagem_erro):
 
 @given(parsers.parse('que o sistema está autenticado com credenciais válidas ("{usuario}" e "{senha}")'))
 def step_dado_usuario_autenticado(page, usuario, senha):
-    # Reaproveita os passos que já criamos para logar rapidamente!
-    step_ambiente_acessivel(page)
-    step_submeter_credenciais_validas(page, usuario, senha)
-    step_validar_autorizacao(page)
-
+    with allure.step("Preparando ambiente: Usuário logado para teste de logout"):
+        login_page = LoginPage(page)
+        login_page.realizar_login_completo_e_aguardar_dashboard(usuario, senha)
 
 @when('aciono a opção de sair do sistema')
 def step_acionar_logout(page):

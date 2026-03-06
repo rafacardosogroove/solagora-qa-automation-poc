@@ -1,0 +1,1 @@
+{"uuid": "f422ba0c-d284-4b7d-9eff-7a1076538aef", "befores": [{"name": "pytestbdd_stepdef_when_preencho os contatos com Email \"{email}\", Celular \"{celular}\", Segundo Celular \"{celular_2}\" e Fixo \"{fixo}\"", "status": "passed", "start": 1772829370090, "stop": 1772829370091}], "start": 1772829370090, "stop": 1772829498389}

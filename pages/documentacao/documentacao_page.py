@@ -9,12 +9,11 @@ class DocumentacaoPage:
 
 
         self.input_complemento = page.locator("#addressInstallation\\.complement")  # Mantive o seu NAME
-        self.toggle_mesmo_endereco = page.locator("span.switch-input__slider")
+        self.toggle_mesmo_endereco = page.locator("input[name='billingAddressInstallation.canUseAddressInstallation']")
 
-        self.input_rg = page.locator("input[name='customer.rg']") # Mantive o seu NAME
-        self.input_email = page.locator("input[name='customer.email']") # Mantive o seu NAME
-        self.input_celular_1 = page.locator("input[name='customer.primaryPhone']") # Mantive o seu NAME
-        self.input_celular_2 = page.locator("input[name='customer.secondaryPhone']") # Mantive o seu NAME
+        self.input_rg = page.locator("#clientInfo\\.rg")
+        self.input_celular_1 = page.locator("#contact\\.secondaryPhone") # Mantive o seu NAME
+        self.input_celular_2 = page.locator("contact\\.landlinePhone") # Mantive o seu NAME
         self.input_fixo = page.locator("input[name='customer.landlinePhone']") # Mantive o seu NAME
 
         self.btn_enviar = page.get_by_role("button", name="Enviar documentação")
@@ -24,15 +23,25 @@ class DocumentacaoPage:
         self.input_numero.fill(numero)
         self.input_complemento.fill(complemento)
 
+    @allure.step("Informar documento de identidade RG: {rg}")
+    def informar_rg(self, rg: str):
+        self.input_rg.fill(rg)
+
     @allure.step("Preencher contatos")
     def preencher_contatos(self, email, c1, c2, fixo):
-        self.input_email.fill(email)
+        #self.input_email.fill(email)
         self.input_celular_1.fill(c1)
-        self.input_celular_2.fill(c2)
-        self.input_fixo.fill(fixo)
+      #  self.input_celular_2.fill(c2)
+      # self.input_fixo.fill(fixo)
+
+
+        # validar Aguardando avaliação da proposta assert ou expected verificar
 
     def validar_botao_ativo(self):
         expect(self.btn_enviar).to_be_enabled(timeout=10000)
+        self.btn_enviar.click()
+        self.btn_enviar.click()
+
 
     @allure.step("Definir se o endereço de cobrança é igual ao de instalação: {escolha}")
     def definir_cobranca_igual(self, escolha: str):
@@ -43,3 +52,4 @@ class DocumentacaoPage:
             self.toggle_mesmo_endereco.click()
             # Pequena pausa para o sistema processar a cópia dos dados entre os campos
             self.page.wait_for_timeout(500)
+

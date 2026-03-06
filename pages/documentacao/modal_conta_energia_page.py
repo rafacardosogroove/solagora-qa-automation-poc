@@ -48,6 +48,8 @@ class ModalContaEnergiaPage:
         try:
             # Esperamos até 15 segundos para dar uma margem de segurança sobre os 5s reais
             expect(self.btn_confirmar).to_be_enabled(timeout=15000)
+
+            self.page.wait_for_timeout(5000)
             self.btn_confirmar.click()
         except AssertionError:
             # Caso o botão não habilite, tiramos um print para o Allure entender o motivo

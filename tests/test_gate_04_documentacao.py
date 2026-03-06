@@ -25,24 +25,24 @@ def step_ambiente_acessivel(page):
         page.goto("https://integrator.hom.solagora.com.br/")
         expect(page).to_have_url(re.compile(".*auth.*"), timeout=15000)
 
-@given(parsers.parse('que executo o fluxo completo de login válido ("{usuario}", "{senha}")'))
-def step_macro_login(page, usuario, senha):
-    with allure.step(f"Realizando login com {usuario}"):
-        login_page = LoginPage(page)
-        login_page.realizar_login_completo_e_aguardar_dashboard(usuario, senha)
-
-@given(parsers.parse('que realizo uma simulação completa para o distribuidor "{distribuidor}" com vencimento "{dia}"'))
-def step_macro_simulacao(page, distribuidor, dia):
-    with allure.step(f"Executando simulação prévia para {distribuidor}"):
-        simulacao = SimulacaoPage(page)
-        simulacao.acessar_nova_simulacao()
-        simulacao.preencher_dados_simulacao("GERAR", "8000", "50000", distribuidor, "1000", dia)
-
-@given(parsers.parse('que realizo a análise de crédito completa para o cliente "{nome}" com CEP "{cep}"'))
-def step_macro_analise(page, nome, cep):
-    with allure.step(f"Executando análise de crédito para {nome}"):
-        analise_page = AnaliseCreditoPage(page)
-        analise_page.realizar_analise_credito_completa(nome, Generators.email(), Generators.telefone(), cep)
+# @given(parsers.parse('que executo o fluxo completo de login válido ("{usuario}", "{senha}")'))
+# def step_macro_login(page, usuario, senha):
+#     with allure.step(f"Realizando login com {usuario}"):
+#         login_page = LoginPage(page)
+#         login_page.realizar_login_completo_e_aguardar_dashboard(usuario, senha)
+#
+# @given(parsers.parse('que realizo uma simulação completa para o distribuidor "{distribuidor}" com vencimento "{dia}"'))
+# def step_macro_simulacao(page, distribuidor, dia):
+#     with allure.step(f"Executando simulação prévia para {distribuidor}"):
+#         simulacao = SimulacaoPage(page)
+#         simulacao.acessar_nova_simulacao()
+#         simulacao.preencher_dados_simulacao("GERAR", "8000", "50000", distribuidor, "1000", dia)
+#
+# @given(parsers.parse('que realizo a análise de crédito completa para o cliente "{nome}" com CEP "{cep}"'))
+# def step_macro_analise(page, nome, cep):
+#     with allure.step(f"Executando análise de crédito para {nome}"):
+#         analise_page = AnaliseCreditoPage(page)
+#         analise_page.realizar_analise_credito_completa(nome, Generators.email(), Generators.telefone(), cep)
 
 # ==============================================================================
 # 2. PASSOS DE AÇÃO (QUANDO) - REFATORADOS

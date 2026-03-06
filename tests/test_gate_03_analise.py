@@ -9,21 +9,21 @@ from utils.Generators import  Generators
 
 scenarios('../features/analise_credito/03_analise_credito.feature')
 
-@given('que o ambiente de homologação está respondendo na página de login')
-def step_acessar_login(page):
-    page.goto("https://integrator.hom.solagora.com.br/")
-
-@given(parsers.parse('que executo o fluxo completo de login válido ("{usuario}", "{senha}")'))
-def step_macro_login(page, usuario, senha):
-    login_page = LoginPage(page)
-    login_page.realizar_login_completo_e_aguardar_dashboard(usuario, senha)
-
-@given(parsers.parse('que realizo uma simulação completa para o distribuidor "{distribuidor}" com vencimento "{dia}"'))
-def step_macro_simulacao(page, distribuidor, dia):
-    simulacao_page = SimulacaoPage(page)
-    simulacao_page.acessar_nova_simulacao()
-    # Macro preenchendo o necessário para chegar no resultado
-    simulacao_page.preencher_dados_simulacao("GERAR", "8000", "50000", distribuidor, "1000", dia)
+# @given('que o ambiente de homologação está respondendo na página de login')
+# def step_acessar_login(page):
+#     page.goto("https://integrator.hom.solagora.com.br/")
+#
+# @given(parsers.parse('que executo o fluxo completo de login válido ("{usuario}", "{senha}")'))
+# def step_macro_login(page, usuario, senha):
+#     login_page = LoginPage(page)
+#     login_page.realizar_login_completo_e_aguardar_dashboard(usuario, senha)
+#
+# @given(parsers.parse('que realizo uma simulação completa para o distribuidor "{distribuidor}" com vencimento "{dia}"'))
+# def step_macro_simulacao(page, distribuidor, dia):
+#     simulacao_page = SimulacaoPage(page)
+#     simulacao_page.acessar_nova_simulacao()
+#     # Macro preenchendo o necessário para chegar no resultado
+#     simulacao_page.preencher_dados_simulacao("GERAR", "8000", "50000", distribuidor, "1000", dia)
 
 @when('decido seguir com a proposta clicando em "Quero criar uma proposta"')
 def step_iniciar_proposta(page):

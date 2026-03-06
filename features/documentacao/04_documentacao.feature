@@ -21,7 +21,7 @@ Funcionalidade: Gate 04 - Documentação e Dados Cadastrais Finais
 
     Exemplos:
       | origem | arquivo   | numero | complemento | endereco_igual | rg           | email | celular | celular_2 | fixo        |
-      | Local  | conta.jpg | 980   | Bloco A     | Sim            | 99.999.999-X | GERAR | GERAR   | GERAR     | 1133334444  |
+      | Local  | conta.jpg | 980   | Bloco A     | Sim            | 34661561-6 | GERAR | GERAR   | GERAR     | 1133334444  |
 
 
     #| Remoto | conta.jpg | 500    | Casa 2      | Sim            | 88.888.888-Y | GERAR | GERAR   | GERAR     | 1122223333  |
