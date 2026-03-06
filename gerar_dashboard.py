@@ -3,11 +3,13 @@ import subprocess
 from collections import Counter
 from datetime import datetime
 
+
 def get_last_committer():
     try:
         return subprocess.check_output(["git", "log", "-1", "--format=%an"]).decode(errors='ignore').strip()
     except:
         return "Robô de QA"
+
 
 def get_git_commits(limit=5):
     try:
@@ -18,6 +20,7 @@ def get_git_commits(limit=5):
     except:
         return ["Sem histórico de commits disponível"]
 
+
 def get_top_contributors():
     try:
         output = subprocess.check_output(["git", "log", "--format=%an"]).decode(errors='ignore').strip()
@@ -26,6 +29,7 @@ def get_top_contributors():
         return ranking.most_common(5)
     except:
         return []
+
 
 def detalhar_arquivos(diretorio, extensao):
     lista_arquivos = []
@@ -36,6 +40,7 @@ def detalhar_arquivos(diretorio, extensao):
                     nome_limpo = file.replace(extensao, "")
                     lista_arquivos.append(nome_limpo)
     return sorted(lista_arquivos)
+
 
 def extrair_autor_do_bdd(caminho_arquivo):
     try:
@@ -48,6 +53,7 @@ def extrair_autor_do_bdd(caminho_arquivo):
     except:
         pass
     return "Não identificado"
+
 
 def gerar_metricas_bdd(diretorio='features'):
     total_features, total_cenarios = 0, 0
@@ -75,7 +81,7 @@ def gerar_metricas_bdd(diretorio='features'):
                             if not l: continue
 
                             for p in l.split():
-                                if p.startswith('@'): tags_contador[p] += 1
+                                if p.startswith('@'): tags_contador[p.lower()] += 1  # Garantimos minúsculo
 
                             if l.startswith(('Funcionalidade:', 'Feature:')):
                                 nome_f = l.split(':', 1)[1].strip()
@@ -117,17 +123,18 @@ def gerar_esteira_progresso(tags_encontradas):
     ]
 
     esteira = []
-    # Converte as chaves do dicionário de tags para uma lista simples
+    # Agora recebemos o dicionário corretamente
     lista_tags_projeto = list(tags_encontradas.keys())
 
     for etapa in etapas_obrigatorias:
-        # Se a tag funcional existir em qualquer feature, marca a bolinha como azul
         check = "🔵" if etapa['tag'] in lista_tags_projeto else "⚪"
         esteira.append(f"{check} **{etapa['nome']}**")
 
     return " --- ".join(esteira)
 
+
 def montar_relatorio(para_email=False):
+    # 'tags' aqui é o dicionário Counter retornado pela função
     _, total_cenarios, lista_features, tags = gerar_metricas_bdd()
     pages = detalhar_arquivos('pages', '.py')
     testes = detalhar_arquivos('tests', '.py')
@@ -138,12 +145,13 @@ def montar_relatorio(para_email=False):
     linhas = []
     linhas.append("# 📊 Dashboard de Engenharia de Qualidade - SolAgora\n")
 
-    # Chamada da Esteira (agora a função já foi declarada)
-    nomes_features = [f['nome'] for f in lista_features]
-    esteira_visual = gerar_esteira_progresso(nomes_features)
+    # --- CHAMADA CORRIGIDA ---
+    esteira_visual = gerar_esteira_progresso(tags)  # Mudamos de nomes_features para tags
     linhas.append("### 🛤️ Esteira de Cobertura (Gates)")
     linhas.append(f"{esteira_visual}\n")
     linhas.append("---\n")
+    # -------------------------
+
     linhas.append(f"> 👤 **Último Push:** {autor} | 🕒 **Atualizado em:** {datetime.now().strftime('%d/%m/%Y %H:%M')}\n")
 
     linhas.append("## 🏆 Top QAs (Ranking de Commits)")
@@ -171,7 +179,8 @@ def montar_relatorio(para_email=False):
         if para_email:
             for p in pages: linhas.append(f"- `{p}`")
         else:
-            linhas.append(f"\n<details>\n<summary><b>Clique para ver a lista de {len(pages)} pages</b></summary>\n\n<ul>")
+            linhas.append(
+                f"\n<details>\n<summary><b>Clique para ver a lista de {len(pages)} pages</b></summary>\n\n<ul>")
             for p in pages: linhas.append(f"<li><code>{p}</code></li>")
             linhas.append("</ul>\n</details>")
 
@@ -190,10 +199,8 @@ def montar_relatorio(para_email=False):
 
     return "\n".join(linhas)
 
+
 if __name__ == '__main__':
-    # 1. Dashboard para e-mail
     with open('email_dashboard.md', 'w', encoding='utf-8') as f:
         f.write(montar_relatorio(para_email=True))
-
-    # 2. Saída para o README
     print(montar_relatorio(para_email=False))
