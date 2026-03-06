@@ -5,20 +5,20 @@
 
 ---
 
-> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 06/03/2026 07:30
+> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 06/03/2026 18:03
 
 ## 🏆 Top QAs (Ranking de Commits)
 
 | QA | Total de Pushes (Commits) |
 |:---|:---:|
-| 👨‍💻 **Rafael Cardoso** | 35 |
-| 👨‍💻 **Robô da Qualidade (QA Bot)** | 28 |
+| 👨‍💻 **Rafael Cardoso** | 36 |
+| 👨‍💻 **Robô da Qualidade (QA Bot)** | 29 |
 
 ## 🚀 Status da Automação
 
 | Categoria | Total |
 | :--- | :---: |
-| 📝 Cenários Totais (incl. Esquemas) | 9 |
+| 📝 Cenários Totais (incl. Esquemas) | 8 |
 | 📄 Page Objects | 25 |
 | 🧪 Scripts de Teste | 5 |
 
@@ -28,7 +28,7 @@
 |:---|:---|:---|:---:|
 | Gate 02 - Simulação de Financiamento (P1) | 1 🟦 | Rafael Cardoso Santana Costa | 06/03/2026 |
 | Gate 03 - Análise de Crédito e Dados Cadastrais | 1 🟦 | Rafael Cardoso Santana Costa | 06/03/2026 |
-| Gate 04 - Documentação e Dados Cadastrais Finais | 2 🟦🟦 | Rafael Cardoso Santana Costa | 06/03/2026 |
+| Gate 04 - Documentação e Dados Cadastrais Finais | 1 🟦 | Rafael Cardoso Santana Costa | 06/03/2026 |
 | Gate 01 - Controle de Acesso e Autenticação | 5 🟦🟦🟦🟦🟦 | Rafael Cardoso Santana Costa | 06/03/2026 |
 
 ### 📄 Page Objects Criados
@@ -69,11 +69,11 @@
 
 | Data | Autor | Mensagem |
 |:---|:---|:---|
+| 06/03 15:02 | **Rafael Cardoso** | fix correção modal de energia e upload de conta |
+| 06/03 07:30 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 06/03 04:30 | **Rafael Cardoso** | fix: ajustes barra de progresso namError |
 | 06/03 04:27 | **Rafael Cardoso** | fix: Correção esteira progresso |
 | 06/03 07:25 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
-| 06/03 04:24 | **Rafael Cardoso** | fix: Ajustes tags principais features - barra de progresso- simulacao |
-| 06/03 04:23 | **Rafael Cardoso** | fix: Ajustes tags principais features - barra de progresso |
 
 ## 🏷️ Cobertura de Tags
 
