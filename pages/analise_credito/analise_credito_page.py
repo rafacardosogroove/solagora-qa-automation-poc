@@ -51,6 +51,7 @@ class AnaliseCreditoPage:
         self.page.wait_for_timeout(3000)
 
     @allure.step("Validar resultado da análise de crédito")
+
     def validar_resultado_analise(self):
         # Verifica se a tela de reprovação apareceu (image_160fa6.png)
         reprovado = self.page.get_by_text("Não será possível continuar com sua proposta").is_visible()
