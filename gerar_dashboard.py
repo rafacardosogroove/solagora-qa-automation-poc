@@ -104,24 +104,25 @@ def gerar_metricas_bdd(diretorio='features'):
                     dados_features.append({'nome': nome_f, 'qtd': cenarios_f, 'data': data_m, 'autor': autor_f})
     return total_features, total_cenarios, dados_features, tags_contador
 
-def gerar_esteira_progresso(features_encontradas):
-    """Gera o visual da esteira de Gates"""
+
+def gerar_esteira_progresso(tags_encontradas):
+    """Gera o visual da esteira baseado em tags funcionais (@login, @simulacao, etc)"""
     etapas_obrigatorias = [
-        {"nome": "Login", "tag": "login"},
-        {"nome": "Simulação", "tag": "simulacao"},
-        {"nome": "Análise de Crédito", "tag": "analise_credito"},
-        {"nome": "Documentação", "tag": "documentacao"},
-        {"nome": "Notas Fiscais", "tag": "notas_fiscais"},
-        {"nome": "Pagamento", "tag": "pagamento"}
+        {"nome": "Login", "tag": "@login"},
+        {"nome": "Simulação", "tag": "@simulacao"},
+        {"nome": "Análise de Crédito", "tag": "@analise_credito"},
+        {"nome": "Documentação", "tag": "@documentacao"},
+        {"nome": "Notas Fiscais", "tag": "@notas_fiscais"},
+        {"nome": "Pagamento", "tag": "@pagamento"}
     ]
 
     esteira = []
-    # Cria uma string única com todos os nomes de arquivos para busca
-    projeto_str = " ".join(features_encontradas).lower()
+    # Converte as chaves do dicionário de tags para uma lista simples
+    lista_tags_projeto = list(tags_encontradas.keys())
 
     for etapa in etapas_obrigatorias:
-        # Se a tag/nome da etapa estiver contida em algum arquivo encontrado
-        check = "🔵" if etapa['tag'] in projeto_str else "⚪"
+        # Se a tag funcional existir em qualquer feature, marca a bolinha como azul
+        check = "🔵" if etapa['tag'] in lista_tags_projeto else "⚪"
         esteira.append(f"{check} **{etapa['nome']}**")
 
     return " --- ".join(esteira)
