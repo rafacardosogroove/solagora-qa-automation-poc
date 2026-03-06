@@ -40,7 +40,6 @@ class DocumentacaoPage:
     def validar_botao_ativo(self):
         expect(self.btn_enviar).to_be_enabled(timeout=10000)
         self.btn_enviar.click()
-        self.btn_enviar.click()
 
 
     @allure.step("Definir se o endereço de cobrança é igual ao de instalação: {escolha}")
