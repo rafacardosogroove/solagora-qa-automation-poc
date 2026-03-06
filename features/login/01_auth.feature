@@ -1,6 +1,7 @@
 # language: pt
 # Autor: Rafael Cardoso Santana Costa
 
+@login
 Funcionalidade: Gate 01 - Controle de Acesso e Autenticação
   Como um sistema de controle de qualidade (CI/CD)
   Quero garantir que a autenticação principal e suas restrições estejam operantes

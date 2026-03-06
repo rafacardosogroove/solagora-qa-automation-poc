@@ -1,7 +1,7 @@
 # language: pt
 # Autor: Rafael Cardoso Santana Costa
 
-
+@analise_credito
 Funcionalidade: Gate 03 - Análise de Crédito e Dados Cadastrais
 
   Contexto: Simulação finalizada com sucesso
