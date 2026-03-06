@@ -12,11 +12,11 @@ def enviar_relatorio():
 
     destinatarios = [
         "rcardoso1904@gmail.com",
-        # "edson.oliveira@groove.tech",
-        # "pedro.vinicius@groove.tech",
-        # "agata.oliveira@groove.tech",
-        # "andre.nunes@groove.tech",
-        # "andre.martins@groove.tech"
+        "edson.oliveira@groove.tech",
+        "pedro.vinicius@groove.tech",
+        "agata.oliveira@groove.tech",
+        "andre.nunes@groove.tech",
+        "andre.martins@groove.tech"
     ]
 
     try:
