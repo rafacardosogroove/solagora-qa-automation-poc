@@ -1,13 +1,18 @@
 # 📊 Dashboard de Engenharia de Qualidade - SolAgora
 
-> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 06/03/2026 07:02
+### 🛤️ Esteira de Cobertura (Gates)
+⚪ **Login** --- ⚪ **Simulação** --- ⚪ **Análise de Crédito** --- ⚪ **Documentação** --- ⚪ **Notas Fiscais** --- ⚪ **Pagamento**
+
+---
+
+> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 06/03/2026 07:16
 
 ## 🏆 Top QAs (Ranking de Commits)
 
 | QA | Total de Pushes (Commits) |
 |:---|:---:|
-| 👨‍💻 **Rafael Cardoso** | 29 |
-| 👨‍💻 **Robô da Qualidade (QA Bot)** | 25 |
+| 👨‍💻 **Rafael Cardoso** | 31 |
+| 👨‍💻 **Robô da Qualidade (QA Bot)** | 26 |
 
 ## 🚀 Status da Automação
 
@@ -64,11 +69,11 @@
 
 | Data | Autor | Mensagem |
 |:---|:---|:---|
+| 06/03 04:16 | **Rafael Cardoso** | fix: Ajustes de barra de progresso dashboard |
+| 06/03 04:12 | **Rafael Cardoso** | feature: criação de barra de progresso dashboard |
+| 06/03 07:02 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 06/03 04:02 | **Rafael Cardoso** | fix: ajustes disparo de email ,atualizacao Dashboard contagem correta |
 | 06/03 07:00 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
-| 06/03 04:00 | **Rafael Cardoso** | fix: correção inclusao author features |
-| 06/03 06:57 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
-| 06/03 03:56 | **Rafael Cardoso** | fix: corrige NameError na geracao do dashboard |
 
 ## 🏷️ Cobertura de Tags
 
