@@ -1,30 +1,30 @@
 # 📊 Dashboard de Engenharia de Qualidade - SolAgora
 
-> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 06/03/2026 02:08
+> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 06/03/2026 06:57
 
 ## 🏆 Top QAs (Ranking de Commits)
 
 | QA | Total de Pushes (Commits) |
 |:---|:---:|
-| 👨‍💻 **Rafael Cardoso** | 25 |
-| 👨‍💻 **Robô da Qualidade (QA Bot)** | 22 |
+| 👨‍💻 **Rafael Cardoso** | 27 |
+| 👨‍💻 **Robô da Qualidade (QA Bot)** | 23 |
 
 ## 🚀 Status da Automação
 
 | Categoria | Total |
 | :--- | :---: |
-| 📝 Cenários BDD | 7 |
+| 📝 Cenários Totais (incl. Esquemas) | 9 |
 | 📄 Page Objects | 25 |
 | 🧪 Scripts de Teste | 5 |
 
 ## 📂 Detalhamento de Negócio (Features)
 
-| Feature | Cenários | Autor Principal | Modificação |
-|:---|:---:|:---|:---:|
-| Gate 02 - Simulação de Financiamento (P1) | 1 | Não identificado | 06/03/2026 |
-| Gate 03 - Análise de Crédito e Dados Cadastrais | 1 | Não identificado | 06/03/2026 |
-| Gate 04 - Documentação e Dados Cadastrais Finais | 1 | Não identificado | 06/03/2026 |
-| Gate 01 - Controle de Acesso e Autenticação | 4 | Rafael Cardoso Santana Costa | 06/03/2026 |
+| Feature | Volume de Testes | Autor Principal | Modificação |
+|:---|:---|:---|:---:|
+| Gate 02 - Simulação de Financiamento (P1) | 1 🟦 | Não identificado | 06/03/2026 |
+| Gate 03 - Análise de Crédito e Dados Cadastrais | 1 🟦 | Não identificado | 06/03/2026 |
+| Gate 04 - Documentação e Dados Cadastrais Finais | 2 🟦🟦 | Não identificado | 06/03/2026 |
+| Gate 01 - Controle de Acesso e Autenticação | 5 🟦🟦🟦🟦🟦 | Rafael Cardoso Santana Costa | 06/03/2026 |
 
 ### 📄 Page Objects Criados
 
@@ -60,29 +60,15 @@
 </ul>
 </details>
 
-### 🧪 Scripts de Teste Automatizados
-
-<details>
-<summary><b>Clique para ver os 5 scripts de teste</b></summary>
-
-<ul>
-<li><code>conftest</code></li>
-<li><code>test_gate_01_auth</code></li>
-<li><code>test_gate_02_simulacao</code></li>
-<li><code>test_gate_03_analise</code></li>
-<li><code>test_gate_04_documentacao</code></li>
-</ul>
-</details>
-
 ## 📜 Histórico Recente de Commits
 
 | Data | Autor | Mensagem |
 |:---|:---|:---|
+| 06/03 03:56 | **Rafael Cardoso** | fix: corrige NameError na geracao do dashboard |
+| 06/03 03:53 | **Rafael Cardoso** | Ajustes Dashboard |
+| 06/03 02:08 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 05/03 23:07 | **Rafael Cardoso** | feat: implementacao do gate 04 e arquivos de teste |
 | 05/03 23:06 | **Rafael Cardoso** | Ajustes modalcontaenergia |
-| 05/03 21:34 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
-| 05/03 18:34 | **Rafael Cardoso** | Padronização estrutura gate 04 |
-| 05/03 21:00 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 
 ## 🏷️ Cobertura de Tags
 
