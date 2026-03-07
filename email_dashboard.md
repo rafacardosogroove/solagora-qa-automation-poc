@@ -5,14 +5,14 @@
 
 ---
 
-> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 07/03/2026 14:45
+> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 07/03/2026 15:50
 
 ## 🏆 Top QAs (Ranking de Commits)
 
 | QA | Total de Pushes (Commits) |
 |:---|:---:|
-| 👨‍💻 **Rafael Cardoso** | 39 |
-| 👨‍💻 **Robô da Qualidade (QA Bot)** | 32 |
+| 👨‍💻 **Rafael Cardoso** | 40 |
+| 👨‍💻 **Robô da Qualidade (QA Bot)** | 33 |
 
 ## 🚀 Status da Automação
 
@@ -70,11 +70,11 @@
 
 | Data | Autor | Mensagem |
 |:---|:---|:---|
+| 07/03 12:50 | **Rafael Cardoso** | refactor: padroniza Page Objects (POM), adiciona tipagem e aprimora relatórios do Allure com capturas de tela |
+| 07/03 14:45 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 07/03 11:44 | **Rafael Cardoso** | chore: implementa gitignore, limpa lixo do allure e refatora primeiras pages |
 | 06/03 21:56 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 06/03 18:55 | **Rafael Cardoso** | feature: criação admin feature gate 05 |
-| 06/03 21:01 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
-| 06/03 18:00 | **Rafael Cardoso** | Preparação integração ADMIN - projeto APIS |
 
 ## 🏷️ Cobertura de Tags
 
