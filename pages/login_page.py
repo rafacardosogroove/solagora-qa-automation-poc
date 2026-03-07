@@ -1,6 +1,7 @@
-import re  # <--- ESSA LINHA É A QUE FALTAVA!
+import re
 import allure
 from playwright.sync_api import Page, expect
+
 
 class LoginPage:
     def __init__(self, page: Page):
@@ -9,30 +10,50 @@ class LoginPage:
         self.input_senha = page.get_by_label("Senha")
         self.btn_entrar = page.get_by_role("button", name="Entrar")
 
-    @allure.step("Realizar login com usuário: {usuario}")
+    @allure.step("Ação: Realizar preenchimento de login duplo para '{usuario}'")
     def realizar_login_duplo(self, usuario, senha):
-        self.input_auth.fill(usuario)
-        self.input_senha.press_sequentially(senha, delay=50)
-        self.page.wait_for_timeout(1000)
-        self.input_senha.blur()
-        self.btn_entrar.click(force=True)
+        with allure.step("Preencher campo de autenticação (CPF/E-mail)"):
+            self.input_auth.fill(usuario)
 
-    @allure.step("Validar exibição da mensagem de erro: '{mensagem}'")
+        with allure.step("Digitar senha de forma sequencial e remover foco"):
+            self.input_senha.press_sequentially(senha, delay=50)
+            self.page.wait_for_timeout(1000)
+            self.input_senha.blur()
+
+        with allure.step("Acionar botão 'Entrar'"):
+            self.btn_entrar.click(force=True)
+
+    @allure.step("Validação: Verificar exibição da mensagem de erro '{mensagem}'")
     def validar_mensagem_erro(self, mensagem):
         alerta_erro = self.page.get_by_text(mensagem, exact=True)
-        expect(alerta_erro).to_be_visible(timeout=5000)
 
-    # ESTE MÉTODO PRECISA ESTAR NESTA IDENTAÇÃO (FORA DO ANTERIOR)
-    @allure.step("Executar fluxo macro de login com sucesso")
+        with allure.step("Aguardar elemento de erro ficar visível na tela"):
+            expect(alerta_erro).to_be_visible(timeout=5000)
+
+        # Evidência visual do erro capturado para o relatório
+        allure.attach(
+            self.page.screenshot(),
+            name="Evidencia_Mensagem_Erro",
+            attachment_type=allure.attachment_type.PNG
+        )
+
+    @allure.step("Macro: Executar fluxo completo de login e aguardar Dashboard")
     def realizar_login_completo_e_aguardar_dashboard(self, usuario, senha):
-        # 1. Acessa a página
-        self.page.goto("https://integrator.hom.solagora.com.br/")
+        with allure.step("Navegar para a página inicial (Ambiente de Homologação)"):
+            self.page.goto("https://integrator.hom.solagora.com.br/")
 
-        # 2. Realiza o preenchimento
+        # Chama a ação que já documentamos acima
         self.realizar_login_duplo(usuario, senha)
 
-        # 3. Garante que saímos da tela de login (não tem mais /auth na URL)
-        expect(self.page).not_to_have_url(re.compile(".*auth.*"), timeout=15000)
+        with allure.step("Garantir saída da tela de autenticação (Redirecionamento)"):
+            expect(self.page).not_to_have_url(re.compile(".*auth.*"), timeout=15000)
 
-        # Opcional: Validar um elemento que só existe na home, como o texto de boas-vindas do print
-        expect(self.page.get_by_text("Boas-vindas ao seu espaço de trabalho")).to_be_visible(timeout=10000)
+        with allure.step("Aguardar carregamento do texto de Boas-vindas na Dashboard"):
+            expect(self.page.get_by_text("Boas-vindas ao seu espaço de trabalho")).to_be_visible(timeout=10000)
+
+        # Tira print da página inteira como prova de que o Macro funcionou
+        allure.attach(
+            self.page.screenshot(full_page=True),
+            name="Dashboard_Carregada_Com_Sucesso",
+            attachment_type=allure.attachment_type.PNG
+        )

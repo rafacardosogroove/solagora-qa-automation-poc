@@ -1,8 +1,11 @@
 # language: pt
 # Autor: Rafael Cardoso Santana Costa
 
-  @documentacao
+@documentacao
 Funcionalidade: Gate 04 - Documentação e Dados Cadastrais Finais
+  Como um parceiro integrador da SolAgora
+  Quero enviar os documentos comprobatórios e dados finais do cliente
+  Para que o projeto avance para a etapa final de assinatura
 
   Contexto: Cliente aprovado na análise de crédito
     Dado que o ambiente de homologação está respondendo na página de login
@@ -20,8 +23,6 @@ Funcionalidade: Gate 04 - Documentação e Dados Cadastrais Finais
     Então o sistema deve habilitar o botão "Enviar documentação"
 
     Exemplos:
-      | origem | arquivo   | numero | complemento | endereco_igual | rg           | email | celular | celular_2 | fixo        |
-      | Local  | conta.jpg | 980   | Bloco A     | Sim            | 34661561-6 | GERAR | GERAR   | GERAR     | 1133334444  |
-
-
-    #| Remoto | conta.jpg | 500    | Casa 2      | Sim            | 88.888.888-Y | GERAR | GERAR   | GERAR     | 1122223333  |
+      | origem | arquivo   | numero | complemento | endereco_igual | rg           | email | celular | celular_2 | fixo       |
+      | Local  | conta.jpg | 980    | Bloco A     | Sim            | 34661561-6   | GERAR | GERAR   | GERAR     | 1133334444 |
+#     | Remoto | conta.jpg | 500    | Casa 2      | Sim            | 88.888.888-Y | GERAR | GERAR   | GERAR     | 1122223333 |

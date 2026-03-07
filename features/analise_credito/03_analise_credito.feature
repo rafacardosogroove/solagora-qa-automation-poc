@@ -3,6 +3,9 @@
 
 @analise_credito
 Funcionalidade: Gate 03 - Análise de Crédito e Dados Cadastrais
+  Como um parceiro integrador da SolAgora
+  Quero preencher os dados cadastrais e opções de seguro do meu cliente
+  Para submeter a proposta à análise de crédito do backoffice
 
   Contexto: Simulação finalizada com sucesso
     Dado que o ambiente de homologação está respondendo na página de login
@@ -17,10 +20,6 @@ Funcionalidade: Gate 03 - Análise de Crédito e Dados Cadastrais
     Então o sistema deve habilitar o botão "Enviar para análise de crédito"
 
     Exemplos:
-      | opcao_seguro | nome            | email                 | celular      | cep      |
-      | COM SEGURO   | Rafael Automacao| GERAR | GERAR  | 01310100 |
-
-
-
-
-    # | SEM SEGURO   | Jose Teste      | jose@teste.com        | 11888888888  | 04101300 |
+      | opcao_seguro | nome             | email          | celular     | cep      |
+      | COM SEGURO   | Rafael Automacao | GERAR          | GERAR       | 01310100 |
+#     | SEM SEGURO   | Jose Teste       | jose@teste.com | 11888888888 | 04101300 |

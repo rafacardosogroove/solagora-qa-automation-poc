@@ -1,1 +1,0 @@
-{"uuid": "07f89c21-6df0-4d8b-badd-f584b89afc3e", "befores": [{"name": "pytestbdd_stepdef_when_preencho os dados com CPF \"{cpf}\", Renda \"{renda}\", Valor \"{valor}\", Distribuidor \"{distribuidor}\", Energia \"{energia}\" e Vencimento \"{dia}\"", "status": "passed", "start": 1772823418397, "stop": 1772823418398}], "start": 1772823418397, "stop": 1772823433996}

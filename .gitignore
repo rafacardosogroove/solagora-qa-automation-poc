@@ -1,0 +1,28 @@
+# ==========================================
+# .gitignore - Projeto SolAgora QA Automation
+# ==========================================
+
+# 1. Ambientes Virtuais (Essencial para não subir bibliotecas pesadas)
+.venv/
+venv/
+env/
+
+# 2. Arquivos de Cache do Python e Pytest
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# 3. Relatórios e Evidências (Allure)
+allure-results/
+tests/allure-results/
+allure-report/
+*.png
+
+# 4. Logs e Variáveis de Ambiente
+*.log
+.env
+
+# 5. Playwright e outros
+test-results/
+*.webm

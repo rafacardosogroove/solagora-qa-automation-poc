@@ -1,1 +1,0 @@
-{"uuid": "3d7751c3-28db-4edf-a481-f4d7442a880c", "befores": [{"name": "pytestbdd_stepdef_when_preencho os dados do cliente com Nome \"{nome}\", Email \"{email}\", Celular \"{celular}\" e CEP \"{cep}\"", "status": "passed", "start": 1772743130758, "stop": 1772743130759}], "start": 1772743130758, "stop": 1772743550500}
