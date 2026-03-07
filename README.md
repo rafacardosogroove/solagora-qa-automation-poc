@@ -5,14 +5,14 @@
 
 ---
 
-> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 06/03/2026 21:56
+> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 07/03/2026 14:45
 
 ## 🏆 Top QAs (Ranking de Commits)
 
 | QA | Total de Pushes (Commits) |
 |:---|:---:|
-| 👨‍💻 **Rafael Cardoso** | 38 |
-| 👨‍💻 **Robô da Qualidade (QA Bot)** | 31 |
+| 👨‍💻 **Rafael Cardoso** | 39 |
+| 👨‍💻 **Robô da Qualidade (QA Bot)** | 32 |
 
 ## 🚀 Status da Automação
 
@@ -26,11 +26,11 @@
 
 | Feature | Volume de Testes | Autor Principal | Modificação |
 |:---|:---|:---|:---:|
-| Gate 02 - Simulação de Financiamento (P1) | 1 🟦 | Rafael Cardoso Santana Costa | 06/03/2026 |
-| Gate 03 - Análise de Crédito e Dados Cadastrais | 1 🟦 | Rafael Cardoso Santana Costa | 06/03/2026 |
-| Gate 04 - Documentação e Dados Cadastrais Finais | 1 🟦 | Rafael Cardoso Santana Costa | 06/03/2026 |
-| Gate 05 - Fluxo de aprovacoes | 0  | Rafael Cardoso Santana Costa | 06/03/2026 |
-| Gate 01 - Controle de Acesso e Autenticação | 5 🟦🟦🟦🟦🟦 | Rafael Cardoso Santana Costa | 06/03/2026 |
+| Gate 02 - Simulação de Financiamento (P1) | 1 🟦 | Rafael Cardoso Santana Costa | 07/03/2026 |
+| Gate 03 - Análise de Crédito e Dados Cadastrais | 1 🟦 | Rafael Cardoso Santana Costa | 07/03/2026 |
+| Gate 04 - Documentação e Dados Cadastrais Finais | 1 🟦 | Rafael Cardoso Santana Costa | 07/03/2026 |
+| Gate 05 - Fluxo de aprovacoes | 0  | Rafael Cardoso Santana Costa | 07/03/2026 |
+| Gate 01 - Controle de Acesso e Autenticação | 5 🟦🟦🟦🟦🟦 | Rafael Cardoso Santana Costa | 07/03/2026 |
 
 ### 📄 Page Objects Criados
 
@@ -70,11 +70,11 @@
 
 | Data | Autor | Mensagem |
 |:---|:---|:---|
+| 07/03 11:44 | **Rafael Cardoso** | chore: implementa gitignore, limpa lixo do allure e refatora primeiras pages |
+| 06/03 21:56 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 06/03 18:55 | **Rafael Cardoso** | feature: criação admin feature gate 05 |
 | 06/03 21:01 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 06/03 18:00 | **Rafael Cardoso** | Preparação integração ADMIN - projeto APIS |
-| 06/03 18:03 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
-| 06/03 15:02 | **Rafael Cardoso** | fix correção modal de energia e upload de conta |
 
 ## 🏷️ Cobertura de Tags
 
