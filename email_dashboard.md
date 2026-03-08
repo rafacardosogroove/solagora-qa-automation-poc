@@ -5,14 +5,14 @@
 
 ---
 
-> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 07/03/2026 15:50
+> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 08/03/2026 02:09
 
 ## 🏆 Top QAs (Ranking de Commits)
 
 | QA | Total de Pushes (Commits) |
 |:---|:---:|
-| 👨‍💻 **Rafael Cardoso** | 40 |
-| 👨‍💻 **Robô da Qualidade (QA Bot)** | 33 |
+| 👨‍💻 **Rafael Cardoso** | 41 |
+| 👨‍💻 **Robô da Qualidade (QA Bot)** | 34 |
 
 ## 🚀 Status da Automação
 
@@ -26,11 +26,11 @@
 
 | Feature | Volume de Testes | Autor Principal | Modificação |
 |:---|:---|:---|:---:|
-| Gate 02 - Simulação de Financiamento (P1) | 1 🟦 | Rafael Cardoso Santana Costa | 07/03/2026 |
-| Gate 03 - Análise de Crédito e Dados Cadastrais | 1 🟦 | Rafael Cardoso Santana Costa | 07/03/2026 |
-| Gate 04 - Documentação e Dados Cadastrais Finais | 1 🟦 | Rafael Cardoso Santana Costa | 07/03/2026 |
-| Gate 05 - Fluxo de aprovacoes | 0  | Rafael Cardoso Santana Costa | 07/03/2026 |
-| Gate 01 - Controle de Acesso e Autenticação | 5 🟦🟦🟦🟦🟦 | Rafael Cardoso Santana Costa | 07/03/2026 |
+| Gate 02 - Simulação de Financiamento (P1) | 1 🟦 | Rafael Cardoso Santana Costa | 08/03/2026 |
+| Gate 03 - Análise de Crédito e Dados Cadastrais | 1 🟦 | Rafael Cardoso Santana Costa | 08/03/2026 |
+| Gate 04 - Documentação e Dados Cadastrais Finais | 1 🟦 | Rafael Cardoso Santana Costa | 08/03/2026 |
+| Gate 05 - Fluxo de aprovacoes | 0  | Rafael Cardoso Santana Costa | 08/03/2026 |
+| Gate 01 - Controle de Acesso e Autenticação | 5 🟦🟦🟦🟦🟦 | Rafael Cardoso Santana Costa | 08/03/2026 |
 
 ### 📄 Page Objects Criados
 
@@ -70,11 +70,11 @@
 
 | Data | Autor | Mensagem |
 |:---|:---|:---|
+| 07/03 23:08 | **Rafael Cardoso** | feat: integra HML_Client (Fluxo Admin) ao core da automação |
+| 07/03 15:50 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 07/03 12:50 | **Rafael Cardoso** | refactor: padroniza Page Objects (POM), adiciona tipagem e aprimora relatórios do Allure com capturas de tela |
 | 07/03 14:45 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 07/03 11:44 | **Rafael Cardoso** | chore: implementa gitignore, limpa lixo do allure e refatora primeiras pages |
-| 06/03 21:56 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
-| 06/03 18:55 | **Rafael Cardoso** | feature: criação admin feature gate 05 |
 
 ## 🏷️ Cobertura de Tags
 
