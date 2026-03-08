@@ -17,7 +17,7 @@ class LoginPage:
 
         with allure.step("Digitar senha de forma sequencial e remover foco"):
             self.input_senha.press_sequentially(senha, delay=50)
-            self.page.wait_for_timeout(1000)
+            self.page.wait_for_timeout(1500)
             self.input_senha.blur()
 
         with allure.step("Acionar botão 'Entrar'"):
