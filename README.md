@@ -5,41 +5,42 @@
 
 ---
 
-> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 08/03/2026 02:09
+> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 10/03/2026 01:37
 
 ## 🏆 Top QAs (Ranking de Commits)
 
 | QA | Total de Pushes (Commits) |
 |:---|:---:|
-| 👨‍💻 **Rafael Cardoso** | 41 |
-| 👨‍💻 **Robô da Qualidade (QA Bot)** | 34 |
+| 👨‍💻 **Rafael Cardoso** | 42 |
+| 👨‍💻 **Robô da Qualidade (QA Bot)** | 35 |
 
 ## 🚀 Status da Automação
 
 | Categoria | Total |
 | :--- | :---: |
-| 📝 Cenários Totais (incl. Esquemas) | 8 |
-| 📄 Page Objects | 25 |
-| 🧪 Scripts de Teste | 5 |
+| 📝 Cenários Totais (incl. Esquemas) | 9 |
+| 📄 Page Objects | 26 |
+| 🧪 Scripts de Teste | 6 |
 
 ## 📂 Detalhamento de Negócio (Features)
 
 | Feature | Volume de Testes | Autor Principal | Modificação |
 |:---|:---|:---|:---:|
-| Gate 02 - Simulação de Financiamento (P1) | 1 🟦 | Rafael Cardoso Santana Costa | 08/03/2026 |
-| Gate 03 - Análise de Crédito e Dados Cadastrais | 1 🟦 | Rafael Cardoso Santana Costa | 08/03/2026 |
-| Gate 04 - Documentação e Dados Cadastrais Finais | 1 🟦 | Rafael Cardoso Santana Costa | 08/03/2026 |
-| Gate 05 - Fluxo de aprovacoes | 0  | Rafael Cardoso Santana Costa | 08/03/2026 |
-| Gate 01 - Controle de Acesso e Autenticação | 5 🟦🟦🟦🟦🟦 | Rafael Cardoso Santana Costa | 08/03/2026 |
+| Gate 02 - Simulação de Financiamento (P1) | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
+| Gate 03 - Análise de Crédito e Dados Cadastrais | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
+| Gate 04 - Documentação e Dados Cadastrais Finais | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
+| Gate 05 - Orquestração e Aprovações (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
+| Gate 01 - Controle de Acesso e Autenticação | 5 🟦🟦🟦🟦🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
 
 ### 📄 Page Objects Criados
 
 <details>
-<summary><b>Clique para ver a lista de 25 pages</b></summary>
+<summary><b>Clique para ver a lista de 26 pages</b></summary>
 
 <ul>
 <li><code>Analise_processamento_page</code></li>
 <li><code>Verificacao_notas_fiscais_page</code></li>
+<li><code>admin_page</code></li>
 <li><code>analise_credito_page</code></li>
 <li><code>analise_credito_page</code></li>
 <li><code>conferir_documentacao</code></li>
@@ -70,11 +71,11 @@
 
 | Data | Autor | Mensagem |
 |:---|:---|:---|
+| 09/03 22:37 | **Rafael Cardoso** | feat(gate-05): orquestração resiliente de aprovações com validação via banco |
+| 08/03 02:09 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 07/03 23:08 | **Rafael Cardoso** | feat: integra HML_Client (Fluxo Admin) ao core da automação |
 | 07/03 15:50 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 07/03 12:50 | **Rafael Cardoso** | refactor: padroniza Page Objects (POM), adiciona tipagem e aprimora relatórios do Allure com capturas de tela |
-| 07/03 14:45 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
-| 07/03 11:44 | **Rafael Cardoso** | chore: implementa gitignore, limpa lixo do allure e refatora primeiras pages |
 
 ## 🏷️ Cobertura de Tags
 
@@ -88,7 +89,9 @@
 | `@gate02` | 1 |
 | `@gate03` | 1 |
 | `@gate04` | 1 |
-| `@admin` | 1 |
+| `@aprovacoes` | 1 |
+| `@gate05` | 1 |
+| `@fluxo_admin` | 1 |
 | `@login` | 1 |
 | `@gate01` | 1 |
 | `@pr_blocker` | 1 |
