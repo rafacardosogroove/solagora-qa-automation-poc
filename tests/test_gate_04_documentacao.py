@@ -60,12 +60,15 @@ def step_contatos_doc(doc_page: DocumentacaoPage, email: str, celular: str, celu
 # 3. VALIDAÇÃO (ENTÃO)
 # ==============================================================================
 
-@then('o sistema deve habilitar o botão "Enviar documentação"')
+@then('o sistema deve habilitar o botão e concluir o envio da documentação')
 def step_validar_final(page: Page, doc_page: DocumentacaoPage):
     with allure.step("Validar que o formulário foi preenchido e o botão foi habilitado"):
         # Seguindo nossa Regra de Ouro (POM não faz assert):
         botao_envio = doc_page.obter_botao_enviar()
         expect(botao_envio).to_be_enabled(timeout=10000)
+
+        with allure.step("Ação: Clicar no botão para concluir o envio"):
+            doc_page.acionar_envio_documentacao()
 
     with allure.step("Capturar evidência de documentação concluída"):
         allure.attach(

@@ -20,7 +20,7 @@ Funcionalidade: Gate 04 - Documentação e Dados Cadastrais Finais
     E defino que o endereço de cobrança "<endereco_igual>" ao de instalação
     E informo o documento de identidade RG "<rg>"
     E preencho os contatos com Email "<email>", Celular "<celular>", Segundo Celular "<celular_2>" e Fixo "<fixo>"
-    Então o sistema deve habilitar o botão "Enviar documentação"
+    Então o sistema deve habilitar o botão e concluir o envio da documentação
 
     Exemplos:
       | origem | arquivo   | numero | complemento | endereco_igual | rg           | email | celular | celular_2 | fixo       |
