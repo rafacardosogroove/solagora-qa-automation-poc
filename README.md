@@ -5,22 +5,22 @@
 
 ---
 
-> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 10/03/2026 01:37
+> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 10/03/2026 03:23
 
 ## 🏆 Top QAs (Ranking de Commits)
 
 | QA | Total de Pushes (Commits) |
 |:---|:---:|
-| 👨‍💻 **Rafael Cardoso** | 42 |
-| 👨‍💻 **Robô da Qualidade (QA Bot)** | 35 |
+| 👨‍💻 **Rafael Cardoso** | 43 |
+| 👨‍💻 **Robô da Qualidade (QA Bot)** | 36 |
 
 ## 🚀 Status da Automação
 
 | Categoria | Total |
 | :--- | :---: |
-| 📝 Cenários Totais (incl. Esquemas) | 9 |
+| 📝 Cenários Totais (incl. Esquemas) | 12 |
 | 📄 Page Objects | 26 |
-| 🧪 Scripts de Teste | 6 |
+| 🧪 Scripts de Teste | 9 |
 
 ## 📂 Detalhamento de Negócio (Features)
 
@@ -29,6 +29,9 @@
 | Gate 02 - Simulação de Financiamento (P1) | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
 | Gate 03 - Análise de Crédito e Dados Cadastrais | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
 | Gate 04 - Documentação e Dados Cadastrais Finais | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
+| Gate 07 - Upload de Nota Fiscal e Cessão (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
+| Gate 06 - Assinatura Eletrônica da Proposta (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
+| Gate 08 - Confirmação de Entrega e Monitoração (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
 | Gate 05 - Orquestração e Aprovações (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
 | Gate 01 - Controle de Acesso e Autenticação | 5 🟦🟦🟦🟦🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
 
@@ -71,16 +74,17 @@
 
 | Data | Autor | Mensagem |
 |:---|:---|:---|
+| 10/03 00:23 | **Rafael Cardoso** | feat(automacao): estruturação inicial dos Gates 06 ao 08 (Assinatura, Faturamento e Equipamentos) |
+| 10/03 01:37 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 09/03 22:37 | **Rafael Cardoso** | feat(gate-05): orquestração resiliente de aprovações com validação via banco |
 | 08/03 02:09 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 07/03 23:08 | **Rafael Cardoso** | feat: integra HML_Client (Fluxo Admin) ao core da automação |
-| 07/03 15:50 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
-| 07/03 12:50 | **Rafael Cardoso** | refactor: padroniza Page Objects (POM), adiciona tipagem e aprimora relatórios do Allure com capturas de tela |
 
 ## 🏷️ Cobertura de Tags
 
 | Tag | Usos |
 |---|---|
+| `@fluxo_admin` | 4 |
 | `@auth` | 4 |
 | `@smoke_test` | 3 |
 | `@simulacao` | 2 |
@@ -89,9 +93,14 @@
 | `@gate02` | 1 |
 | `@gate03` | 1 |
 | `@gate04` | 1 |
+| `@faturamento` | 1 |
+| `@gate07` | 1 |
+| `@assinatura` | 1 |
+| `@gate06` | 1 |
+| `@equipamentos` | 1 |
+| `@gate08` | 1 |
 | `@aprovacoes` | 1 |
 | `@gate05` | 1 |
-| `@fluxo_admin` | 1 |
 | `@login` | 1 |
 | `@gate01` | 1 |
 | `@pr_blocker` | 1 |
