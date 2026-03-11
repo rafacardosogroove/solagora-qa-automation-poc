@@ -8,8 +8,7 @@ Funcionalidade: Gate 02 - Simulação de Financiamento (P1)
   Para visualizar as taxas e condições aprovadas antes de gerar a proposta
 
   Contexto: Acessar o sistema
-    Dado que o ambiente de homologação está respondendo na página de login
-    E que executo o fluxo completo de login válido ("qaautomacao", "solagora")
+    Dado que o sistema está autenticado com credenciais válidas ("qaautomacao" e "solagora")
 
   @simulacao @smoke_test @gate02
   Esquema do Cenário: 1. Processar simulação inicial com diferentes perfis de cliente

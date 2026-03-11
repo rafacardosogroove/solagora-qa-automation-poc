@@ -1,115 +1,64 @@
 import pytest
-import time
 import allure
-from pytest_bdd import scenarios, when, then
+from pytest_bdd import scenarios, when, then, parsers
 from playwright.sync_api import Page, expect
-from pages.admin.admin_page import AdminPage
+from pages.notas_fiscais.faturamento_page import FaturamentoPage
 
-# Aponta para o caminho da sua feature do Gate 07
-scenarios('../features/admin/admin.feature')
-
-
-@pytest.fixture
-def context_data():
-    return {}
+# ==========================================
+# CARREGAMENTO DA FEATURE
+# ==========================================
+scenarios('../features/admin/faturamento.feature')
 
 
-# ==============================================================================
-# PASSOS AUXILIARES (Reaproveitados)
-# ==============================================================================
-@when('capturo o ID do projeto atual pela interface')
-def step_capturar_id(admin_page: AdminPage, context_data: dict):
-    context_data['projeto_id'] = admin_page.capturar_id_projeto_url()
+# NOTA: O Contexto (@given 'que o contrato do projeto foi assinado eletronicamente')
+# está centralizado e sendo injetado automaticamente pelo conftest.py!
+
+# ==========================================
+# PASSOS DE AÇÃO (QUANDO)
+# ==========================================
+
+@when('pesquiso o projeto pelo CPF do cliente na listagem')
+def step_pesquisar_projeto(page: Page, context_data: dict):
+    with allure.step("Ação: Pesquisar projeto pelo CPF do cliente"):
+        # O CPF foi gerado no step_macro_simulacao do conftest
+        cpf = context_data.get('cpf_utilizado', "249.622.403-66")  # Fallback de segurança
+        faturamento_page = FaturamentoPage(page)
+        faturamento_page.buscar_projeto_por_filtro(cpf)
 
 
-@when('atualizo a página do portal do integrador')
-def step_atualizar_pagina_integrador(page: Page):
-    with allure.step("Atualizando a página do portal do integrador"):
-        page.reload()
-        page.wait_for_load_state("networkidle")
+@when('seleciono a opção de continuar o projeto faturamento na engrenagem')
+def step_continuar_projeto(page: Page, context_data: dict):
+    with allure.step("Ação: Acionar engrenagem e clicar em 'Continuar'"):
+        cpf = context_data.get('cpf_utilizado', "249.622.403-66")
+        faturamento_page = FaturamentoPage(page)
+        faturamento_page.clicar_continuar_projeto(cpf)
 
 
-# ==============================================================================
-# INTERAÇÃO DE UI - PREENCHER AMANHÃ
-# ==============================================================================
-@when('realizo o upload da nota fiscal de venda pela interface')
-def step_upload_nota_fiscal(page: Page, admin_page: AdminPage):
-    with allure.step("Upload da Nota Fiscal via UI"):
-        # TODO: Amanhã você vai criar esses métodos na AdminPage!
-        # Exemplo do que faremos:
-        # admin_page.clicar_aba_notas_fiscais()
-        # admin_page.fazer_upload_arquivo_nota("caminho/do/arquivo/nf.pdf")
-        # admin_page.preencher_dados_nota_fiscal(numero="12345", valor="50000")
-        # admin_page.clicar_salvar_nota()
+@when('prossigo para o envio de notas no modal de sucesso')
+def step_fechar_modal_sucesso(page: Page):
+    with allure.step("Ação: Prosseguir no modal de documentação aprovada"):
+        faturamento_page = FaturamentoPage(page)
+        faturamento_page.btn_prosseguir_notas.click()
 
-        print("Aguardando implementação da UI para upload da nota fiscal...")
-        time.sleep(2)  # Placeholder
 
-        # 📸 Evidência do upload na tela
+@when(parsers.parse('preencho os dados da Nota Fiscal de Equipamento com número "{numero}" e valor "{valor}"'))
+def step_preencher_nf_equip(page: Page, numero, valor):
+    with allure.step(f"Ação: Preencher dados da NF de Equipamento (Nº {numero} | R$ {valor})"):
+        faturamento_page = FaturamentoPage(page)
+        faturamento_page.preencher_nf_equipamento(numero, valor, "conta.jpg")
+
+
+# ==========================================
+# PASSOS DE VALIDAÇÃO (ENTÃO)
+# ==========================================
+
+@then('o sistema deve exibir a tela de análise de notas fiscais')
+def step_validar_final_nf(page: Page):
+    with allure.step("Validar transição para a tela de Verificação das Notas Fiscais"):
+        expect(page.get_by_text("Verificando as notas fiscais")).to_be_visible(timeout=15000)
+
         allure.attach(
             page.screenshot(full_page=True),
-            name="UI_Upload_Nota_Fiscal",
-            attachment_type=allure.attachment_type.PNG
-        )
-
-
-# ==============================================================================
-# O MODO DEUS - GATE 07 (CESSÃO E CALLBACKS)
-# ==============================================================================
-@when('aciono os serviços de faturamento, cessão e callbacks via Modo Deus')
-def step_trigger_faturamento_modo_deus(admin, context_data: dict, page: Page):
-    projeto_id = context_data.get('projeto_id')
-
-    with allure.step(f"Orquestração Gate 07 (Faturamento) - ID: {projeto_id}"):
-
-        # --- ETAPA 1: FLUXO DE CESSÃO ---
-        with allure.step("Fase 1: Classificar Nota e Aprovar Cessão"):
-            try:
-                # O método fluxo_cessao já faz a classificação (NFV) e a aprovação no seu hml_client
-                resultado_cessao = admin.fluxo_cessao(projeto_id, tipo_nota="NFV")
-                print(f"✅ Resultado da cessão: {resultado_cessao}")
-            except Exception as e:
-                print(f"⚠️ Aviso na aprovação da cessão: {e}")
-
-            time.sleep(3)
-
-        # --- ETAPA 2: CALLBACKS DO BMP (9 E 10) ---
-        with allure.step("Fase 2: Enviar Callbacks do BMP"):
-            try:
-                # Dispara os callbacks 10 (Cessão Iniciada) e 9 (Cessão Finalizada)
-                admin.enviar_callbacks_cessao(projeto_id, intervalo=5)
-                print("✅ Callbacks BMP enviados com sucesso.")
-            except Exception as e:
-                print(f"⚠️ Aviso no envio dos callbacks BMP: {e}")
-
-            time.sleep(3)
-
-        # Atualiza a tela para gerar a evidência intermediária
-        page.reload()
-        page.wait_for_load_state("networkidle")
-
-        # 📸 Captura Allure Intermediária
-        allure.attach(
-            page.screenshot(full_page=True),
-            name="Status_Pos_Servicos_Cessao",
-            attachment_type=allure.attachment_type.PNG
-        )
-
-
-# ==============================================================================
-# VALIDAÇÃO (ENTÃO)
-# ==============================================================================
-@then('o sistema deve exibir o status do projeto como "Cessão de pagamento finalizada"')
-def step_validate_status_faturamento(page: Page, admin_page: AdminPage):
-    with allure.step("Validando transição de status para Faturamento/Cessão finalizada"):
-        # O status final baseia-se no log que você me mandou ("Cessão de pagamento finalizada").
-        # Substitua pelo locator correto mapeado na AdminPage amanhã.
-        status_locator = page.locator("text=Cessão de pagamento finalizada")
-        expect(status_locator).to_be_visible(timeout=20000)
-
-        # 📸 Captura Allure Final do Gate 07
-        allure.attach(
-            page.screenshot(full_page=True),
-            name="Gate07_Sucesso_Faturamento",
+            name="Gate07_Finalizado",
             attachment_type=allure.attachment_type.PNG
         )

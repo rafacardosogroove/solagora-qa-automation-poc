@@ -13,6 +13,8 @@ class NotasFiscaisPage:
             # Colocamos um timeout estendido caso a transição de tela demore
             expect(self.titulo_modal).to_be_visible(timeout=15000)
 
+
     def clicar_continuar_para_notas(self):
         with allure.step("Clicando em 'Continuar para notas fiscais'"):
             self.btn_continuar.click()
+

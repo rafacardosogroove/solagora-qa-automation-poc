@@ -1,6 +1,9 @@
 # language: pt
 # Autor: Rafael Cardoso Santana Costa
 
+# language: pt
+# Autor: Rafael Cardoso Santana Costa
+
 @documentacao
 Funcionalidade: Gate 04 - Documentação e Dados Cadastrais Finais
   Como um parceiro integrador da SolAgora
@@ -8,10 +11,7 @@ Funcionalidade: Gate 04 - Documentação e Dados Cadastrais Finais
   Para que o projeto avance para a etapa final de assinatura
 
   Contexto: Cliente aprovado na análise de crédito
-    Dado que o ambiente de homologação está respondendo na página de login
-    E que executo o fluxo completo de login válido ("qaautomacao", "solagora")
-    E que realizo uma simulação completa para o distribuidor "ALDO" com vencimento "10"
-    E que realizo a análise de crédito completa para o cliente "Rafael Automacao" com CEP "01310100"
+    Dado que o cliente foi aprovado na análise de crédito
 
   @gate04 @documentacao
   Esquema do Cenário: Realizar upload de documentos e preenchimento total do formulário

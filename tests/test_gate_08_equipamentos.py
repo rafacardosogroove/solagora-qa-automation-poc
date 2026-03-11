@@ -30,10 +30,10 @@ def step_atualizar_pagina_integrador(page: Page):
 
 
 # ==============================================================================
-# O MODO DEUS - GATE 08 (EQUIPAMENTOS)
+# O MODO Admin - GATE 08 (EQUIPAMENTOS)
 # ==============================================================================
-@when('aciono os serviços de equipamentos e monitoração via Modo Deus')
-def step_trigger_equipamentos_modo_deus(admin, context_data: dict, page: Page):
+@when('aciono os serviços de equipamentos e monitoração via Modo Admin')
+def step_trigger_equipamentos_modo_admin(admin, context_data: dict, page: Page):
     projeto_id = context_data.get('projeto_id')
 
     with allure.step(f"Orquestração Gate 08 (Equipamentos) - ID: {projeto_id}"):

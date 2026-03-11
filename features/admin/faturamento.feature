@@ -1,28 +1,23 @@
 # language: pt
 # Autor: Rafael Cardoso Santana Costa
 
-@faturamento
-Funcionalidade: Gate 07 - Upload de Nota Fiscal e Cessão (Fluxo Admin)
+@faturamento @gate07
+Funcionalidade: Gate 07 - Upload de Notas Fiscais e Equipamentos
   Como um parceiro integrador da SolAgora
-  Quero enviar a nota fiscal da proposta pela interface e validar o faturamento
-  Para que o projeto avance para a etapa de liberação de pagamento e equipamentos
+  Quero localizar um projeto autorizado e enviar as notas fiscais
+  Para que o faturamento seja processado e o projeto avance para cessão
 
   Contexto: Projeto assinado e com faturamento autorizado
-    Dado que o ambiente de homologação está respondendo na página de login
-    E que executo o fluxo completo de login válido ("qaautomacao", "solagora")
-    E que realizo uma simulação completa para o distribuidor "ALDO" com vencimento "10"
-    E que realizo a análise de crédito completa para o cliente "Rafael Automacao" com CEP "13282538"
-    E que envio a documentação completa com origem "Local" e arquivo "conta.jpg"
-    # --> Prepara Gate 05 <--
-    E capturo o ID do projeto atual pela interface
-    E aciono os serviços de aprovação interna, documentação e biometria via Modo Deus
-    # --> Prepara Gate 06 <--
-    E aciono o serviço de finalização de assinatura via Modo Deus
-    E atualizo a página do portal do integrador
+    Dado que o contrato do projeto foi assinado eletronicamente
 
-  @gate07 @fluxo_admin
-  Cenário: Realizar upload de nota fiscal e aprovação de cessão via back-end
-    Quando realizo o upload da nota fiscal de venda pela interface
-    E aciono os serviços de faturamento, cessão e callbacks via Modo Deus
-    E atualizo a página do portal do integrador
-    Então o sistema deve exibir o status do projeto como "Cessão de pagamento finalizada"
+  @fluxo_admin
+  Cenário: Realizar upload de notas fiscais de equipamento e serviço com sucesso
+    Quando pesquiso o projeto pelo CPF do cliente na listagem
+    E seleciono a opção de continuar o projeto faturamento na engrenagem
+    E prossigo para o envio de notas no modal de sucesso
+    E preencho os dados da Nota Fiscal de Equipamento com número "123456" e valor "45000"
+    E preencho os dados da Nota Fiscal de Serviço com número "7890" e valor "5000"
+    E seleciono o fabricante do inversor "WEG" e quantidade "1"
+    E seleciono o fabricante do módulo "CANADIAN" e quantidade "10"
+    E finalizo o envio das notas e informações
+    Então o sistema deve exibir a tela de análise de notas fiscais
