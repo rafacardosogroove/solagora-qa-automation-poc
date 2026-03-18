@@ -12,11 +12,12 @@ Funcionalidade: Gate 03 - Análise de Crédito e Dados Cadastrais
 
   @gate03 @analise_credito @smoke_test
   Esquema do Cenário: Validar preenchimento completo da análise de crédito
-    Quando decido seguir com a proposta clicando em "Quero criar uma proposta"
+    Quando aceito os termos de uso e privacidade para habilitar a proposta
+    E decido seguir com a proposta clicando em "Quero criar uma proposta"
     E seleciono a opção de seguro "<opcao_seguro>" se o modal for exibido
     E preencho os dados do cliente com Nome "<nome>", Email "<email>", Celular "<celular>" e CEP "<cep>"
     Então o sistema deve habilitar o botão "Enviar para análise de crédito"
+
     Exemplos:
-      | opcao_seguro | nome             | email          | celular     | cep      |
-      | COM SEGURO   | Rafael Automacao | GERAR          | GERAR       | 01310100 |
-#     | SEM SEGURO   | Jose Teste       | jose@teste.com | 11888888888 | 04101300 |
+      | opcao_seguro | nome             | email | celular     | cep      |
+      | COM SEGURO   | Rafael Automacao | GERAR | GERAR | 01310100 |

@@ -1,12 +1,18 @@
 import allure
 import pytest
-from playwright.sync_api import Page
+from playwright.sync_api import Page, expect
 
 
 class AnaliseCreditoPage:
     def __init__(self, page: Page):
         self.page = page
+
+        # --- Elementos Mapeados ---
+
+        # O seletor de ouro capturado via codegen (A div que simula o checkbox)
+        self.cbx_termos = page.locator(".min-w-\\[1\\.5rem\\]")
         self.btn_quero_proposta = page.get_by_role("button", name="Quero criar uma proposta")
+
         self.btn_com_seguro = page.get_by_role("button", name="Continuar com o seguro")
         self.btn_sem_seguro = page.get_by_role("button", name="Continuar sem o seguro")
 
@@ -17,8 +23,22 @@ class AnaliseCreditoPage:
         self.btn_enviar_analise = page.get_by_role("button", name="Enviar para análise de crédito")
         self.btn_continuar = page.get_by_role("button", name="Continuar para documentação")
 
+    @allure.step("Ação: Aceitar termos de uso e privacidade")
+    def aceitar_termos(self):
+        # 1. Garante que a div está visível
+        self.cbx_termos.wait_for(state="visible", timeout=7000)
+        self.cbx_termos.scroll_into_view_if_needed()
+
+        # 2. Clica na div (pois o .check() não funciona fora de inputs nativos)
+        self.cbx_termos.click()
+
+        # 3. Pequena pausa para o sistema processar a liberação do botão (debounce)
+        self.page.wait_for_timeout(500)
+
     @allure.step("Ação: Iniciar a criação da proposta no painel")
     def iniciar_proposta(self):
+        # Garante que o botão habilitou após o aceite dos termos
+        expect(self.btn_quero_proposta).to_be_enabled(timeout=5000)
         self.btn_quero_proposta.click()
 
     @allure.step("Ação Intermediária: Tratar modal de escolha de seguro ({escolha})")
@@ -31,7 +51,8 @@ class AnaliseCreditoPage:
                 self.btn_sem_seguro.wait_for(state="visible", timeout=3000)
                 self.btn_sem_seguro.click()
         except Exception:
-            pass
+            # Se o modal não aparecer (regra de negócio ou cache), o teste segue
+            print(f"Modal de seguro '{escolha}' não disparou, seguindo fluxo.")
 
     @allure.step("Preenchimento: Inserir dados do cliente ({nome})")
     def preencher_dados_cadastrais(self, nome: str, email: str, celular: str, cep: str):
@@ -41,10 +62,9 @@ class AnaliseCreditoPage:
 
         self.page.locator("#addressInstallation\\.zipCode").fill(cep)
         self.page.locator("#addressInstallation\\.zipCode").press("Tab")
-        # Dá o tempo para a API de CEP do SolAgora preencher o restante dos campos e habilitar o botão
-        self.page.wait_for_timeout(2000)
 
-        # 🚨 Removemos o 'self.btn_enviar_analise.click()' daqui!
+        # Tempo para a API de CEP carregar os campos de endereço
+        self.page.wait_for_timeout(2000)
 
     @allure.step("Mapear elemento: Botão de envio da análise de crédito")
     def obter_botao_envio(self):
@@ -53,12 +73,19 @@ class AnaliseCreditoPage:
     @allure.step("Macro: Realizar fluxo completo de análise de crédito e submeter")
     def realizar_analise_credito_completa(self, nome: str, email: str, celular: str, cep: str,
                                           opcao_seguro="SEM SEGURO"):
+        # 👇 Esta orquestração garante que o conftest.py (Macros E2E) continue funcionando! 👇
+
+        # 1. Fluxo inicial
+        self.aceitar_termos()
         self.iniciar_proposta()
+
+        # 2. Preenchimento de dados
         self.tratar_modal_seguro(opcao_seguro)
         self.preencher_dados_cadastrais(nome, email, celular, cep)
 
-        # 🟢 O clique de envio veio para cá, onde ele realmente faz sentido (no Macro)!
+        # 3. Submissão final
         self.obter_botao_envio().click()
 
-        self.btn_continuar.wait_for(state="visible", timeout=20000)
+        # 4. Aguarda a transição para a tela de documentação
+        expect(self.btn_continuar).to_be_visible(timeout=20000)
         self.btn_continuar.click()
