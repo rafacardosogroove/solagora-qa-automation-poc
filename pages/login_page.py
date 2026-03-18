@@ -2,7 +2,6 @@ import re
 import allure
 from playwright.sync_api import Page, expect
 
-
 class LoginPage:
     def __init__(self, page: Page):
         self.page = page
@@ -17,7 +16,7 @@ class LoginPage:
 
         with allure.step("Digitar senha de forma sequencial e remover foco"):
             self.input_senha.press_sequentially(senha, delay=50)
-            self.page.wait_for_timeout(2000)
+            self.page.wait_for_timeout(3000)
             self.input_senha.blur()
 
         with allure.step("Acionar botão 'Entrar'"):
