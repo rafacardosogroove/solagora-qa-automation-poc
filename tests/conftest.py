@@ -99,7 +99,7 @@ def macro_simulacao_aprovada(page: Page, login_page: LoginPage, simulacao_page: 
         cpf_gerado = Generators.cpf()
         context_data['cpf_utilizado'] = cpf_gerado  # Fundamental para buscas futuras (ex: Gate 07)
         allure.attach(f"CPF Gerado para o Fluxo: {cpf_gerado}", name="Massa_de_Dados")
-        simulacao_page.preencher_dados_simulacao(cpf_gerado, "8000", "50000", "ALDO", "1000", "10")
+        simulacao_page.preencher_dados_simulacao(cpf_gerado, "8000", "50000", "ALDO", "1000", "28")
 
 
 @given('que o cliente foi aprovado na análise de crédito')

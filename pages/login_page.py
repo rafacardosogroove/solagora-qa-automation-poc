@@ -2,6 +2,7 @@ import re
 import allure
 from playwright.sync_api import Page, expect
 
+
 class LoginPage:
     def __init__(self, page: Page):
         self.page = page
@@ -47,8 +48,8 @@ class LoginPage:
         with allure.step("Garantir saída da tela de autenticação (Redirecionamento)"):
             expect(self.page).not_to_have_url(re.compile(".*auth.*"), timeout=15000)
 
-        with allure.step("Aguardar carregamento do texto de Boas-vindas na Dashboard"):
-            expect(self.page.get_by_text("Boas-vindas ao seu espaço de trabalho")).to_be_visible(timeout=10000)
+        with allure.step("Aguardar carregamento da navegação principal (autenticado)"):
+            expect(self.page.get_by_role("link", name="Projetos")).to_be_visible(timeout=15000)
 
         # Tira print da página inteira como prova de que o Macro funcionou
         allure.attach(

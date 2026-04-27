@@ -74,23 +74,33 @@ class SimulacaoPage:
         # O modal de entrada tem seu próprio step principal
         self.tratar_modal_entrada_se_visivel()
 
-    @allure.step("Ação Oculta: Buscar e selecionar o próximo dia útil disponível no calendário")
+    @allure.step("Ação Oculta: Buscar e selecionar o próximo dia disponível no calendário")
     def selecionar_data_vencimento_disponivel(self, dia_base: str):
-        dia_atual = int(dia_base)
-        max_tentativas = 31
+        dia_base = int(dia_base)
 
-        while dia_atual <= max_tentativas:
-            seletor_dia = self.page.get_by_text(str(dia_atual), exact=True)
+        # Aguarda o calendário renderizar
+        self.page.wait_for_selector("table td > span", timeout=5000)
+
+        # Dias habilitados: td cujo span interno NÃO tem p-disabled
+        # Clica no td (intercepta eventos), filtra pelo span
+        tds_habilitados = self.page.locator("table td:has(span:not(.p-disabled))").all()
+
+        dias_disponiveis = []
+        for td in tds_habilitados:
             try:
-                # Se o dia estiver desabilitado (disabled), o clique falha e cai no except
-                seletor_dia.click(timeout=2000)
-                return  # Sai da função assim que consegue clicar
-            except Exception:
-                dia_atual += 1
+                num = int(td.text_content().strip())
+                dias_disponiveis.append((num, td))
+            except (ValueError, Exception):
+                continue
 
-        if dia_atual > max_tentativas:
-            raise Exception(
-                f"Falha Crítica: Não foi possível encontrar uma data disponível a partir do dia {dia_base}.")
+        if not dias_disponiveis:
+            raise Exception("Calendário sem dias habilitados disponíveis.")
+
+        dias_disponiveis.sort(key=lambda x: x[0])
+
+        # Primeiro dia >= dia_base; se não encontrar, wrap-around para o primeiro disponível
+        candidato = next((el for num, el in dias_disponiveis if num >= dia_base), dias_disponiveis[0][1])
+        candidato.click()
 
     @allure.step("Ação de Contorno: Aceitar modal de 'Entrada Necessária' (Regra de Risco)")
     def tratar_modal_entrada_se_visivel(self):

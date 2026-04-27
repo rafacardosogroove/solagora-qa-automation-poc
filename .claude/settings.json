@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_Preview__preview_logs",
+      "mcp__Claude_Preview__preview_screenshot",
+      "mcp__Claude_Preview__preview_snapshot",
+      "mcp__Claude_Preview__preview_console_logs",
+      "mcp__Claude_Preview__preview_network",
+      "mcp__Claude_Preview__preview_list",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "mcp__Claude_in_Chrome__read_page",
+      "Bash(.venv/Scripts/pytest.exe tests/test_gate_03_analise.py -v)",
+      "Bash(.venv/Scripts/pytest.exe tests/test_gate_04_documentacao.py -v)",
+      "Bash(.venv/Scripts/pytest.exe tests/test_gate_05_aprovacoes.py -v)",
+      "Bash(.venv/Scripts/pytest.exe tests/test_gate_07_faturamento.py -v)",
+      "Bash(.venv/Scripts/pytest.exe tests/test_gate_08_equipamentos.py -v)",
+      "Bash(.venv/Scripts/pytest.exe tests/ -v)",
+      "Bash(git remote -v)"
+    ]
+  }
+}

@@ -854,6 +854,7 @@ class HmlClient:
         Args:
             enabled: True para ligar, False para desligar
         """
+
         conn = self._db_conn("document")
         conn.autocommit = False
         try:

@@ -26,3 +26,5 @@ allure-report/
 # 5. Playwright e outros
 test-results/
 *.webm
+# Claude Code local settings
+.claude/settings.local.json

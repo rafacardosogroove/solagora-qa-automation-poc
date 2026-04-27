@@ -4,7 +4,7 @@
 ================================================================================
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-📄 ARQUIVO: .env (43 linhas)
+📄 ARQUIVO: .env (51 linhas)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # =============================================================================
 # hml_client.py - Credenciais do Ambiente HML
@@ -22,6 +22,7 @@ KEYCLOAK_HML_PASSWORD=SuperAdmin@123
 # -----------------------------------------------------------------------------
 DB_PROJECT_USERNAME=project
 DB_PROJECT_PASSWORD=%EQic4152f*m
+
 # -----------------------------------------------------------------------------
 # Banco: project_lifecycle_manager_svc (project_lifecycle_manager.project)
 # Host: solagora-psql-hml.cluster-cqd4h0vlsr95.us-east-1.rds.amazonaws.com:5432
@@ -50,6 +51,12 @@ DB_CUSTOMER_PASSWORD=%EQic4152f*m
 DB_DOCUMENT_USERNAME=document
 DB_DOCUMENT_PASSWORD=IswXxY528k7x
 
+# -----------------------------------------------------------------------------
+# NOVO - Banco: acceptance_terms (Auditoria de Termos Aceitos)
+# Host: solagora-psql-hml.cluster-cqd4h0vlsr95.us-east-1.rds.amazonaws.com:5432
+# -----------------------------------------------------------------------------
+DB_ACCEPTANCE_TERMS_USERNAME=acceptance_terms
+DB_ACCEPTANCE_TERMS_PASSWORD=%EQic4152f*m
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 📄 ARQUIVO: .gitignore (28 linhas)
@@ -84,7 +91,58 @@ test-results/
 *.webm
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-📄 ARQUIVO: email_dashboard.md (109 linhas)
+📄 ARQUIVO: debugraw.py (47 linhas)
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+import json
+from pathlib import Path
+from utils.hml_client import hml
+
+
+def extrair_dados_geograficos(project_id):
+    raiz = Path(__file__).resolve().parent.parent
+    hml.configure(env_file=str(raiz / ".env"))
+
+    conn = hml._db_conn("project")
+    try:
+        cur = conn.cursor()
+        query = """
+            SELECT action, location, is_location_granted, created 
+            FROM project.device_location_data 
+            WHERE project_id = %s ORDER BY created DESC;
+        """
+        cur.execute(query, (project_id,))
+        rows = cur.fetchall()
+
+        print(f"\n🌍 AUDITORIA DE GEOLOCALIZAÇÃO: {project_id}")
+        print("=" * 90)
+        template = "{:<25} | {:<15} | {:<15} | {:<15}"
+        print(template.format("ETAPA", "LATITUDE", "LONGITUDE", "STATUS GPS"))
+        print("-" * 90)
+
+        for action, location, granted, created in rows:
+            lat, lon, status = "N/A", "N/A", "BLOQUEADO"
+
+            if location and location != 'null':
+                try:
+                    data = json.loads(location)
+                    lat = data.get("Latitude", "Erro")
+                    lon = data.get("Longitude", "Erro")
+                    status = "CAPTURADO"
+                    if lat == 37.4220936: status = "SIMULADO (GOOGLE)"
+                except:
+                    status = "ERRO FORMATO"
+
+            print(template.format(str(action), str(lat), str(lon), status))
+
+    finally:
+        conn.close()
+
+
+if __name__ == "__main__":
+    extrair_dados_geograficos("c19649b2-7e9a-4e9a-9f6a-130775f13928")
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+📄 ARQUIVO: email_dashboard.md (110 linhas)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # 📊 Dashboard de Engenharia de Qualidade - SolAgora
 
@@ -93,40 +151,40 @@ test-results/
 
 ---
 
-> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 10/03/2026 03:23
+> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 11/03/2026 13:00
 
 ## 🏆 Top QAs (Ranking de Commits)
 
 | QA | Total de Pushes (Commits) |
 |:---|:---:|
-| 👨‍💻 **Rafael Cardoso** | 43 |
-| 👨‍💻 **Robô da Qualidade (QA Bot)** | 36 |
+| 👨‍💻 **Rafael Cardoso** | 44 |
+| 👨‍💻 **Robô da Qualidade (QA Bot)** | 37 |
 
 ## 🚀 Status da Automação
 
 | Categoria | Total |
 | :--- | :---: |
 | 📝 Cenários Totais (incl. Esquemas) | 12 |
-| 📄 Page Objects | 26 |
+| 📄 Page Objects | 27 |
 | 🧪 Scripts de Teste | 9 |
 
 ## 📂 Detalhamento de Negócio (Features)
 
 | Feature | Volume de Testes | Autor Principal | Modificação |
 |:---|:---|:---|:---:|
-| Gate 02 - Simulação de Financiamento (P1) | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
-| Gate 03 - Análise de Crédito e Dados Cadastrais | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
-| Gate 04 - Documentação e Dados Cadastrais Finais | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
-| Gate 07 - Upload de Nota Fiscal e Cessão (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
-| Gate 06 - Assinatura Eletrônica da Proposta (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
-| Gate 08 - Confirmação de Entrega e Monitoração (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
-| Gate 05 - Orquestração e Aprovações (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
-| Gate 01 - Controle de Acesso e Autenticação | 5 🟦🟦🟦🟦🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
+| Gate 02 - Simulação de Financiamento (P1) | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
+| Gate 03 - Análise de Crédito e Dados Cadastrais | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
+| Gate 04 - Documentação e Dados Cadastrais Finais | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
+| Gate 07 - Upload de Notas Fiscais e Equipamentos | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
+| Gate 06 - Assinatura Eletrônica da Proposta (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
+| Gate 08 - Confirmação de Entrega e Monitoração (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
+| Gate 05 - Orquestração e Aprovações (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
+| Gate 01 - Controle de Acesso e Autenticação | 5 🟦🟦🟦🟦🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
 
 ### 📄 Page Objects Criados
 
 <details>
-<summary><b>Clique para ver a lista de 26 pages</b></summary>
+<summary><b>Clique para ver a lista de 27 pages</b></summary>
 
 <ul>
 <li><code>Analise_processamento_page</code></li>
@@ -141,6 +199,7 @@ test-results/
 <li><code>documentacao_page</code></li>
 <li><code>documentacao_pj</code></li>
 <li><code>documentacao_popup_page</code></li>
+<li><code>faturamento_page</code></li>
 <li><code>login_page</code></li>
 <li><code>modal_conta_energia_page</code></li>
 <li><code>modal_conta_energia_page</code></li>
@@ -162,11 +221,11 @@ test-results/
 
 | Data | Autor | Mensagem |
 |:---|:---|:---|
+| 11/03 10:00 | **Rafael Cardoso** | feature: Criaçãio Orquestrador BackEnd, reformulação de todas as chamadas serviços HML |
+| 10/03 03:23 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 10/03 00:23 | **Rafael Cardoso** | feat(automacao): estruturação inicial dos Gates 06 ao 08 (Assinatura, Faturamento e Equipamentos) |
 | 10/03 01:37 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 09/03 22:37 | **Rafael Cardoso** | feat(gate-05): orquestração resiliente de aprovações com validação via banco |
-| 08/03 02:09 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
-| 07/03 23:08 | **Rafael Cardoso** | feat: integra HML_Client (Fluxo Admin) ao core da automação |
 
 ## 🏷️ Cobertura de Tags
 
@@ -679,8 +738,9 @@ addopts = --headed --browser chromium --alluredir=./allure-results
 testpaths = tests
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-📄 ARQUIVO: README.md (109 linhas)
+📄 ARQUIVO: README.md (133 linhas)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+<<<<<<< HEAD
 # 📊 Dashboard de Engenharia de Qualidade - SolAgora
 
 ### 🛤️ Esteira de Cobertura (Gates)
@@ -688,40 +748,40 @@ testpaths = tests
 
 ---
 
-> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 10/03/2026 03:23
+> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 11/03/2026 13:00
 
 ## 🏆 Top QAs (Ranking de Commits)
 
 | QA | Total de Pushes (Commits) |
 |:---|:---:|
-| 👨‍💻 **Rafael Cardoso** | 43 |
-| 👨‍💻 **Robô da Qualidade (QA Bot)** | 36 |
+| 👨‍💻 **Rafael Cardoso** | 44 |
+| 👨‍💻 **Robô da Qualidade (QA Bot)** | 37 |
 
 ## 🚀 Status da Automação
 
 | Categoria | Total |
 | :--- | :---: |
 | 📝 Cenários Totais (incl. Esquemas) | 12 |
-| 📄 Page Objects | 26 |
+| 📄 Page Objects | 27 |
 | 🧪 Scripts de Teste | 9 |
 
 ## 📂 Detalhamento de Negócio (Features)
 
 | Feature | Volume de Testes | Autor Principal | Modificação |
 |:---|:---|:---|:---:|
-| Gate 02 - Simulação de Financiamento (P1) | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
-| Gate 03 - Análise de Crédito e Dados Cadastrais | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
-| Gate 04 - Documentação e Dados Cadastrais Finais | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
-| Gate 07 - Upload de Nota Fiscal e Cessão (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
-| Gate 06 - Assinatura Eletrônica da Proposta (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
-| Gate 08 - Confirmação de Entrega e Monitoração (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
-| Gate 05 - Orquestração e Aprovações (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
-| Gate 01 - Controle de Acesso e Autenticação | 5 🟦🟦🟦🟦🟦 | Rafael Cardoso Santana Costa | 10/03/2026 |
+| Gate 02 - Simulação de Financiamento (P1) | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
+| Gate 03 - Análise de Crédito e Dados Cadastrais | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
+| Gate 04 - Documentação e Dados Cadastrais Finais | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
+| Gate 07 - Upload de Notas Fiscais e Equipamentos | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
+| Gate 06 - Assinatura Eletrônica da Proposta (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
+| Gate 08 - Confirmação de Entrega e Monitoração (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
+| Gate 05 - Orquestração e Aprovações (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
+| Gate 01 - Controle de Acesso e Autenticação | 5 🟦🟦🟦🟦🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
 
 ### 📄 Page Objects Criados
 
 <details>
-<summary><b>Clique para ver a lista de 26 pages</b></summary>
+<summary><b>Clique para ver a lista de 27 pages</b></summary>
 
 <ul>
 <li><code>Analise_processamento_page</code></li>
@@ -736,6 +796,7 @@ testpaths = tests
 <li><code>documentacao_page</code></li>
 <li><code>documentacao_pj</code></li>
 <li><code>documentacao_popup_page</code></li>
+<li><code>faturamento_page</code></li>
 <li><code>login_page</code></li>
 <li><code>modal_conta_energia_page</code></li>
 <li><code>modal_conta_energia_page</code></li>
@@ -757,11 +818,11 @@ testpaths = tests
 
 | Data | Autor | Mensagem |
 |:---|:---|:---|
+| 11/03 10:00 | **Rafael Cardoso** | feature: Criaçãio Orquestrador BackEnd, reformulação de todas as chamadas serviços HML |
+| 10/03 03:23 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 10/03 00:23 | **Rafael Cardoso** | feat(automacao): estruturação inicial dos Gates 06 ao 08 (Assinatura, Faturamento e Equipamentos) |
 | 10/03 01:37 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
 | 09/03 22:37 | **Rafael Cardoso** | feat(gate-05): orquestração resiliente de aprovações com validação via banco |
-| 08/03 02:09 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
-| 07/03 23:08 | **Rafael Cardoso** | feat: integra HML_Client (Fluxo Admin) ao core da automação |
 
 ## 🏷️ Cobertura de Tags
 
@@ -790,6 +851,28 @@ testpaths = tests
 | `@login_invalido` | 1 |
 | `@logout` | 1 |
 | `@acesso_negado` | 1 |
+=======
+# Introduction 
+TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+
+# Getting Started
+TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
+1.	Installation process
+2.	Software dependencies
+3.	Latest releases
+4.	API references
+
+# Build and Test
+TODO: Describe and show how to build your code and run the tests. 
+
+# Contribute
+TODO: Explain how other users and developers can contribute to make your code better. 
+
+If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
+- [ASP.NET Core](https://github.com/aspnet/Home)
+- [Visual Studio Code](https://github.com/Microsoft/vscode)
+- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+>>>>>>> 9634c53f142ca9f3a22d0366cc0a49ba89896399
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -3193,7 +3276,7 @@ Funcionalidade: Gate 02 - Simulação de Financiamento (P1)
 
     Exemplos:
       | perfil                | cpf         | renda  | valor   | distribuidor | energia | dia |
-      | Sucesso - Dinâmico    | GERAR       | 5000   | 50000   | ALDO         | 1000    | 10  |
+      | Sucesso - Dinâmico    | GERAR       | 5000   | 50000   | ALDO         | 1000    | 18  |
 #     | Sucesso - Fixo (PF)   | 82453950053 | 15000  | 120000  | WEG          | 2500    | 15  |
 #     | Limite Mínimo         | GERAR       | 2500   | 15000   | ALDO         | 500     | 05  |
 #     | Projeto de Alto Valor | GERAR       | 50000  | 500000  | WEG          | 8000    | 20  |
@@ -4740,7 +4823,7 @@ def macro_simulacao_aprovada(page: Page, login_page: LoginPage, simulacao_page: 
         cpf_gerado = Generators.cpf()
         context_data['cpf_utilizado'] = cpf_gerado  # Fundamental para buscas futuras (ex: Gate 07)
         allure.attach(f"CPF Gerado para o Fluxo: {cpf_gerado}", name="Massa_de_Dados")
-        simulacao_page.preencher_dados_simulacao(cpf_gerado, "8000", "50000", "ALDO", "1000", "10")
+        simulacao_page.preencher_dados_simulacao(cpf_gerado, "8000", "50000", "ALDO", "1000", "28")
 
 
 @given('que o cliente foi aprovado na análise de crédito')
@@ -5612,6 +5695,106 @@ class OrquestradorBackend:
         if sys_status == "equipment_delivered":
             self.api.equip_forcar_monitoracao(project_id)
             time.sleep(4)
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+📄 ARQUIVO: utils\descobrir_colunas.py (96 linhas)
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+import json
+import os
+from pathlib import Path
+from utils.hml_client import hml
+
+
+def reset_e_consultar(project_id):
+    # 1. SETUP DE AMBIENTE (Garante carregamento do .env independente da pasta)
+    raiz = Path(__file__).resolve().parent.parent
+    caminho_env = raiz / ".env"
+
+    if not caminho_env.exists():
+        print(f"❌ Erro: Arquivo .env não encontrado em: {caminho_env}")
+        return
+
+    hml.configure(env_file=str(caminho_env))
+
+    print(f"🚀 Iniciando Diagnóstico Robusto")
+    print(f"📍 Projeto ID: {project_id}")
+    print("-" * 60)
+
+    conn = hml._db_conn("project")
+    try:
+        cur = conn.cursor()
+
+        # PASSO 1: O projeto existe na tabela mestre?
+        print("🔍 Checando existência na tabela 'project.project'...")
+        cur.execute('SELECT "StatusId", "Created" FROM project.project WHERE id = %s', (project_id,))
+        projeto_mestre = cur.fetchone()
+
+        if not projeto_mestre:
+            print("❌ ERRO: Este ID de projeto não foi encontrado no banco 'project'!")
+            return
+        else:
+            print(f"✅ Projeto localizado! Criado em: {projeto_mestre[1]}")
+
+        # PASSO 2: Existe algum rastro na tabela de geolocalização?
+        print("🔍 Buscando registros na 'project.device_location_data'...")
+        query = """
+            SELECT 
+                action, 
+                location, 
+                is_location_granted, 
+                device_system, 
+                created 
+            FROM project.device_location_data 
+            WHERE project_id = %s
+            ORDER BY created DESC;
+        """
+        cur.execute(query, (project_id,))
+        rows = cur.fetchall()
+
+        if not rows:
+            print("\n⚠️ RESULTADO: O projeto existe, mas NÃO HÁ NENHUMA linha de localização para ele.")
+            print("💡 Causa provável: A automação ou o Portal não disparou o evento de captura.")
+            return
+
+        # PASSO 3: Formatação dos resultados encontrados
+        print(f"\n✅ Foram encontrados {len(rows)} registro(s) de localização:")
+        print("=" * 120)
+        template = "{:<25} | {:<40} | {:<10} | {:<20}"
+        print(template.format("AÇÃO", "LAT/LONG (TRATADA)", "PERMISSÃO", "DATA (UTC)"))
+        print("-" * 120)
+
+        for action, location, granted, system, created in rows:
+            display_loc = "Vazio/Nulo"
+
+            if location:
+                # Tenta limpar e converter o texto 'location'
+                try:
+                    # Limpa possíveis caracteres de escape se vier stringificado
+                    clean_loc = location.strip()
+                    if clean_loc.startswith('{'):
+                        loc_json = json.loads(clean_loc)
+                        lat = loc_json.get('latitude') or loc_json.get('lat', '?')
+                        lon = loc_json.get('longitude') or loc_json.get('long') or loc_json.get('lng', '?')
+                        display_loc = f"Lat: {lat} / Lon: {lon}"
+                    else:
+                        display_loc = clean_loc  # Se for apenas "lat,long"
+                except Exception:
+                    display_loc = f"Erro Parse: {location[:30]}"
+
+            permissao = "✅ SIM" if granted else "❌ NÃO"
+            print(template.format(str(action), display_loc, permissao, str(created)))
+
+    except Exception as e:
+        print(f"❌ Falha técnica na consulta: {e}")
+    finally:
+        if 'conn' in locals():
+            conn.close()
+
+
+if __name__ == "__main__":
+    # Substitua pelo ID que você quer testar
+    ID_ALVO = "c19649b2-7e9a-4e9a-9f6a-130775f13928"
+    reset_e_consultar(ID_ALVO)
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 📄 ARQUIVO: utils\Generators.py (56 linhas)
@@ -7360,6 +7543,6 @@ if __name__ == "__main__":
 
 ================================================================================
 📊 RESUMO DA ENGENHARIA DE QUALIDADE:
-Total de arquivos processados: 82
-Total de linhas de inteligência: 7002
+Total de arquivos processados: 84
+Total de linhas de inteligência: 7178
 ================================================================================
