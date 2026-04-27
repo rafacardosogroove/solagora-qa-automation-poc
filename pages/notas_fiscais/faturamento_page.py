@@ -29,8 +29,10 @@ class FaturamentoPage:
             "input[type='file']")
 
         # --- Equipamentos (Print 5e3df7) ---
-        self.combo_inversor = page.locator("div").filter(has_text="Fabricante do inversor").locator("span").first
+        self.combo_inversor = page.get_by_test_id("inversor-[0]-field")
         self.input_qtd_inversor = page.locator("input[name='inverter_quantity']")
+        self.combo_modulo = page.get_by_test_id("module-[0]-field")
+        self.input_qtd_modulo = page.locator("input[name='module_quantity']")
         self.btn_enviar_final = page.get_by_role("button", name="Enviar notas e informações")
 
     @allure.step("Localizar projeto na listagem pelo CPF: {termo}")
@@ -117,3 +119,64 @@ class FaturamentoPage:
 
         allure.attach(self.page.screenshot(full_page=True), name="NF_Equipamento_Preenchida",
                       attachment_type=allure.attachment_type.PNG)
+
+    @allure.step("Preencher Nota Fiscal de Serviço: {numero}")
+    def preencher_nf_servico(self, numero: str, valor: str, arquivo: str):
+        base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+        path_arquivo = os.path.join(base_path, "data", arquivo)
+
+        with allure.step(f"Upload do arquivo de NF Serviço: {path_arquivo}"):
+            if not os.path.exists(path_arquivo):
+                raise FileNotFoundError(f"Arquivo não encontrado: {path_arquivo}")
+            self.page.locator("#serviceInvoice\\.invoiceFile").set_input_files(path_arquivo)
+            self.page.wait_for_timeout(2000)
+
+        with allure.step(f"Preenchendo Número: {numero} e Valor: {valor}"):
+            input_numero = self.page.locator("input[name='serviceInvoice.invoiceNumber']")
+            input_numero.click()
+            self.page.keyboard.press("Control+A")
+            self.page.keyboard.press("Backspace")
+            input_numero.press_sequentially(numero, delay=50)
+
+            input_valor = self.page.locator("input[name='serviceInvoice.invoiceValue']")
+            input_valor.click()
+            self.page.keyboard.press("Control+A")
+            self.page.keyboard.press("Backspace")
+            input_valor.press_sequentially(valor, delay=50)
+            self.page.keyboard.press("Tab")
+
+        allure.attach(self.page.screenshot(full_page=True), name="NF_Servico_Preenchida",
+                      attachment_type=allure.attachment_type.PNG)
+
+    @allure.step("Selecionar fabricante do inversor: {fabricante} (qtd: {quantidade})")
+    def selecionar_fabricante_inversor(self, fabricante: str, quantidade: str):
+        self.combo_inversor.wait_for(state="visible", timeout=10000)
+        self.combo_inversor.click()
+        self.page.wait_for_timeout(800)
+        # Debug: listar opções disponíveis
+        opcoes_disponiveis = self.page.get_by_role("option").all()
+        nomes = [o.text_content() for o in opcoes_disponiveis]
+        print(f"[DEBUG] Opções inversor: {nomes}")
+        self.page.get_by_role("option", name=fabricante, exact=False).first.wait_for(state="visible", timeout=15000)
+        self.page.get_by_role("option", name=fabricante, exact=False).first.click()
+        self.input_qtd_inversor.wait_for(state="visible", timeout=10000)
+        self.input_qtd_inversor.fill(quantidade)
+
+    @allure.step("Selecionar fabricante do módulo: {fabricante} (qtd: {quantidade})")
+    def selecionar_fabricante_modulo(self, fabricante: str, quantidade: str):
+        self.combo_modulo.wait_for(state="visible", timeout=10000)
+        self.combo_modulo.click()
+        self.page.wait_for_timeout(800)
+        opcoes_disponiveis = self.page.get_by_role("option").all()
+        nomes = [o.text_content() for o in opcoes_disponiveis]
+        print(f"[DEBUG] Opções módulo: {nomes}")
+        self.page.get_by_role("option", name=fabricante, exact=False).first.wait_for(state="visible", timeout=15000)
+        self.page.get_by_role("option", name=fabricante, exact=False).first.click()
+        self.input_qtd_modulo.fill(quantidade)
+
+    @allure.step("Finalizar: Enviar notas e informações de equipamentos")
+    def finalizar_envio_notas(self):
+        self.btn_enviar_final.wait_for(state="visible", timeout=10000)
+        self.btn_enviar_final.scroll_into_view_if_needed()
+        self.btn_enviar_final.click()
+        self.page.wait_for_load_state("networkidle", timeout=30000)

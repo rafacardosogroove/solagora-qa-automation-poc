@@ -1,3 +1,4 @@
+import re
 import allure
 import pytest
 from playwright.sync_api import Page, expect
@@ -85,7 +86,9 @@ class AnaliseCreditoPage:
         # 3. Submissão final
         self.obter_botao_envio().click()
 
-        # 4. Aguarda a transição para a tela de documentação
-        expect(self.btn_continuar).to_be_visible(timeout=20000)
+        # 4. Aguarda a transição para a tela de documentação (SPA usa pushState, não load event)
+        expect(self.btn_continuar).to_be_visible(timeout=60000)
         self.btn_continuar.click()
-        self.page.wait_for_load_state("networkidle", timeout=15000)
+        expect(self.page).to_have_url(re.compile(".*documentation.*"), timeout=30000)
+        # 5. Aguarda seção de uploads carregar (indica que todas as APIs da doc. completaram)
+        self.page.get_by_text("Conta de energia", exact=False).first.wait_for(state="visible", timeout=60000)

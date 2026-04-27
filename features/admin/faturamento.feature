@@ -17,7 +17,7 @@ Funcionalidade: Gate 07 - Upload de Notas Fiscais e Equipamentos
     E prossigo para o envio de notas no modal de sucesso
     E preencho os dados da Nota Fiscal de Equipamento com número "123456" e valor "45000"
     E preencho os dados da Nota Fiscal de Serviço com número "7890" e valor "5000"
-    E seleciono o fabricante do inversor "WEG" e quantidade "1"
+    E seleciono o fabricante do inversor "Fronius" e quantidade "1"
     E seleciono o fabricante do módulo "CANADIAN" e quantidade "10"
     E finalizo o envio das notas e informações
     Então o sistema deve exibir a tela de análise de notas fiscais

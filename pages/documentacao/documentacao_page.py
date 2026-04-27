@@ -40,6 +40,14 @@ class DocumentacaoPage:
 
     @allure.step("Ação: Configurar endereço de cobrança: Igual à instalação? -> {escolha}")
     def definir_cobranca_igual(self, escolha: str):
+        # Fecha qualquer modal aberto que bloqueie a interação
+        dialog_mask = self.page.locator(".p-dialog-mask")
+        if dialog_mask.count() > 0:
+            try:
+                dialog_mask.wait_for(state="hidden", timeout=8000)
+            except Exception:
+                self.page.keyboard.press("Escape")
+                self.page.wait_for_timeout(1000)
         if escolha.upper() == "SIM":
             self.toggle_mesmo_endereco.click()
             self.page.wait_for_timeout(500)
