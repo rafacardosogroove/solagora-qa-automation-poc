@@ -15,6 +15,7 @@ class ModalContaEnergiaPage:
     @allure.step("Ação Complexa: Iniciar e concluir upload de conta de energia ({origem})")
     def realizar_upload_energia(self, origem: str, arquivo: str, valor: str = "1000"):
         with allure.step("Abrir modal e informar a Distribuidora"):
+            self.btn_abrir_modal.wait_for(state="visible", timeout=20000)
             self.btn_abrir_modal.click()
             self.page.wait_for_timeout(800)
             self.combo_origem.click()
