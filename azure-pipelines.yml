@@ -1,0 +1,131 @@
+# ============================================================
+# Azure DevOps Pipeline — SolAgora QA Automation
+# Gera e publica Allure Report como artifact do pipeline
+# ============================================================
+# NOTA: Testes rodam localmente (requerem VPN + HML).
+#       Developer commita allure-results/ após rodar localmente.
+#       Este pipeline gera o HTML e publica como artifact.
+# ============================================================
+
+trigger:
+  branches:
+    include:
+      - main
+      - feat/*
+  paths:
+    include:
+      - allure-results/**   # Só dispara quando resultados forem commitados
+
+pr:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  ALLURE_VERSION: '2.27.0'
+  PYTHON_VERSION: '3.11'
+
+stages:
+
+  # ============================================================
+  # STAGE 1 — Gerar Allure Report
+  # ============================================================
+  - stage: AllureReport
+    displayName: "📈 Gerar Allure Report"
+    jobs:
+      - job: GerarPublicarReport
+        displayName: "Gerar HTML e Publicar Artifact"
+
+        steps:
+          - checkout: self
+            fetchDepth: 0
+            displayName: "Checkout completo"
+
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: $(PYTHON_VERSION)
+            displayName: "Configurar Python $(PYTHON_VERSION)"
+
+          # Verifica se há resultados para processar
+          - bash: |
+              if [ -d "allure-results" ] && ls allure-results/*.json 1> /dev/null 2>&1; then
+                echo "##vso[task.setvariable variable=HAS_RESULTS]true"
+                echo "Encontrados $(ls allure-results/*.json | wc -l) arquivos de resultado"
+              else
+                echo "##vso[task.setvariable variable=HAS_RESULTS]false"
+                echo "Nenhum resultado encontrado. Commite allure-results/ apos rodar localmente."
+              fi
+            displayName: "Verificar allure-results"
+
+          # Instala Allure CLI
+          - bash: |
+              wget -q https://github.com/allure-framework/allure2/releases/download/$(ALLURE_VERSION)/allure-$(ALLURE_VERSION).tgz
+              tar -xzf allure-$(ALLURE_VERSION).tgz
+              sudo mv allure-$(ALLURE_VERSION) /opt/allure
+              sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure
+              allure --version
+            displayName: "Instalar Allure CLI"
+            condition: eq(variables['HAS_RESULTS'], 'true')
+
+          # Gera relatório HTML
+          - bash: |
+              allure generate allure-results --clean -o allure-report
+              echo "Report gerado:"
+              ls allure-report/
+            displayName: "Gerar Allure Report HTML"
+            condition: eq(variables['HAS_RESULTS'], 'true')
+
+          # Publica como artifact do pipeline (acessível na aba "Artifacts")
+          - task: PublishBuildArtifacts@1
+            inputs:
+              pathToPublish: 'allure-report'
+              artifactName: 'AllureReport'
+              publishLocation: 'Container'
+            displayName: "Publicar Allure Report como Artifact"
+            condition: eq(variables['HAS_RESULTS'], 'true')
+
+          # Publica resultados brutos também (para histórico/trend)
+          - task: PublishBuildArtifacts@1
+            inputs:
+              pathToPublish: 'allure-results'
+              artifactName: 'AllureResults'
+              publishLocation: 'Container'
+            displayName: "Publicar allure-results (raw) como Artifact"
+            condition: eq(variables['HAS_RESULTS'], 'true')
+
+          # Sumário no pipeline com link para o report
+          - bash: |
+              BRANCH=$(Build.SourceBranchName)
+              BUILD_ID=$(Build.BuildId)
+              echo "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Allure Report]"
+              echo "## Allure Report gerado com sucesso"
+              echo "Acesse: Pipelines > Esta execucao > Artifacts > AllureReport > index.html"
+            displayName: "Sumario no pipeline"
+            condition: eq(variables['HAS_RESULTS'], 'true')
+
+  # ============================================================
+  # STAGE 2 — Validar BDD (roda em PRs para main)
+  # ============================================================
+  - stage: QualityGate
+    displayName: "🛡️ Quality Gate BDD"
+    dependsOn: []    # Roda em paralelo com AllureReport
+    condition: eq(variables['Build.Reason'], 'PullRequest')
+
+    jobs:
+      - job: ValidarBDD
+        displayName: "Validar padroes BDD nas features"
+
+        steps:
+          - checkout: self
+            displayName: "Checkout"
+
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: $(PYTHON_VERSION)
+            displayName: "Configurar Python"
+
+          - bash: python validar_bdd.py
+            displayName: "Validar BDD (autor, tags, max steps)"
