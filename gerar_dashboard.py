@@ -20,6 +20,9 @@ GATES = [
 # Bots que poluem o ranking — ignorados
 BOTS = {"robô da qualidade (qa bot)", "qa bot", "github-actions", "github actions"}
 
+# URL do Allure Report publicado no GitHub Pages
+ALLURE_REPORT_URL = "https://rafacardosogroove.github.io/solagora-qa-automation-poc/"
+
 
 # ==============================================================================
 # GIT HELPERS
@@ -293,6 +296,7 @@ def montar_markdown(autor, agora, esteira_linha, pct, barra_pct, gates_cobertos,
         L.append(f"| `{tag}` | {qtd} |")
 
     L.append("\n---")
+    L.append(f"**[Ver Allure Report Completo]({ALLURE_REPORT_URL})** — evidências, screenshots e steps detalhados\n")
     L.append(f"*Gerado automaticamente pelo QA Bot — {agora}*")
     return "\n".join(L)
 
@@ -430,6 +434,20 @@ def montar_html_email(autor, agora, esteira_linha, pct, barra_pct_html, gates_co
       {commits_html}
     </table>
 
+  </div>
+
+  <!-- FOOTER -->
+  <!-- BOTÃO ALLURE REPORT -->
+  <div style="padding:20px 32px;text-align:center;border-top:1px solid #eee;">
+    <a href="{ALLURE_REPORT_URL}"
+       style="display:inline-block;background:linear-gradient(135deg,#e74c3c,#c0392b);
+              color:white;padding:12px 32px;border-radius:8px;text-decoration:none;
+              font-weight:bold;font-size:14px;letter-spacing:0.5px;">
+      Ver Allure Report Completo →
+    </a>
+    <p style="margin:8px 0 0;font-size:11px;color:#aaa;">
+      Evidências, screenshots e steps detalhados de cada execução
+    </p>
   </div>
 
   <!-- FOOTER -->
