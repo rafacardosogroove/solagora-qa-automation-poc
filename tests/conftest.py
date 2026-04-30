@@ -95,6 +95,23 @@ def admin_page(page: Page) -> AdminPage: return AdminPage(page)
 # ==============================================================================
 # 3. CONTEXTOS MACRO PROGRESSIVOS (O MOTOR DO BDD)
 # ==============================================================================
+#
+# CADEIA DE HERANÇA — cada macro chama o anterior automaticamente:
+#
+#   macro_login                        → Gate 01
+#     └── macro_simulacao_aprovada     → Gate 02
+#           └── macro_analise_aprovada → Gate 03
+#                 └── macro_documentacao_enviada    → Gate 04
+#                       └── macro_aprovado_mesa_interna → Gate 05 (API)
+#                             └── macro_contrato_assinado    → Gate 06 (API)
+#                                   └── macro_notas_enviadas → Gate 07 (API)
+#                                         └── Gate 08 usa macro_notas_enviadas
+#
+# Como usar na feature:
+#   Dado que as notas fiscais do projeto foram enviadas e aprovadas
+#   → executa Gates 01 a 07 automaticamente antes do seu cenário
+#
+# ==============================================================================
 
 @given('que o ambiente de homologação está respondendo na página de login')
 def step_ambiente_acessivel(page: Page):
