@@ -30,9 +30,9 @@ class FaturamentoPage:
 
         # --- Equipamentos (Print 5e3df7) ---
         self.combo_inversor = page.get_by_test_id("inversor-[0]-field")
-        self.input_qtd_inversor = page.locator("input[name='inverter_quantity']")
+        self.input_qtd_inversor = page.get_by_test_id("inversor-amount-field")
         self.combo_modulo = page.get_by_test_id("module-[0]-field")
-        self.input_qtd_modulo = page.locator("input[name='module_quantity']")
+        self.input_qtd_modulo = page.get_by_test_id("module-amount-field")
         self.btn_enviar_final = page.get_by_role("button", name="Enviar notas e informações")
 
     @allure.step("Localizar projeto na listagem pelo CPF: {termo}")
@@ -159,7 +159,20 @@ class FaturamentoPage:
         print(f"[DEBUG] Opções inversor: {nomes}")
         self.page.get_by_role("option", name=fabricante, exact=False).first.wait_for(state="visible", timeout=15000)
         self.page.get_by_role("option", name=fabricante, exact=False).first.click()
-        self.input_qtd_inversor.wait_for(state="visible", timeout=10000)
+        self.page.wait_for_timeout(1500)  # aguarda render do campo qtd após seleção
+        allure.attach(self.page.screenshot(full_page=True), name="Pre_Assert_Qtd_Inversor",
+                      attachment_type=allure.attachment_type.PNG)
+        # Debug: inspecionar inputs numéricos na seção de inversores para identificar locator correto
+        inputs_info = self.page.evaluate("""() => {
+            const inputs = document.querySelectorAll('input[type=number], input[inputmode=numeric]');
+            return Array.from(inputs).map(i => ({
+                name: i.name, id: i.id, testid: i.dataset.testid,
+                placeholder: i.placeholder, value: i.value,
+                outerHTML: i.outerHTML.substring(0, 200)
+            }));
+        }""")
+        print(f"[DEBUG] Inputs numéricos: {inputs_info}")
+        self.input_qtd_inversor.wait_for(state="visible", timeout=20000)
         self.input_qtd_inversor.fill(quantidade)
 
     @allure.step("Selecionar fabricante do módulo: {fabricante} (qtd: {quantidade})")

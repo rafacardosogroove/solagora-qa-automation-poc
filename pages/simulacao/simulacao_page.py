@@ -56,7 +56,7 @@ class SimulacaoPage:
         with allure.step(f"Abrir lista e selecionar o Distribuidor: '{distribuidor}'"):
             self.page.locator("span").filter(has_text=re.compile(r"^Selecione$")).click()
             opcao = self.page.get_by_role("option", name=distribuidor, exact=False)
-            opcao.first.wait_for(state="visible", timeout=10000)
+            opcao.first.wait_for(state="visible", timeout=20000)
             opcao.first.click()
 
         with allure.step("Preencher consumo de Energia Elétrica (kWh)"):

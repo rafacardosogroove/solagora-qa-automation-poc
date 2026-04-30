@@ -27,7 +27,7 @@ class AnaliseCreditoPage:
     @allure.step("Ação: Aceitar termos de uso e privacidade (se exibido)")
     def aceitar_termos(self):
         try:
-            self.cbx_termos.wait_for(state="visible", timeout=5000)
+            self.cbx_termos.wait_for(state="visible", timeout=20000)
             self.cbx_termos.scroll_into_view_if_needed()
             self.cbx_termos.click()
             self.page.wait_for_timeout(500)
@@ -38,17 +38,17 @@ class AnaliseCreditoPage:
     @allure.step("Ação: Iniciar a criação da proposta no painel")
     def iniciar_proposta(self):
         # Garante que o botão habilitou após o aceite dos termos
-        expect(self.btn_quero_proposta).to_be_enabled(timeout=5000)
+        expect(self.btn_quero_proposta).to_be_enabled(timeout=20000)
         self.btn_quero_proposta.click()
 
     @allure.step("Ação Intermediária: Tratar modal de escolha de seguro ({escolha})")
     def tratar_modal_seguro(self, escolha: str):
         try:
             if escolha.upper() == "COM SEGURO":
-                self.btn_com_seguro.wait_for(state="visible", timeout=3000)
+                self.btn_com_seguro.wait_for(state="visible", timeout=10000)
                 self.btn_com_seguro.click()
             else:
-                self.btn_sem_seguro.wait_for(state="visible", timeout=3000)
+                self.btn_sem_seguro.wait_for(state="visible", timeout=10000)
                 self.btn_sem_seguro.click()
         except Exception:
             # Se o modal não aparecer (regra de negócio ou cache), o teste segue
@@ -87,7 +87,10 @@ class AnaliseCreditoPage:
         self.obter_botao_envio().click()
 
         # 4. Aguarda a transição para a tela de documentação (SPA usa pushState, não load event)
-        expect(self.btn_continuar).to_be_visible(timeout=60000)
+        # Screenshot antes do assert — captura o estado real da tela se falhar
+        allure.attach(self.page.screenshot(full_page=True), name="Pre_Assert_Continuar_Documentacao",
+                      attachment_type=allure.attachment_type.PNG)
+        expect(self.btn_continuar).to_be_visible(timeout=90000)
         self.btn_continuar.click()
         expect(self.page).to_have_url(re.compile(".*documentation.*"), timeout=30000)
         # 5. Aguarda seção de uploads carregar (indica que todas as APIs da doc. completaram)

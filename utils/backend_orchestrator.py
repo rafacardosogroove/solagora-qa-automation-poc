@@ -26,13 +26,13 @@ class OrquestradorBackend:
                     print(f"[Gate05] aprovar_projeto err: {e}")
             elif sys_status in ['waiting_process', 'waiting_process_bmp']:
                 bmp_tentativas += 1
-                if bmp_tentativas <= 3:
+                if bmp_tentativas <= 5:
                     try:
                         self.api.callback_bmp(project_id, 10)
                     except Exception as e:
                         print(f"[Gate05] BMP callback err: {e}")
-                else:
-                    # BMP callback não avança — fallback via CCB direto
+                elif bmp_tentativas <= 10:
+                    # Fallback: CCB direto
                     try:
                         self.api.emitir_ccb(project_id)
                         time.sleep(2)
@@ -40,6 +40,14 @@ class OrquestradorBackend:
                         print(f"[Gate05] CCB fallback OK")
                     except Exception as e:
                         print(f"[Gate05] CCB fallback err: {e}")
+                else:
+                    # Bypass total: BMP degradado no HML — força status via DB
+                    print(f"[Gate05] 🚨 BMP degradado após 10 tentativas — bypass via DB")
+                    try:
+                        self.api.bypass_bmp(project_id)
+                        break
+                    except Exception as e:
+                        print(f"[Gate05] bypass_bmp err: {e}")
             elif sys_status == 'waiting_biometrics':
                 bmp_tentativas = 0  # reset ao ver novo ciclo de biometria
                 try:

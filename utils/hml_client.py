@@ -529,7 +529,11 @@ class HmlClient:
             row = cur.fetchone()
             if not row:
                 raise RuntimeError(f"Projeto {project_id} nao encontrado em bmp.proposal")
-            return str(row[0])
+            bmp_code = str(row[0])
+            # UUID nulo = BMP ainda não preencheu o Code (registro criado mas não processado)
+            if bmp_code == "00000000-0000-0000-0000-000000000000" or not bmp_code:
+                raise RuntimeError(f"BMP Code ainda nao preenchido para {project_id} — aguardando BMP processar")
+            return bmp_code
         finally:
             conn.close()
 
@@ -559,6 +563,22 @@ class HmlClient:
         if resp.status_code not in (200, 204):
             raise RuntimeError(f"Callback {situacao} falhou: {resp.status_code} - {resp.text[:300]}")
         return resp
+
+    def bypass_bmp(self, project_id):
+        """Força status para 'Aguardando assinaturas' via DB quando BMP está degradado no HML.
+
+        Usar apenas como último recurso quando:
+        - callback_bmp retorna Code nulo após múltiplas tentativas
+        - emitir_ccb retorna 404
+        - BMP service não está processando no ambiente HML
+
+        Atualiza project + lifecycle_manager (igual a _set_status_hml).
+        """
+        STATUS_WAITING_SIGNATURES = "47ce852f-7f03-4120-ad25-cc1c5c3f4f5a"
+        print(f"[bypass_bmp] Forçando status waiting_signatures para {project_id} (BMP degradado no HML)")
+        rows = self._set_status_hml(project_id, STATUS_WAITING_SIGNATURES)
+        print(f"[bypass_bmp] Rows atualizadas: {rows}")
+        return rows
 
     def enviar_callbacks_cessao(self, project_id, intervalo=5):
         """Envia callback 10 (cessao iniciada) e 9 (cessao finalizada) com intervalo.

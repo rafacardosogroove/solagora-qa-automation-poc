@@ -5,6 +5,25 @@ import time
 from playwright.sync_api import Page, expect
 from pytest_bdd import given, when, then, parsers
 
+
+# ==============================================================================
+# BROWSER — janela maximizada para todos os gates
+# ==============================================================================
+
+@pytest.fixture(scope="session")
+def browser_type_launch_args(browser_type_launch_args):
+    return {
+        **browser_type_launch_args,
+        "args": ["--start-maximized"],
+    }
+
+@pytest.fixture(scope="session")
+def browser_context_args(browser_context_args):
+    return {
+        **browser_context_args,
+        "viewport": {"width": 1920, "height": 1080},
+    }
+
 # Imports de Utilitários e API
 from utils.Generators import Generators
 from utils.hml_client import hml
