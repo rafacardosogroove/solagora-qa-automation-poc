@@ -1,0 +1,36 @@
+Modal de seguro 'SEM SEGURO' não disparou, seguindo fluxo.
+Tentativa 1: Status Banco = Em processamento BMP (waiting_process_bmp)
+⚙️ Status BMP detectado (tentativa BMP 1)...
+Aviso callback_bmp: BMP Code ainda nao preenchido para 06599ba6-6fd9-4371-85c4-cd68c2c5eb26 — aguardando BMP processar
+Tentativa 2: Status Banco = Em processamento BMP (waiting_process_bmp)
+⚙️ Status BMP detectado (tentativa BMP 2)...
+Aviso callback_bmp: BMP Code ainda nao preenchido para 06599ba6-6fd9-4371-85c4-cd68c2c5eb26 — aguardando BMP processar
+Tentativa 3: Status Banco = Em processamento BMP (waiting_process_bmp)
+⚙️ Status BMP detectado (tentativa BMP 3)...
+Aviso callback_bmp: BMP Code ainda nao preenchido para 06599ba6-6fd9-4371-85c4-cd68c2c5eb26 — aguardando BMP processar
+Tentativa 4: Status Banco = Em processamento BMP (waiting_process_bmp)
+⚙️ Status BMP detectado (tentativa BMP 4)...
+Aviso callback_bmp: BMP Code ainda nao preenchido para 06599ba6-6fd9-4371-85c4-cd68c2c5eb26 — aguardando BMP processar
+Tentativa 5: Status Banco = Em processamento BMP (waiting_process_bmp)
+⚙️ Status BMP detectado (tentativa BMP 5)...
+Aviso callback_bmp: BMP Code ainda nao preenchido para 06599ba6-6fd9-4371-85c4-cd68c2c5eb26 — aguardando BMP processar
+Tentativa 6: Status Banco = Em processamento BMP (waiting_process_bmp)
+⚙️ Status BMP detectado (tentativa BMP 6)...
+Aviso fallback CCB: Erro ao emitir CCB: 404 - 
+Tentativa 7: Status Banco = Em processamento BMP (waiting_process_bmp)
+⚙️ Status BMP detectado (tentativa BMP 7)...
+Aviso fallback CCB: Erro ao emitir CCB: 404 - 
+Tentativa 8: Status Banco = Em processamento BMP (waiting_process_bmp)
+⚙️ Status BMP detectado (tentativa BMP 8)...
+Aviso fallback CCB: Erro ao emitir CCB: 404 - 
+Tentativa 9: Status Banco = Em processamento BMP (waiting_process_bmp)
+⚙️ Status BMP detectado (tentativa BMP 9)...
+Aviso fallback CCB: Erro ao emitir CCB: 404 - 
+Tentativa 10: Status Banco = Em processamento BMP (waiting_process_bmp)
+⚙️ Status BMP detectado (tentativa BMP 10)...
+Aviso fallback CCB: Erro ao emitir CCB: 404 - 
+Tentativa 11: Status Banco = Em processamento BMP (waiting_process_bmp)
+⚙️ Status BMP detectado (tentativa BMP 11)...
+🚨 BMP degradado após 10 tentativas — bypass via DB
+[bypass_bmp] Forçando status waiting_signatures para 06599ba6-6fd9-4371-85c4-cd68c2c5eb26 (BMP degradado no HML)
+[bypass_bmp] Rows atualizadas: 1
