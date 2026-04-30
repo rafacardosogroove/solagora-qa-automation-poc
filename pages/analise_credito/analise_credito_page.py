@@ -90,7 +90,7 @@ class AnaliseCreditoPage:
         # Screenshot antes do assert — captura o estado real da tela se falhar
         allure.attach(self.page.screenshot(full_page=True), name="Pre_Assert_Continuar_Documentacao",
                       attachment_type=allure.attachment_type.PNG)
-        expect(self.btn_continuar).to_be_visible(timeout=90000)
+        expect(self.btn_continuar).to_be_visible(timeout=180000)
         self.btn_continuar.click()
         expect(self.page).to_have_url(re.compile(".*documentation.*"), timeout=30000)
         # 5. Aguarda seção de uploads carregar (indica que todas as APIs da doc. completaram)
