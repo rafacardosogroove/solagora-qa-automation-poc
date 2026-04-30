@@ -456,4 +456,4 @@ if __name__ == "__main__":
     with open("email_dashboard.html", "w", encoding="utf-8") as f:
         f.write(montar_relatorio(para_email=True))
 
-    print("✅ DASHBOARD.md e email_dashboard.html gerados com sucesso.")
+    print("DASHBOARD.md e email_dashboard.html gerados com sucesso.")
