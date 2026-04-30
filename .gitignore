@@ -28,3 +28,4 @@ test-results/
 *.webm
 # Claude Code local settings
 .claude/settings.local.json
+utils/.token_hml
