@@ -1,60 +1,71 @@
-name: Gerar Dashboard de Qualidade (BDD)
+name: 📊 Dashboard de Qualidade (BDD)
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
+  schedule:
+    - cron: '0 8 * * 1-5'   # Seg-Sex às 8h (UTC) — e-mail diário automático
+  workflow_dispatch:          # Disparo manual pelo GitHub
 
 jobs:
-  atualizar-dashboard: # Primeiro Job: Gera e Salva os dados
+
+  # ============================================================
+  # JOB 1 — Gera DASHBOARD.md e email_dashboard.html
+  # ============================================================
+  atualizar-dashboard:
+    name: 📊 Gerar e Publicar Dashboard
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
     steps:
       - name: 📥 Checkout do Repositório
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0   # Histórico completo (ranking de commits precisa)
 
       - name: 🐍 Configurar Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
-      - name: 📊 Rodar o Script e Gerar Markdowns
-        # AJUSTE 1: Gera os dois arquivos para não dar erro no script de e-mail
-        run: |
-          python gerar_dashboard.py > README.md
-          python gerar_dashboard.py > email_dashboard.md
+      - name: 📊 Gerar DASHBOARD.md e email_dashboard.html
+        run: python gerar_dashboard.py
 
-      - name: 💾 Fazer o Commit Automático
+      - name: 💾 Commitar Dashboard Atualizado
         run: |
-          git config --global user.name "Robô da Qualidade (QA Bot)"
+          git config --global user.name "QA Bot"
           git config --global user.email "qa-bot@solagora.com.br"
-          git add README.md email_dashboard.md
-          git diff --quiet && git diff --staged --quiet || (git commit -m "docs: 📊 Atualiza dashboard automático" && git push)
+          git add DASHBOARD.md email_dashboard.html
+          git diff --quiet && git diff --staged --quiet \
+            || git commit -m "docs: 📊 atualiza dashboard automático [skip ci]" \
+            && git push
 
-  enviar-email: # Segundo Job: Espera o primeiro terminar e envia
+  # ============================================================
+  # JOB 2 — Envia e-mail com o HTML gerado (aguarda Job 1)
+  # ============================================================
+  enviar-email:
+    name: 📧 Enviar Relatório por E-mail
     runs-on: ubuntu-latest
     needs: atualizar-dashboard
+
     steps:
-      - name: 📥 Checkout do Repositório (Dados Atualizados)
-        uses: actions/checkout@v3
+      - name: 📥 Checkout (versão atualizada pelo bot)
+        uses: actions/checkout@v4
         with:
-          ref: main       # AJUSTE 2: Garante que pegue o arquivo que o Robô acabou de subir
+          ref: main
           fetch-depth: 0
 
       - name: 🐍 Configurar Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
-      - name: 📦 Instalar Dependências de E-mail
-        run: pip install markdown
+      - name: 📊 Regerar HTML (garante dados frescos após pull)
+        run: python gerar_dashboard.py
 
-      - name: 📧 Enviar Relatório por E-mail
+      - name: 📧 Enviar E-mail
         env:
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
