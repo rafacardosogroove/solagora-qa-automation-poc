@@ -2,7 +2,7 @@ import re
 import allure
 from playwright.sync_api import Page, expect
 
-B3mi9ExgciGTAE2QqxZfGJ38Fk3O5XENvOphS8XZCKP7IKa0lv7eJQQJ99CCACAAAAApvJOQAAASAZDO2PmJ
+
 class LoginPage:
     def __init__(self, page: Page):
         self.page = page
