@@ -14,10 +14,9 @@ __pycache__/
 .pytest_cache/
 
 # 3. Relatórios e Evidências (Allure)
-allure-results/
-tests/allure-results/
-allure-report/
-*.png
+# allure-results/ — NÃO ignorado: developer commita após rodar localmente
+#                   CI usa esses arquivos para gerar e publicar o relatório
+allure-report/    # HTML gerado — ignorado (CI gera na hora)
 
 # 4. Logs e Variáveis de Ambiente
 *.log
@@ -26,3 +25,6 @@ allure-report/
 # 5. Playwright e outros
 test-results/
 *.webm
+# Claude Code local settings
+.claude/settings.local.json
+utils/.token_hml

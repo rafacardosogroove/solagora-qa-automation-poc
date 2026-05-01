@@ -1,0 +1,7 @@
+Status Banco = Em processamento BMP (waiting_process_bmp)
+Status Banco = Em processamento BMP (waiting_process_bmp)
+Status Banco = Em processamento BMP (waiting_process_bmp)
+Status Banco = Em processamento BMP (waiting_process_bmp)
+Status Banco = Em processamento BMP (waiting_process_bmp)
+Status Banco = Em processamento BMP (waiting_process_bmp)
+Status Banco = Aguardando assinaturas (waiting_signatures)

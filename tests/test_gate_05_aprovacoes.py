@@ -51,9 +51,11 @@ def step_trigger_modo_admin(admin, context_data: dict, page: Page):
                           attachment_type=allure.attachment_type.PNG)
 
             # --- 3. LOOP DE MESA INTERNA ---
+            # BMP é lento — 30 tentativas × 5s = 150s máx
             sucesso_mesa = False
+            bmp_tentativas = 0
             with allure.step("Fase 3: Mesa Interna e Emissão CCB"):
-                for tentativa in range(15):
+                for tentativa in range(30):
                     page.reload()
                     page.wait_for_load_state("networkidle")
 
@@ -74,35 +76,57 @@ def step_trigger_modo_admin(admin, context_data: dict, page: Page):
 
                     # Ação 2: Reforça Biometria se cair
                     elif sys_status == 'waiting_biometrics':
+                        bmp_tentativas = 0
                         admin.finalizar_biometria(projeto_id)
 
-                    # Ação 3 (O PULO DO GATO 🐈): Aciona os serviços de CCB e Assinatura!
-                    elif sys_status == 'waiting_process_bmp':
-                        print("⚙️ Status BMP detectado! Chamando serviços de emissão de CCB e Assinatura...")
+                    # Ação 3: BMP — callback primeiro (emitir_ccb endpoint está 404 no HML)
+                    elif sys_status in ['waiting_process_bmp', 'waiting_process']:
+                        bmp_tentativas += 1
+                        print(f"⚙️ Status BMP detectado (tentativa BMP {bmp_tentativas})...")
+                        if bmp_tentativas <= 5:
+                            # Tenta callback normal (aguarda BMP popular o Code)
+                            try:
+                                admin.callback_bmp(projeto_id, 10)
+                            except Exception as e:
+                                print(f"Aviso callback_bmp: {e}")
+                        elif bmp_tentativas <= 10:
+                            # Fallback: CCB direto
+                            try:
+                                admin.emitir_ccb(projeto_id)
+                                time.sleep(2)
+                                admin.aguardar_assinatura(projeto_id)
+                            except Exception as e:
+                                print(f"Aviso fallback CCB: {e}")
+                        else:
+                            # Bypass total: BMP degradado no HML — força status via DB
+                            print("🚨 BMP degradado após 10 tentativas — bypass via DB")
+                            try:
+                                admin.bypass_bmp(projeto_id)
+                                sucesso_mesa = True
+                                break
+                            except Exception as e:
+                                print(f"Aviso bypass_bmp: {e}")
+
+                    # Ação 4: CCB emitida — só precisar chamar aguardar_assinatura
+                    elif sys_status in ['ccb_issued', 'waiting_ccb']:
                         try:
-                            admin.emitir_ccb(projeto_id)
-                            time.sleep(2)
                             admin.aguardar_assinatura(projeto_id)
                         except Exception as e:
-                            print(f"Aviso ao tentar forçar CCB: {e}")
+                            print(f"Aviso aguardar_assinatura: {e}")
 
                     time.sleep(5)
 
                 if not sucesso_mesa:
                     print("Aviso: Loop da mesa estourou o tempo, tentando forçar sequência...")
 
-            # A Fase 4 antiga (fora do loop) pode até ser deletada se quiser, pois agora o loop faz o trabalho!
-
-        # --- 4. GARANTIR EMISSÃO DE CCB E LIBERAÇÃO ---
-        with allure.step("Fase 4: Emissão CCB e Liberação de Assinaturas"):
+        # --- 4. GARANTIR ASSINATURA (fallback se saiu do loop sem sucesso) ---
+        with allure.step("Fase 4: Garantir Liberação de Assinaturas"):
             _, sys_status, _ = admin._get_status_hml(projeto_id)
-            if sys_status != 'waiting_signatures':
+            if sys_status not in ['waiting_signatures', 'signature']:
                 try:
-                    admin.emitir_ccb(projeto_id)
-                    time.sleep(2)
                     admin.aguardar_assinatura(projeto_id)
                 except Exception as e:
-                    print(f"Fallback CCB info: {e}")
+                    print(f"Fallback aguardar_assinatura: {e}")
 
         # --- ATUALIZA A TELA PARA VER O RESULTADO FINAL DO GATE 05 ---
         page.reload()

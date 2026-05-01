@@ -1,0 +1,88 @@
+name: 📈 Allure Report — GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - feat/**          # Publica também em feature branches (para testar)
+    paths:
+      - 'allure-results/**'   # Só dispara quando resultados forem commitados
+  workflow_dispatch:           # Disparo manual
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  publish-allure:
+    name: Gerar e Publicar Allure Report
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verificar se allure-results existe
+        id: check_results
+        run: |
+          if [ -d "allure-results" ] && [ "$(ls -A allure-results/*.json 2>/dev/null | wc -l)" -gt "0" ]; then
+            echo "has_results=true" >> $GITHUB_OUTPUT
+            echo "Encontrados $(ls allure-results/*.json | wc -l) arquivos de resultado"
+          else
+            echo "has_results=false" >> $GITHUB_OUTPUT
+            echo "Nenhum resultado encontrado em allure-results/"
+          fi
+
+      - name: Instalar Allure CLI
+        if: steps.check_results.outputs.has_results == 'true'
+        run: |
+          wget -q https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
+          tar -xzf allure-2.27.0.tgz
+          sudo mv allure-2.27.0 /opt/allure
+          sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure
+          allure --version
+
+      - name: Recuperar histórico de execuções anteriores (trend)
+        if: steps.check_results.outputs.has_results == 'true'
+        run: |
+          # Busca histórico do gh-pages para manter trend de execuções
+          git fetch origin gh-pages --depth=1 2>/dev/null || echo "Branch gh-pages ainda nao existe"
+          if git show-ref --quiet refs/remotes/origin/gh-pages; then
+            mkdir -p allure-results/history
+            git show origin/gh-pages:history/history.json > allure-results/history/history.json 2>/dev/null || true
+            git show origin/gh-pages:history/trend.json > allure-results/history/trend.json 2>/dev/null || true
+            echo "Historico recuperado"
+          fi
+
+      - name: Gerar Allure Report HTML
+        if: steps.check_results.outputs.has_results == 'true'
+        run: |
+          allure generate allure-results --clean -o allure-report
+          echo "Report gerado em allure-report/"
+          ls allure-report/
+
+      - name: Adicionar index redirect na raiz
+        if: steps.check_results.outputs.has_results == 'true'
+        run: |
+          # Copia histórico para o report (para próxima execução ter trend)
+          mkdir -p allure-report/history
+          cp allure-results/history/*.json allure-report/history/ 2>/dev/null || true
+
+      - name: Publicar no GitHub Pages (branch gh-pages)
+        if: steps.check_results.outputs.has_results == 'true'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report
+          publish_branch: gh-pages
+          commit_message: "docs: atualiza Allure Report [skip ci]"
+          force_orphan: false
+
+      - name: Resultado sem dados
+        if: steps.check_results.outputs.has_results != 'true'
+        run: |
+          echo "Nenhum resultado para publicar."
+          echo "Execute os testes localmente e commite a pasta allure-results/"

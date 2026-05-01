@@ -1,14 +1,13 @@
 import smtplib
 import os
-import markdown
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
 
 
 def enviar_relatorio():
-    email_remetente = os.environ.get('EMAIL_USER')
-    senha_remetente = os.environ.get('EMAIL_PASS')
+    email_remetente = os.environ.get("EMAIL_USER")
+    senha_remetente = os.environ.get("EMAIL_PASS")
 
     destinatarios = [
         "rcardoso1904@gmail.com",
@@ -16,43 +15,44 @@ def enviar_relatorio():
         "pedro.vinicius@groove.tech",
         "agata.oliveira@groove.tech",
         "andre.nunes@groove.tech",
-        "andre.martins@groove.tech"
+        "andre.martins@groove.tech",
+        "pablo.borges@groove.tech",
+        "daniel.cochoni@groove.tech",
     ]
 
+    # Lê o HTML gerado pelo gerar_dashboard.py
+    arquivo_html = "email_dashboard.html"
+    if not os.path.exists(arquivo_html):
+        print(f"❌ Arquivo {arquivo_html} não encontrado. Execute gerar_dashboard.py antes.")
+        return
+
+    with open(arquivo_html, "r", encoding="utf-8") as f:
+        html_final = f.read()
+
+    assunto = f"📊 Dashboard QA SolAgora — {datetime.now().strftime('%d/%m/%Y %H:%M')}"
+
     try:
-        with open('email_dashboard.md', 'r', encoding='utf-8') as f:
-            conteudo_md = f.read()
-
-        corpo_html = markdown.markdown(conteudo_md, extensions=['tables'])
-
-        html_final = f"""
-        <html>
-            <body style="font-family: Arial, sans-serif; color: #333;">
-                <div style="max-width: 800px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 10px;">
-                    {corpo_html}
-                </div>
-            </body>
-        </html>
-        """
-
-        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server = smtplib.SMTP("smtp.gmail.com", 587)
         server.starttls()
         server.login(email_remetente, senha_remetente)
 
-        for destino in destinatarios:
-            msg = MIMEMultipart()
-            msg['From'] = email_remetente
-            msg['To'] = destino
-            msg['Subject'] = f"🚀 Status Automação SolAgora - {datetime.now().strftime('%d/%m/%Y %H:%M')}"
+        msg = MIMEMultipart("alternative")
+        msg["From"] = email_remetente
+        msg["To"] = email_remetente          # remetente no To (campo visível)
+        msg["Bcc"] = ", ".join(destinatarios)  # destinatários em BCC (invisível entre si)
+        msg["Subject"] = assunto
+        msg.attach(MIMEText(html_final, "html"))
 
-            msg.attach(MIMEText(html_final, 'html'))
-            server.sendmail(email_remetente, destino, msg.as_string())
-            print(f"✅ E-mail enviado para: {destino}")
+        todos = [email_remetente] + destinatarios
+        server.sendmail(email_remetente, todos, msg.as_string())
+        print(f"Email enviado para {len(destinatarios)} destinatarios via BCC.")
 
         server.quit()
+        print("Todos os e-mails enviados com sucesso.")
     except Exception as e:
-        print(f"❌ Erro ao enviar e-mail: {e}")
+        print(f"Erro ao enviar e-mail: {e}")
+        raise
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     enviar_relatorio()

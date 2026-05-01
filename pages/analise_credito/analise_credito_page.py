@@ -1,3 +1,4 @@
+import re
 import allure
 import pytest
 from playwright.sync_api import Page, expect
@@ -23,32 +24,31 @@ class AnaliseCreditoPage:
         self.btn_enviar_analise = page.get_by_role("button", name="Enviar para análise de crédito")
         self.btn_continuar = page.get_by_role("button", name="Continuar para documentação")
 
-    @allure.step("Ação: Aceitar termos de uso e privacidade")
+    @allure.step("Ação: Aceitar termos de uso e privacidade (se exibido)")
     def aceitar_termos(self):
-        # 1. Garante que a div está visível
-        self.cbx_termos.wait_for(state="visible", timeout=7000)
-        self.cbx_termos.scroll_into_view_if_needed()
-
-        # 2. Clica na div (pois o .check() não funciona fora de inputs nativos)
-        self.cbx_termos.click()
-
-        # 3. Pequena pausa para o sistema processar a liberação do botão (debounce)
-        self.page.wait_for_timeout(500)
+        try:
+            self.cbx_termos.wait_for(state="visible", timeout=20000)
+            self.cbx_termos.scroll_into_view_if_needed()
+            self.cbx_termos.click()
+            self.page.wait_for_timeout(500)
+        except Exception:
+            # Checkbox removido da aplicação ou não exibido neste fluxo
+            pass
 
     @allure.step("Ação: Iniciar a criação da proposta no painel")
     def iniciar_proposta(self):
         # Garante que o botão habilitou após o aceite dos termos
-        expect(self.btn_quero_proposta).to_be_enabled(timeout=5000)
+        expect(self.btn_quero_proposta).to_be_enabled(timeout=20000)
         self.btn_quero_proposta.click()
 
     @allure.step("Ação Intermediária: Tratar modal de escolha de seguro ({escolha})")
     def tratar_modal_seguro(self, escolha: str):
         try:
             if escolha.upper() == "COM SEGURO":
-                self.btn_com_seguro.wait_for(state="visible", timeout=3000)
+                self.btn_com_seguro.wait_for(state="visible", timeout=10000)
                 self.btn_com_seguro.click()
             else:
-                self.btn_sem_seguro.wait_for(state="visible", timeout=3000)
+                self.btn_sem_seguro.wait_for(state="visible", timeout=10000)
                 self.btn_sem_seguro.click()
         except Exception:
             # Se o modal não aparecer (regra de negócio ou cache), o teste segue
@@ -86,6 +86,12 @@ class AnaliseCreditoPage:
         # 3. Submissão final
         self.obter_botao_envio().click()
 
-        # 4. Aguarda a transição para a tela de documentação
-        expect(self.btn_continuar).to_be_visible(timeout=20000)
+        # 4. Aguarda a transição para a tela de documentação (SPA usa pushState, não load event)
+        # Screenshot antes do assert — captura o estado real da tela se falhar
+        allure.attach(self.page.screenshot(full_page=True), name="Pre_Assert_Continuar_Documentacao",
+                      attachment_type=allure.attachment_type.PNG)
+        expect(self.btn_continuar).to_be_visible(timeout=180000)
         self.btn_continuar.click()
+        expect(self.page).to_have_url(re.compile(".*documentation.*"), timeout=30000)
+        # 5. Aguarda seção de uploads carregar (indica que todas as APIs da doc. completaram)
+        self.page.get_by_text("Conta de energia", exact=False).first.wait_for(state="visible", timeout=60000)

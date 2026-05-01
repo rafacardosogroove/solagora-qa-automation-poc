@@ -1,0 +1,21 @@
+Modal de seguro 'SEM SEGURO' não disparou, seguindo fluxo.
+[Gate05] tentativa=0 status=waiting_biometrics
+[Gate05] tentativa=1 status=waiting_process_bmp
+[Gate05] BMP callback err: BMP Code ainda nao preenchido para d1266384-8f1f-4485-8b4f-7cc3bbb762ab — aguardando BMP processar
+[Gate05] tentativa=2 status=waiting_process_bmp
+[Gate05] BMP callback err: BMP Code ainda nao preenchido para d1266384-8f1f-4485-8b4f-7cc3bbb762ab — aguardando BMP processar
+[Gate05] tentativa=3 status=waiting_process_bmp
+[Gate05] BMP callback err: BMP Code ainda nao preenchido para d1266384-8f1f-4485-8b4f-7cc3bbb762ab — aguardando BMP processar
+[Gate05] tentativa=4 status=waiting_process_bmp
+[Gate05] BMP callback err: BMP Code ainda nao preenchido para d1266384-8f1f-4485-8b4f-7cc3bbb762ab — aguardando BMP processar
+[Gate05] tentativa=5 status=waiting_process_bmp
+[Gate05] BMP callback err: BMP Code ainda nao preenchido para d1266384-8f1f-4485-8b4f-7cc3bbb762ab — aguardando BMP processar
+[Gate05] tentativa=6 status=waiting_process_bmp
+[Gate05] CCB fallback err: Erro ao emitir CCB: 404 - 
+[Gate05] tentativa=7 status=waiting_signatures
+[Gate07] status inicial: waiting_billing_data
+[Gate07] Forçando status doc_pagamento_analise (simula NF subida)
+[Gate07] classificar_nota falhou (Erro ao classificar nota: 500 - {"title":"Ocorreu um erro na operação","status":500,"detail":"Tente novamente ou entre em contato com o nosso atendimento","errors":[]}) — forçando proposal_released via DB
+[Gate07] aprovar_cessao err: Erro ao aprovar cessao: 422 - {"title":"Erro de Validação","status":422,"detail":"Current and destination status are equals.","errors":[]} — forçando proposal_released via DB
+[callbacks] Enviando callback 10 (cessao iniciada)...
+[Gate07] callbacks cessão err (ignorado): BMP Code ainda nao preenchido para d1266384-8f1f-4485-8b4f-7cc3bbb762ab — aguardando BMP processar

@@ -48,6 +48,34 @@ def step_preencher_nf_equip(page: Page, numero, valor):
         faturamento_page.preencher_nf_equipamento(numero, valor, "conta.jpg")
 
 
+@when(parsers.parse('preencho os dados da Nota Fiscal de Serviço com número "{numero}" e valor "{valor}"'))
+def step_preencher_nf_serv(page: Page, numero, valor):
+    with allure.step(f"Ação: Preencher dados da NF de Serviço (Nº {numero} | R$ {valor})"):
+        faturamento_page = FaturamentoPage(page)
+        faturamento_page.preencher_nf_servico(numero, valor, "conta.jpg")
+
+
+@when(parsers.parse('seleciono o fabricante do inversor "{fabricante}" e quantidade "{quantidade}"'))
+def step_fabricante_inversor(page: Page, fabricante, quantidade):
+    with allure.step(f"Ação: Selecionar inversor {fabricante} (qtd: {quantidade})"):
+        faturamento_page = FaturamentoPage(page)
+        faturamento_page.selecionar_fabricante_inversor(fabricante, quantidade)
+
+
+@when(parsers.parse('seleciono o fabricante do módulo "{fabricante}" e quantidade "{quantidade}"'))
+def step_fabricante_modulo(page: Page, fabricante, quantidade):
+    with allure.step(f"Ação: Selecionar módulo {fabricante} (qtd: {quantidade})"):
+        faturamento_page = FaturamentoPage(page)
+        faturamento_page.selecionar_fabricante_modulo(fabricante, quantidade)
+
+
+@when('finalizo o envio das notas e informações')
+def step_finalizar_envio(page: Page):
+    with allure.step("Ação: Finalizar envio das notas e informações"):
+        faturamento_page = FaturamentoPage(page)
+        faturamento_page.finalizar_envio_notas()
+
+
 # ==========================================
 # PASSOS DE VALIDAÇÃO (ENTÃO)
 # ==========================================

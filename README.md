@@ -1,133 +1,206 @@
-<<<<<<< HEAD
-# 📊 Dashboard de Engenharia de Qualidade - SolAgora
+# SolAgora QA Automation — E2E Tests
 
-### 🛤️ Esteira de Cobertura (Gates)
-🔵 **Login** --- 🔵 **Simulação** --- 🔵 **Análise de Crédito** --- 🔵 **Documentação** --- ⚪ **Notas Fiscais** --- ⚪ **Pagamento**
+Framework de automação E2E para o portal do integrador SolAgora.
+Cobre o fluxo completo de uma proposta do Gate 01 (login) ao Gate 08 (equipamentos).
 
 ---
 
-> 👤 **Último Push:** Rafael Cardoso | 🕒 **Atualizado em:** 11/03/2026 13:00
+## 📋 Índice
 
-## 🏆 Top QAs (Ranking de Commits)
+1. [Pré-requisitos](#pré-requisitos)
+2. [Como rodar os testes](#como-rodar-os-testes)
+3. [Entendendo a estrutura do projeto](#entendendo-a-estrutura-do-projeto)
+4. [Cadeia de Gates (herança de contexto)](#cadeia-de-gates)
+5. [Como criar um novo Gate](#como-criar-um-novo-gate)
 
-| QA | Total de Pushes (Commits) |
-|:---|:---:|
-| 👨‍💻 **Rafael Cardoso** | 44 |
-| 👨‍💻 **Robô da Qualidade (QA Bot)** | 37 |
+---
 
-## 🚀 Status da Automação
+## Pré-requisitos
 
-| Categoria | Total |
-| :--- | :---: |
-| 📝 Cenários Totais (incl. Esquemas) | 12 |
-| 📄 Page Objects | 27 |
-| 🧪 Scripts de Teste | 9 |
+Antes de rodar qualquer teste, garanta que:
 
-## 📂 Detalhamento de Negócio (Features)
+- **VPN está conectada** — obrigatório para acessar o ambiente HML
+- Python 3.12+ instalado
+- Dependências instaladas:
 
-| Feature | Volume de Testes | Autor Principal | Modificação |
-|:---|:---|:---|:---:|
-| Gate 02 - Simulação de Financiamento (P1) | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
-| Gate 03 - Análise de Crédito e Dados Cadastrais | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
-| Gate 04 - Documentação e Dados Cadastrais Finais | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
-| Gate 07 - Upload de Notas Fiscais e Equipamentos | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
-| Gate 06 - Assinatura Eletrônica da Proposta (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
-| Gate 08 - Confirmação de Entrega e Monitoração (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
-| Gate 05 - Orquestração e Aprovações (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
-| Gate 01 - Controle de Acesso e Autenticação | 5 🟦🟦🟦🟦🟦 | Rafael Cardoso Santana Costa | 11/03/2026 |
+```bash
+pip install -r requirements.txt
+playwright install chromium
+```
 
-### 📄 Page Objects Criados
+- Arquivo `.env` na raiz do projeto (peça ao tech lead — nunca commite este arquivo)
 
-<details>
-<summary><b>Clique para ver a lista de 27 pages</b></summary>
+---
 
-<ul>
-<li><code>Analise_processamento_page</code></li>
-<li><code>Verificacao_notas_fiscais_page</code></li>
-<li><code>admin_page</code></li>
-<li><code>analise_credito_page</code></li>
-<li><code>analise_credito_page</code></li>
-<li><code>conferir_documentacao</code></li>
-<li><code>dashboard_page</code></li>
-<li><code>documentacao_completa_page</code></li>
-<li><code>documentacao_e_comprovantes_page</code></li>
-<li><code>documentacao_page</code></li>
-<li><code>documentacao_pj</code></li>
-<li><code>documentacao_popup_page</code></li>
-<li><code>faturamento_page</code></li>
-<li><code>login_page</code></li>
-<li><code>modal_conta_energia_page</code></li>
-<li><code>modal_conta_energia_page</code></li>
-<li><code>modal_notas_fiscais_page</code></li>
-<li><code>modal_pagamento_page</code></li>
-<li><code>notas_fiscais_page</code></li>
-<li><code>opcoes_parcelamento_page</code></li>
-<li><code>pagamento_processo_iniciado_page</code></li>
-<li><code>politica_renda_page</code></li>
-<li><code>resultado_simulacao_page</code></li>
-<li><code>resultado_simulacao_page</code></li>
-<li><code>simulacao_page</code></li>
-<li><code>simulador_page</code></li>
-<li><code>validacao_valoresv_page</code></li>
-</ul>
-</details>
+## Como rodar os testes
 
-## 📜 Histórico Recente de Commits
+### Rodar um gate específico
 
-| Data | Autor | Mensagem |
-|:---|:---|:---|
-| 11/03 10:00 | **Rafael Cardoso** | feature: Criaçãio Orquestrador BackEnd, reformulação de todas as chamadas serviços HML |
-| 10/03 03:23 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
-| 10/03 00:23 | **Rafael Cardoso** | feat(automacao): estruturação inicial dos Gates 06 ao 08 (Assinatura, Faturamento e Equipamentos) |
-| 10/03 01:37 | **Robô da Qualidade (QA Bot)** | docs: 📊 Atualiza dashboard automático |
-| 09/03 22:37 | **Rafael Cardoso** | feat(gate-05): orquestração resiliente de aprovações com validação via banco |
+```bash
+# Gate 01 — Login
+pytest tests/test_gate_01_auth.py -v
 
-## 🏷️ Cobertura de Tags
+# Gate 03 — Análise de Crédito
+pytest tests/test_gate_03_analise.py -v
 
-| Tag | Usos |
-|---|---|
-| `@fluxo_admin` | 4 |
-| `@auth` | 4 |
-| `@smoke_test` | 3 |
-| `@simulacao` | 2 |
-| `@analise_credito` | 2 |
-| `@documentacao` | 2 |
-| `@gate02` | 1 |
-| `@gate03` | 1 |
-| `@gate04` | 1 |
-| `@faturamento` | 1 |
-| `@gate07` | 1 |
-| `@assinatura` | 1 |
-| `@gate06` | 1 |
-| `@equipamentos` | 1 |
-| `@gate08` | 1 |
-| `@aprovacoes` | 1 |
-| `@gate05` | 1 |
-| `@login` | 1 |
-| `@gate01` | 1 |
-| `@pr_blocker` | 1 |
-| `@login_invalido` | 1 |
-| `@logout` | 1 |
-| `@acesso_negado` | 1 |
-=======
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Gate 08 — Equipamentos (roda TODA a cadeia do zero)
+pytest tests/test_gate_08_equipamentos.py -v
+```
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+### Rodar por marcação
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+```bash
+# Só testes rápidos (smoke)
+pytest -m smoke -v
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+# Suite completa de regressão
+pytest -m regression -v
+```
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
->>>>>>> 9634c53f142ca9f3a22d0366cc0a49ba89896399
+### Ver relatório Allure após execução
+
+```bash
+allure serve allure-results
+```
+
+> **Dica:** Se o teste falhar, o Allure já captura screenshot automático da tela no momento do erro. Procure o anexo `SITUAÇÃO_NO_ERRO` no relatório.
+
+---
+
+## Entendendo a estrutura do projeto
+
+```
+solagora-qa-automation-poc/
+│
+├── features/           # Cenários de teste em linguagem natural (Gherkin)
+│   ├── login/
+│   ├── simulacao/
+│   ├── analise_credito/
+│   ├── documentacao/
+│   └── admin/          # Gates 05 a 08
+│
+├── pages/              # Page Objects — locators e ações de cada tela
+│   ├── login_page.py
+│   ├── simulacao/
+│   ├── analise_credito/
+│   ├── documentacao/
+│   └── admin/
+│
+├── tests/              # Arquivos de teste (um por Gate)
+│   ├── conftest.py     # ⭐ Motor central — macros e fixtures compartilhadas
+│   ├── test_gate_01_auth.py
+│   ├── test_gate_02_simulacao.py
+│   └── ...
+│
+├── utils/
+│   ├── hml_client.py           # Cliente HTTP + DB para o ambiente HML
+│   ├── backend_orchestrator.py # Orquestra aprovações via API (sem UI)
+│   └── Generators.py           # Geração de CPF, email, telefone aleatórios
+│
+└── data/               # Arquivos usados nos uploads (ex: conta.jpg)
+```
+
+---
+
+## Cadeia de Gates
+
+Cada Gate herda automaticamente todos os anteriores via `conftest.py`.
+Você **não precisa** preparar o ambiente manualmente — basta declarar o `Dado` correto na feature.
+
+```
+Gate 01 — Login
+  └── Gate 02 — Simulação de Financiamento
+        └── Gate 03 — Análise de Crédito
+              └── Gate 04 — Documentação
+                    └── Gate 05 — Aprovação Mesa Interna (via API)
+                          └── Gate 06 — Assinatura Eletrônica (via API)
+                                └── Gate 07 — Notas Fiscais (via API)
+                                      └── Gate 08 — Equipamentos e Monitoração (via API)
+```
+
+### Como funciona na prática
+
+No arquivo `.feature`, você declara apenas o ponto de partida:
+
+```gherkin
+# Para testar Gate 06, basta declarar:
+Dado que o projeto foi aprovado pela mesa interna
+# O framework já executa Gates 01 a 05 automaticamente por baixo
+```
+
+---
+
+## Como criar um novo Gate
+
+Siga estes 3 passos:
+
+### 1. Crie o arquivo de feature
+
+```
+features/admin/gate_09_meu_gate.feature
+```
+
+```gherkin
+# language: pt
+@meu_gate
+Funcionalidade: Gate 09 - Descrição do que este gate valida
+
+  Contexto: Estado inicial necessário
+    Dado que as notas fiscais do projeto foram enviadas e aprovadas  ← herda tudo até Gate 07
+
+  @gate09
+  Cenário: Descrição do cenário
+    Quando faço alguma ação
+    Então o sistema deve exibir o resultado esperado
+```
+
+### 2. Crie o arquivo de teste
+
+```
+tests/test_gate_09_meu_gate.py
+```
+
+```python
+from pytest_bdd import scenarios, when, then
+from playwright.sync_api import Page, expect
+
+scenarios('../features/admin/gate_09_meu_gate.feature')
+
+@when('faço alguma ação')
+def step_minha_acao(page: Page):
+    # seu código aqui
+    pass
+
+@then('o sistema deve exibir o resultado esperado')
+def step_validacao(page: Page):
+    # seu assert aqui
+    pass
+```
+
+### 3. Registre a marca no `pytest.ini`
+
+Abra `pytest.ini` e adicione na seção `markers`:
+
+```ini
+gate09: gate 9 - descrição
+```
+
+> **Regra de ouro:** Nunca coloque seletores (locators) dentro dos arquivos de teste.
+> Seletores ficam **sempre** no Page Object (`pages/`).
+> Testes só chamam métodos do Page Object.
+
+---
+
+## Dúvidas frequentes
+
+**Q: O teste falhou com `403` ou `RuntimeError: Keycloak`**
+A: VPN desconectou. Reconecte e rode novamente.
+
+**Q: O teste demorou muito e deu timeout na análise de crédito**
+A: Ambiente HML pode estar lento. Tente novamente em alguns minutos.
+
+**Q: Como saber qual CPF foi usado no teste?**
+A: Abra o Allure Report e procure o anexo `Massa_de_Dados` no step da simulação.
+
+**Q: Posso commitar o arquivo `.env`?**
+A: **Nunca.** Ele contém credenciais. Está no `.gitignore`.

@@ -5,6 +5,25 @@ import time
 from playwright.sync_api import Page, expect
 from pytest_bdd import given, when, then, parsers
 
+
+# ==============================================================================
+# BROWSER — janela maximizada para todos os gates
+# ==============================================================================
+
+@pytest.fixture(scope="session")
+def browser_type_launch_args(browser_type_launch_args):
+    return {
+        **browser_type_launch_args,
+        "args": ["--start-maximized"],
+    }
+
+@pytest.fixture(scope="session")
+def browser_context_args(browser_context_args):
+    return {
+        **browser_context_args,
+        "viewport": {"width": 1920, "height": 1080},
+    }
+
 # Imports de Utilitários e API
 from utils.Generators import Generators
 from utils.hml_client import hml
@@ -76,6 +95,23 @@ def admin_page(page: Page) -> AdminPage: return AdminPage(page)
 # ==============================================================================
 # 3. CONTEXTOS MACRO PROGRESSIVOS (O MOTOR DO BDD)
 # ==============================================================================
+#
+# CADEIA DE HERANÇA — cada macro chama o anterior automaticamente:
+#
+#   macro_login                        → Gate 01
+#     └── macro_simulacao_aprovada     → Gate 02
+#           └── macro_analise_aprovada → Gate 03
+#                 └── macro_documentacao_enviada    → Gate 04
+#                       └── macro_aprovado_mesa_interna → Gate 05 (API)
+#                             └── macro_contrato_assinado    → Gate 06 (API)
+#                                   └── macro_notas_enviadas → Gate 07 (API)
+#                                         └── Gate 08 usa macro_notas_enviadas
+#
+# Como usar na feature:
+#   Dado que as notas fiscais do projeto foram enviadas e aprovadas
+#   → executa Gates 01 a 07 automaticamente antes do seu cenário
+#
+# ==============================================================================
 
 @given('que o ambiente de homologação está respondendo na página de login')
 def step_ambiente_acessivel(page: Page):
@@ -99,7 +135,7 @@ def macro_simulacao_aprovada(page: Page, login_page: LoginPage, simulacao_page: 
         cpf_gerado = Generators.cpf()
         context_data['cpf_utilizado'] = cpf_gerado  # Fundamental para buscas futuras (ex: Gate 07)
         allure.attach(f"CPF Gerado para o Fluxo: {cpf_gerado}", name="Massa_de_Dados")
-        simulacao_page.preencher_dados_simulacao(cpf_gerado, "8000", "50000", "ALDO", "1000", "10")
+        simulacao_page.preencher_dados_simulacao(cpf_gerado, "8000", "50000", "ALDO", "1000", "28")
 
 
 @given('que o cliente foi aprovado na análise de crédito')
