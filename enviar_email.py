@@ -36,19 +36,21 @@ def enviar_relatorio():
         server.starttls()
         server.login(email_remetente, senha_remetente)
 
-        for destino in destinatarios:
-            msg = MIMEMultipart("alternative")
-            msg["From"] = email_remetente
-            msg["To"] = destino
-            msg["Subject"] = assunto
-            msg.attach(MIMEText(html_final, "html"))
-            server.sendmail(email_remetente, destino, msg.as_string())
-            print(f"✅ E-mail enviado para: {destino}")
+        msg = MIMEMultipart("alternative")
+        msg["From"] = email_remetente
+        msg["To"] = email_remetente          # remetente no To (campo visível)
+        msg["Bcc"] = ", ".join(destinatarios)  # destinatários em BCC (invisível entre si)
+        msg["Subject"] = assunto
+        msg.attach(MIMEText(html_final, "html"))
+
+        todos = [email_remetente] + destinatarios
+        server.sendmail(email_remetente, todos, msg.as_string())
+        print(f"Email enviado para {len(destinatarios)} destinatarios via BCC.")
 
         server.quit()
-        print("✅ Todos os e-mails enviados com sucesso.")
+        print("Todos os e-mails enviados com sucesso.")
     except Exception as e:
-        print(f"❌ Erro ao enviar e-mail: {e}")
+        print(f"Erro ao enviar e-mail: {e}")
         raise
 
 
