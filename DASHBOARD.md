@@ -1,6 +1,6 @@
 # 📊 Dashboard de Engenharia de Qualidade — SolAgora
 
-> 👤 **Último push:** Rafael Cardoso &nbsp;|&nbsp; 🕒 **Atualizado:** 30/04/2026 às 05:02 &nbsp;|&nbsp; Status: 🟢 **Saudável**
+> 👤 **Último push:** Rafael Cardoso &nbsp;|&nbsp; 🕒 **Atualizado:** 01/05/2026 às 03:05 &nbsp;|&nbsp; Status: 🟢 **Saudável**
 
 ---
 
@@ -21,27 +21,27 @@
 | 📝 Cenários BDD (incl. Esquemas) | **12** |
 | 📄 Page Objects | **27** |
 | 🧪 Scripts de Teste | **9** |
-| 🔁 Commits (humanos) | **59** |
+| 🔁 Commits (humanos) | **60** |
 
 ## 🏆 Ranking de QAs
 
 | # | QA | Commits |
 |:---:|:---|:---:|
-| 🥇 | Rafael Cardoso | 58 |
+| 🥇 | Rafael Cardoso | 59 |
 | 🥈 | Eneas Silva | 1 |
 
 ## 📂 Features por Domínio
 
 | Feature | Cenários | Autor | Modificado |
 |:---|:---:|:---|:---:|
-| Gate 02 - Simulação de Financiamento (P1) | 1 🟦 | Rafael Cardoso Santana Costa | 30/04/2026 |
-| Gate 01 - Controle de Acesso e Autenticação | 5 🟦🟦🟦🟦🟦 | Rafael Cardoso Santana Costa | 30/04/2026 |
-| Gate 06 - Assinatura Eletrônica da Proposta (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 30/04/2026 |
-| Gate 05 - Orquestração e Aprovações (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 30/04/2026 |
-| Gate 08 - Confirmação de Entrega e Monitoração (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 30/04/2026 |
-| Gate 07 - Upload de Notas Fiscais e Equipamentos | 1 🟦 | Rafael Cardoso Santana Costa | 30/04/2026 |
-| Gate 04 - Documentação e Dados Cadastrais Finais | 1 🟦 | Rafael Cardoso Santana Costa | 30/04/2026 |
-| Gate 03 - Análise de Crédito e Dados Cadastrais | 1 🟦 | Rafael Cardoso Santana Costa | 30/04/2026 |
+| Gate 02 - Simulação de Financiamento (P1) | 1 🟦 | Rafael Cardoso Santana Costa | 01/05/2026 |
+| Gate 01 - Controle de Acesso e Autenticação | 5 🟦🟦🟦🟦🟦 | Rafael Cardoso Santana Costa | 01/05/2026 |
+| Gate 06 - Assinatura Eletrônica da Proposta (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 01/05/2026 |
+| Gate 05 - Orquestração e Aprovações (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 01/05/2026 |
+| Gate 08 - Confirmação de Entrega e Monitoração (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 01/05/2026 |
+| Gate 07 - Upload de Notas Fiscais e Equipamentos | 1 🟦 | Rafael Cardoso Santana Costa | 01/05/2026 |
+| Gate 04 - Documentação e Dados Cadastrais Finais | 1 🟦 | Rafael Cardoso Santana Costa | 01/05/2026 |
+| Gate 03 - Análise de Crédito e Dados Cadastrais | 1 🟦 | Rafael Cardoso Santana Costa | 01/05/2026 |
 
 ## 📜 Últimos Commits
 
@@ -79,4 +79,4 @@
 ---
 **[Ver Allure Report Completo](https://rafacardosogroove.github.io/solagora-qa-automation-poc/)** — evidências, screenshots e steps detalhados
 
-*Gerado automaticamente pelo QA Bot — 30/04/2026 às 05:02*
+*Gerado automaticamente pelo QA Bot — 01/05/2026 às 03:05*
