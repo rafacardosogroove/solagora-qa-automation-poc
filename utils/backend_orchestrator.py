@@ -141,11 +141,52 @@ class OrquestradorBackend:
 
     @allure.step("Orquestrador: Aprovar Gate 08 (Equipamento Entregue e Monitoração)")
     def orquestrar_gate_08(self, project_id):
-        # 1. Aguarda Doc
+        # 0. Garante que o projeto passou pelo pagamento do fundo antes de Gate 08
+        # equip_aguardar_doc exige status payment_assignment_finished
+        # Fluxo: proposal_released → fund_payment_started → fund_payment_finished → payment_assignment_finished
+        _, sys_status, _ = self.api._get_status_hml(project_id)
+        print(f"[Gate08] status inicial: {sys_status}")
+
+        if sys_status == "proposal_released":
+            print("[Gate08] Executando fund_payment_started...")
+            try:
+                self.api.fund_payment_started(project_id)
+                time.sleep(2)
+            except Exception as e:
+                print(f"[Gate08] fund_payment_started err: {e}")
+
+            print("[Gate08] Executando fund_payment_finished...")
+            try:
+                self.api.fund_payment_finished(project_id)
+                time.sleep(3)
+            except Exception as e:
+                print(f"[Gate08] fund_payment_finished err: {e}")
+
+            _, sys_status, _ = self.api._get_status_hml(project_id)
+            print(f"[Gate08] status após fund payments: {sys_status}")
+
+        # 1. Aguarda Doc equipamento entregue
         self.api.equip_aguardar_doc(project_id)
         time.sleep(2)
 
-        # 2. Cliente Confirma
+        # 2. Integrador confirma (endpoint removido em alguns envs — try/except)
+        try:
+            self.api.equip_confirmar_integrador(project_id)
+            time.sleep(2)
+            print("[Gate08] equip_confirmar_integrador OK")
+        except Exception as e:
+            print(f"[Gate08] equip_confirmar_integrador ignorado ({e}) — forcando status via DB")
+            # Endpoint removido em HML: forca waiting_confirmation_equipment_delivered via DB
+            # para que equip_confirmar_cliente possa executar
+            STATUS_WAITING_CONFIRMATION_EQUIP = "33446459-1806-4dbb-b4dd-daae33320629"
+            try:
+                self.api._set_status_hml(project_id, STATUS_WAITING_CONFIRMATION_EQUIP)
+                time.sleep(1)
+                print("[Gate08] Status forcado para waiting_confirmation_equipment_delivered via DB")
+            except Exception as e2:
+                print(f"[Gate08] fallback DB err: {e2}")
+
+        # 3. Cliente confirma entrega
         self.api.equip_confirmar_cliente(project_id)
         time.sleep(5)  # Aguarda worker RabbitMQ
 
