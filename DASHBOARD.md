@@ -1,6 +1,6 @@
 # 📊 Dashboard de Engenharia de Qualidade — SolAgora
 
-> 👤 **Último push:** Rafael Cardoso &nbsp;|&nbsp; 🕒 **Atualizado:** 04/05/2026 às 17:58 &nbsp;|&nbsp; Status: 🟢 **Saudável**
+> 👤 **Último push:** Rafael Cardoso &nbsp;|&nbsp; 🕒 **Atualizado:** 04/05/2026 às 19:37 &nbsp;|&nbsp; Status: 🟢 **Saudável**
 
 ---
 
@@ -21,13 +21,13 @@
 | 📝 Cenários BDD (incl. Esquemas) | **23** |
 | 📄 Page Objects | **30** |
 | 🧪 Scripts de Teste | **16** |
-| 🔁 Commits (humanos) | **70** |
+| 🔁 Commits (humanos) | **72** |
 
 ## 🏆 Ranking de QAs
 
 | # | QA | Commits |
 |:---:|:---|:---:|
-| 🥇 | Rafael Cardoso | 68 |
+| 🥇 | Rafael Cardoso | 70 |
 | 🥈 | Eneas Silva | 2 |
 
 ## 📂 Features por Domínio
@@ -98,4 +98,4 @@
 ---
 **[Ver Allure Report Completo](https://rafacardosogroove.github.io/solagora-qa-automation-poc/)** — evidências, screenshots e steps detalhados
 
-*Gerado automaticamente pelo QA Bot — 04/05/2026 às 17:58*
+*Gerado automaticamente pelo QA Bot — 04/05/2026 às 19:37*
