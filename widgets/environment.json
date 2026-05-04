@@ -1,1 +1,1 @@
-[]
+[{"values":["Chromium"],"name":"Browser"},{"values":["Homologacao"],"name":"Environment"},{"values":["https://integrator.hom.solagora.com.br"],"name":"Base.URL"},{"values":["https://admin.hom.solagora.com.br"],"name":"Admin.URL"},{"values":["1920x1080"],"name":"Viewport"}]
