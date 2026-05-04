@@ -68,5 +68,5 @@ def step_sem_badge_campos_vazios(customers_list_page: CustomersListPage,
     cpf = customer_data_module.CUSTOMER['cpf']
     customer_edit_page.clicar_voltar()
     customers_list_page.navegar_para_clientes()
-    customers_list_page.ir_para_pagina_cliente()
+    customers_list_page.buscar_por_cpf(cpf)
     customers_list_page.verificar_badge_ausente(cpf)

@@ -65,8 +65,25 @@ class CustomerDetailsPage:
 
     @allure.step("Navegar para aba 'Lista de Projetos' do cliente")
     def navegar_aba_projetos(self):
-        self.page.get_by_role("tab", name="Lista de Projetos").click()
-        self.page.wait_for_timeout(1000)
+        # Tentar nomes de aba possíveis
+        for nome in ["Lista de Projetos", "Projetos", "Projects", "Lista de projetos"]:
+            tab = self.page.get_by_role("tab", name=nome, exact=False)
+            if tab.count() > 0 and tab.first.is_visible():
+                tab.first.click()
+                self.page.wait_for_timeout(1000)
+                return
+        # Fallback: qualquer tab que contenha "projeto"
+        tab = self.page.locator("[role='tab']").filter(has_text="rojeto").first
+        if tab.count() > 0:
+            tab.click()
+            self.page.wait_for_timeout(1000)
+            return
+        allure.attach(
+            self.page.screenshot(),
+            name="Aba_Projetos_Nao_Encontrada",
+            attachment_type=allure.attachment_type.PNG
+        )
+        raise RuntimeError("Aba de projetos não encontrada na página de detalhes")
 
     @allure.step("Obter lista de emails na aba Projetos")
     def obter_emails_projetos(self) -> list:

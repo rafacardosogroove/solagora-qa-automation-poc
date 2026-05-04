@@ -2,7 +2,6 @@ import pytest
 import allure
 from pytest_bdd import scenario, when, then
 import data.customer_data as customer_data_module
-from data.customer_data import VALID_DATA
 from pages.admin.customers.customers_list_page import CustomersListPage
 from pages.admin.customers.customer_edit_page import CustomerEditPage
 
@@ -38,8 +37,8 @@ def step_abrir_edicao_ambos(customers_list_page: CustomersListPage):
 
 @when('altero o campo "Email" e o campo "Celular" com novos dados válidos')
 def step_preencher_ambos(customer_edit_page: CustomerEditPage):
-    customer_edit_page.limpar_e_preencher_email(VALID_DATA['email_alt'])
-    customer_edit_page.limpar_e_preencher_celular(VALID_DATA['celular_alt'])
+    customer_edit_page.limpar_e_preencher_email(customer_data_module.next_email())
+    customer_edit_page.limpar_e_preencher_celular(customer_data_module.VALID_DATA['celular_alt'])
 
 
 @when('submeto o formulário de edição simultânea')
@@ -57,8 +56,9 @@ def step_fechar_e_verificar_badge_ambos(customer_edit_page: CustomerEditPage,
                                          customers_list_page: CustomersListPage):
     cpf = customer_data_module.CUSTOMER['cpf']
     customer_edit_page.fechar_modal()
+    customers_list_page.page.wait_for_timeout(2000)
     customers_list_page.navegar_para_clientes()
-    customers_list_page.ir_para_pagina_cliente()
+    customers_list_page.buscar_por_cpf(cpf)
     customers_list_page.verificar_badge_presente(cpf)
     allure.attach(
         customers_list_page.page.screenshot(),

@@ -2,7 +2,7 @@ import pytest
 import allure
 from pytest_bdd import scenario, when, then
 import data.customer_data as customer_data_module
-from data.customer_data import VALID_DATA, INVALID_DATA
+from data.customer_data import INVALID_DATA
 from pages.admin.customers.customers_list_page import CustomersListPage
 from pages.admin.customers.customer_edit_page import CustomerEditPage
 
@@ -39,7 +39,7 @@ def step_abrir_edicao_email(customers_list_page: CustomersListPage):
 
 @when('altero o campo "Email" para um novo endereço válido')
 def step_preencher_email_valido(customer_edit_page: CustomerEditPage):
-    customer_edit_page.limpar_e_preencher_email(VALID_DATA['email'])
+    customer_edit_page.limpar_e_preencher_email(customer_data_module.next_email())
 
 
 @when('submeto o formulário de edição')
@@ -57,9 +57,9 @@ def step_fechar_e_verificar_badge_email(customer_edit_page: CustomerEditPage,
                                         customers_list_page: CustomersListPage):
     cpf = customer_data_module.CUSTOMER['cpf']
     customer_edit_page.fechar_modal()
-    # Voltar para a mesma página onde o cliente foi encontrado
+    customers_list_page.page.wait_for_timeout(2000)
     customers_list_page.navegar_para_clientes()
-    customers_list_page.ir_para_pagina_cliente()
+    customers_list_page.buscar_por_cpf(cpf)
     customers_list_page.verificar_badge_presente(cpf)
     allure.attach(
         customers_list_page.page.screenshot(),

@@ -1,5 +1,6 @@
 import allure
 from playwright.sync_api import Page, expect
+import data.customer_data as _cdata
 
 
 class CustomersListPage:
@@ -54,7 +55,8 @@ class CustomersListPage:
                 if not status_txt:
                     cpf = celulas[0].inner_text().strip()
                     # Pular CNPJs (XX.XXX.XXX/XXXX-XX)
-                    if cpf and "/" not in cpf:
+                    if cpf and "/" not in cpf and cpf not in _cdata._USED_CPFS:
+                        _cdata._USED_CPFS.add(cpf)
                         return cpf
 
             avancou = self._clicar_proxima_pagina()
@@ -75,9 +77,13 @@ class CustomersListPage:
         campo_input.press("Backspace")
         campo_input.type(cpf)
         self.page.wait_for_timeout(2000)
-        # Fechar dropdown para não bloquear cliques na tabela
-        campo_input.press("Escape")
-        self.page.wait_for_timeout(500)
+        # Selecionar primeira opção do dropdown para aplicar o filtro na tabela
+        primeira_opcao = self.page.locator(".react-select__option").first
+        if primeira_opcao.is_visible():
+            primeira_opcao.click()
+        else:
+            campo_input.press("Escape")
+        self.page.wait_for_timeout(800)
 
     @allure.step("Limpar campo de busca")
     def limpar_busca(self):

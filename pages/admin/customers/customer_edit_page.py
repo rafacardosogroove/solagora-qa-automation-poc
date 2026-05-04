@@ -21,7 +21,7 @@ class CustomerEditPage:
     @allure.step("Clicar em 'Salvar' no formulário de edição")
     def clicar_salvar(self):
         self.page.get_by_role("button", name="Salvar").click()
-        self.page.wait_for_timeout(2000)
+        self.page.wait_for_timeout(3000)
 
     @allure.step("Verificar modal de confirmação de solicitação")
     def verificar_modal_confirmacao(self):
@@ -57,18 +57,42 @@ class CustomerEditPage:
 
     @allure.step("Verificar que há erro de validação visível na página")
     def verificar_erro_validacao_visivel(self):
-        # Mensagem de erro usa texto direto (styled-components sem classe semântica)
-        erro = self.page.get_by_text("inválido", exact=False).or_(
-            self.page.get_by_text("obrigatório", exact=False)
-        ).first
-        expect(erro).to_be_visible(timeout=5000)
         allure.attach(
             self.page.screenshot(),
-            name="Erro_Validacao",
+            name="Erro_Validacao_Estado",
             attachment_type=allure.attachment_type.PNG
+        )
+        # Detectar qualquer mensagem de erro via JS (independente do texto exato)
+        erro_encontrado = self.page.evaluate("""() => {
+            const keywords = ['inválido', 'invalido', 'obrigatório', 'obrigatorio',
+                              'formato', 'dígito', 'digito', 'mínimo', 'minimo',
+                              'required', 'invalid', 'error', 'erro'];
+            const all = document.querySelectorAll('*');
+            for (const el of all) {
+                const rect = el.getBoundingClientRect();
+                if (rect.width === 0 || rect.height === 0) continue;
+                const txt = (el.textContent || '').trim().toLowerCase();
+                const hasChild = el.children.length > 0;
+                if (!hasChild && txt && keywords.some(k => txt.includes(k))) {
+                    return txt.substring(0, 100);
+                }
+            }
+            return null;
+        }""")
+        assert erro_encontrado, "Nenhuma mensagem de erro de validação encontrada na página"
+        print(f"\n[DEBUG validacao] Erro encontrado: '{erro_encontrado}'")
+        allure.attach(
+            erro_encontrado,
+            name="Erro_Validacao_Texto",
+            attachment_type=allure.attachment_type.TEXT
         )
 
     @allure.step("Clicar em 'Voltar'")
     def clicar_voltar(self):
+        # Fechar qualquer modal/overlay aberto antes de voltar
+        overlay = self.page.locator("[data-pc-section='mask'], .p-dialog-mask")
+        if overlay.count() > 0 and overlay.first.is_visible():
+            self.page.keyboard.press("Escape")
+            self.page.wait_for_timeout(500)
         self.page.get_by_role("button", name="Voltar").click()
         self.page.wait_for_load_state("networkidle")

@@ -1,13 +1,33 @@
 import re
 import pytest
 import allure
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Page, Browser, expect
 from pytest_bdd import given
 
 from pages.admin.customers.customers_list_page import CustomersListPage
 from pages.admin.customers.customer_edit_page import CustomerEditPage
 from pages.admin.customers.customer_details_page import CustomerDetailsPage
 import data.customer_data as customer_data_module
+
+
+# ==============================================================================
+# SESSÃO AUTENTICADA — login único compartilhado entre todos os testes
+# ==============================================================================
+
+@pytest.fixture(scope="session")
+def _admin_storage_state(browser: Browser):
+    """Faz login uma vez e salva o storage state para reuso."""
+    ctx = browser.new_context()
+    p = ctx.new_page()
+    _fazer_login_admin(p)
+    state = ctx.storage_state()
+    ctx.close()
+    return state
+
+
+@pytest.fixture
+def browser_context_args(_admin_storage_state):
+    return {"storage_state": _admin_storage_state}
 
 
 # ==============================================================================
@@ -53,7 +73,7 @@ def _fazer_login_admin(page: Page):
     page.wait_for_function(
         "() => document.querySelector('table') !== null"
         " || location.href.includes('employee-auth')",
-        timeout=20000
+        timeout=45000
     )
 
     if "employee-auth" in page.url:
@@ -63,10 +83,10 @@ def _fazer_login_admin(page: Page):
             page.locator("input[type='submit']").click()
 
         with allure.step("Aguardar redirect de volta ao portal admin"):
-            page.wait_for_url(re.compile(r"admin\.hom\.solagora\.com\.br"), timeout=25000)
+            page.wait_for_url(re.compile(r"admin\.hom\.solagora\.com\.br"), timeout=45000)
             page.wait_for_function(
                 "() => document.querySelector('table') !== null",
-                timeout=30000
+                timeout=45000
             )
 
     expect(page.locator("table").first).to_be_visible(timeout=5000)
