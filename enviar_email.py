@@ -18,6 +18,7 @@ def enviar_relatorio():
         "andre.martins@groove.tech",
         "pablo.borges@groove.tech",
         "daniel.cochoni@groove.tech",
+        "eliandro@groove.tech",
     ]
 
     # Lê o HTML gerado pelo gerar_dashboard.py
