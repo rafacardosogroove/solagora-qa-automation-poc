@@ -1,0 +1,1 @@
+{'tipo': 'E-mail', 'valor_anterior': 'Lelia.Nolan@yahoo.com', 'novo_valor': 'qa.auto.0504173508.007@solagora.com.br', 'status': 'Aprovado', 'solicitado_em': '04/05/2026, 17:42', 'processado_em': '04/05/2026, 17:42', 'por': 'superadmin'}

@@ -1,1 +1,0 @@
-{'tipo': 'E-mail', 'valor_anterior': 'vini.005@hotmail.com', 'novo_valor': 'qa.auto.0504154219a@solagora.com.br', 'status': 'Aprovado', 'solicitado_em': '04/05/2026, 15:43', 'processado_em': '04/05/2026, 15:43', 'por': 'superadmin'}
