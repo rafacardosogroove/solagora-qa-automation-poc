@@ -1,2 +1,0 @@
-Modal de seguro 'SEM SEGURO' não disparou, seguindo fluxo.
-Tentativa 1: Status Banco = Aguardando assinaturas (waiting_signatures)
