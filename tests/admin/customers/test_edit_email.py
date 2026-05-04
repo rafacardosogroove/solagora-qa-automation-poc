@@ -1,7 +1,8 @@
 import pytest
 import allure
 from pytest_bdd import scenario, when, then
-from data.customer_data import CUSTOMER, VALID_DATA, INVALID_DATA
+import data.customer_data as customer_data_module
+from data.customer_data import VALID_DATA, INVALID_DATA
 from pages.admin.customers.customers_list_page import CustomersListPage
 from pages.admin.customers.customer_edit_page import CustomerEditPage
 
@@ -22,14 +23,17 @@ def test_c01_editar_email():
 
 @when('busco o cliente pelo CPF para edição de e-mail')
 def step_buscar_cliente_email(customers_list_page: CustomersListPage):
-    with allure.step(f"Buscar cliente CPF: {CUSTOMER['cpf']}"):
-        customers_list_page.buscar_por_cpf(CUSTOMER['cpf'])
-        customers_list_page.verificar_badge_ausente(CUSTOMER['cpf'])
+    from tests.admin.customers.conftest import _definir_cliente_sem_status
+    with allure.step("Encontrar cliente sem status e buscar na lista"):
+        cpf = _definir_cliente_sem_status(customers_list_page)
+        customers_list_page.buscar_por_cpf(cpf)
+        customers_list_page.verificar_badge_ausente(cpf)
 
 
 @when('acesso a opção "Editar" do menu de ações')
 def step_abrir_edicao_email(customers_list_page: CustomersListPage):
-    customers_list_page.abrir_menu_acoes(CUSTOMER['cpf'])
+    cpf = customer_data_module.CUSTOMER['cpf']
+    customers_list_page.abrir_menu_acoes(cpf)
     customers_list_page.clicar_editar()
 
 
@@ -51,9 +55,12 @@ def step_verificar_modal_email(customer_edit_page: CustomerEditPage):
 @then('ao fechar o modal o cliente deve ter o badge de aguardando aprovação')
 def step_fechar_e_verificar_badge_email(customer_edit_page: CustomerEditPage,
                                         customers_list_page: CustomersListPage):
+    cpf = customer_data_module.CUSTOMER['cpf']
     customer_edit_page.fechar_modal()
-    customers_list_page.buscar_por_cpf(CUSTOMER['cpf'])
-    customers_list_page.verificar_badge_presente(CUSTOMER['cpf'])
+    # Voltar para a mesma página onde o cliente foi encontrado
+    customers_list_page.navegar_para_clientes()
+    customers_list_page.ir_para_pagina_cliente()
+    customers_list_page.verificar_badge_presente(cpf)
     allure.attach(
         customers_list_page.page.screenshot(),
         name="Badge_Aguardando_Email",
@@ -92,6 +99,7 @@ def step_erro_campo_email(customer_edit_page: CustomerEditPage):
 @then('o badge de aguardando aprovação não deve aparecer para o cliente')
 def step_sem_badge_email_invalido(customers_list_page: CustomersListPage,
                                    customer_edit_page: CustomerEditPage):
+    cpf = customer_data_module.CUSTOMER['cpf']
     customer_edit_page.clicar_voltar()
-    customers_list_page.buscar_por_cpf(CUSTOMER['cpf'])
-    customers_list_page.verificar_badge_ausente(CUSTOMER['cpf'])
+    customers_list_page.buscar_por_cpf(cpf)
+    customers_list_page.verificar_badge_ausente(cpf)

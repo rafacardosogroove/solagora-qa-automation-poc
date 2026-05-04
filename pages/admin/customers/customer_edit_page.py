@@ -57,7 +57,10 @@ class CustomerEditPage:
 
     @allure.step("Verificar que há erro de validação visível na página")
     def verificar_erro_validacao_visivel(self):
-        erro = self.page.locator("[class*='error'], [class*='invalid'], [role='alert']").first
+        # Mensagem de erro usa texto direto (styled-components sem classe semântica)
+        erro = self.page.get_by_text("inválido", exact=False).or_(
+            self.page.get_by_text("obrigatório", exact=False)
+        ).first
         expect(erro).to_be_visible(timeout=5000)
         allure.attach(
             self.page.screenshot(),

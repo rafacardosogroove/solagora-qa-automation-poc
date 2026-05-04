@@ -1,10 +1,12 @@
 import pytest
 import allure
 from pytest_bdd import scenario, given, when, then
-from data.customer_data import CUSTOMER, VALID_DATA
+import data.customer_data as customer_data_module
+from data.customer_data import VALID_DATA
 from pages.admin.customers.customers_list_page import CustomersListPage
 from pages.admin.customers.customer_edit_page import CustomerEditPage
 from pages.admin.customers.customer_details_page import CustomerDetailsPage
+from playwright.sync_api import expect
 
 
 # ==============================================================================
@@ -15,16 +17,21 @@ def _criar_e_aprovar_solicitacao(customers_list_page: CustomersListPage,
                                   customer_edit_page: CustomerEditPage,
                                   customer_details_page: CustomerDetailsPage,
                                   novo_email: str):
-    """Cria solicitação e já aprova, retornando ao estado limpo."""
-    customers_list_page.buscar_por_cpf(CUSTOMER['cpf'])
-    customers_list_page.abrir_menu_acoes(CUSTOMER['cpf'])
+    """Encontra cliente limpo, submete edição e aprova."""
+    from tests.admin.customers.conftest import _definir_cliente_sem_status
+    cpf = _definir_cliente_sem_status(customers_list_page)
+    customers_list_page.buscar_por_cpf(cpf)
+    customers_list_page.abrir_menu_acoes(cpf)
     customers_list_page.clicar_editar()
     customer_edit_page.limpar_e_preencher_email(novo_email)
     customer_edit_page.clicar_salvar()
     customer_edit_page.verificar_modal_confirmacao()
     customer_edit_page.fechar_modal()
-    customers_list_page.buscar_por_cpf(CUSTOMER['cpf'])
-    customers_list_page.abrir_menu_acoes(CUSTOMER['cpf'])
+    # Navegar para página correta e abrir detalhes
+    customers_list_page.navegar_para_clientes()
+    customers_list_page.ir_para_pagina_cliente()
+    customers_list_page.buscar_por_cpf(cpf)
+    customers_list_page.abrir_menu_acoes(cpf)
     customers_list_page.clicar_ver_detalhes()
     customer_details_page.ir_para_secao_analise()
     customer_details_page.selecionar_aprovar()
@@ -47,9 +54,11 @@ def test_c09_nomenclatura_status():
 @when('submeto uma alteração de dados para o cliente de nomenclatura')
 def step_submeter_alteracao_nomenclatura(customers_list_page: CustomersListPage,
                                           customer_edit_page: CustomerEditPage):
+    from tests.admin.customers.conftest import _definir_cliente_sem_status
     with allure.step("Submeter alteração para gerar status de aguardando"):
-        customers_list_page.buscar_por_cpf(CUSTOMER['cpf'])
-        customers_list_page.abrir_menu_acoes(CUSTOMER['cpf'])
+        cpf = _definir_cliente_sem_status(customers_list_page)
+        customers_list_page.buscar_por_cpf(cpf)
+        customers_list_page.abrir_menu_acoes(cpf)
         customers_list_page.clicar_editar()
         customer_edit_page.limpar_e_preencher_email(VALID_DATA['email'])
         customer_edit_page.clicar_salvar()
@@ -59,10 +68,11 @@ def step_submeter_alteracao_nomenclatura(customers_list_page: CustomersListPage,
 
 @then('o status atribuído deve ser exatamente "Aguardando aprovação da alteração"')
 def step_verificar_nomenclatura_status(customers_list_page: CustomersListPage):
-    from playwright.sync_api import expect
-    customers_list_page.buscar_por_cpf(CUSTOMER['cpf'])
-    linha = customers_list_page.page.locator("tr", has_text=CUSTOMER['cpf'])
-    # Verifica texto exato do status na linha
+    cpf = customer_data_module.CUSTOMER['cpf']
+    customers_list_page.navegar_para_clientes()
+    customers_list_page.ir_para_pagina_cliente()
+    customers_list_page.buscar_por_cpf(cpf)
+    linha = customers_list_page.page.locator("tr", has_text=cpf)
     expect(linha.get_by_text("Aguardando aprovação da alteração", exact=False)).to_be_visible(timeout=5000)
 
 
@@ -103,9 +113,11 @@ def step_garantir_email_aprovado(customers_list_page: CustomersListPage,
 @when("acesso os projetos vinculados ao cliente")
 def step_acessar_projetos(customers_list_page: CustomersListPage,
                            customer_details_page: CustomerDetailsPage):
+    cpf = customer_data_module.CUSTOMER['cpf']
     customers_list_page.navegar_para_clientes()
-    customers_list_page.buscar_por_cpf(CUSTOMER['cpf'])
-    customers_list_page.abrir_menu_acoes(CUSTOMER['cpf'])
+    customers_list_page.ir_para_pagina_cliente()
+    customers_list_page.buscar_por_cpf(cpf)
+    customers_list_page.abrir_menu_acoes(cpf)
     customers_list_page.clicar_ver_detalhes()
     customer_details_page.navegar_aba_projetos()
 
@@ -150,9 +162,11 @@ def step_garantir_decisao_registrada(customers_list_page: CustomersListPage,
 @when("verifico o histórico de alterações do cliente")
 def step_verificar_historico(customers_list_page: CustomersListPage,
                               customer_details_page: CustomerDetailsPage):
+    cpf = customer_data_module.CUSTOMER['cpf']
     customers_list_page.navegar_para_clientes()
-    customers_list_page.buscar_por_cpf(CUSTOMER['cpf'])
-    customers_list_page.abrir_menu_acoes(CUSTOMER['cpf'])
+    customers_list_page.ir_para_pagina_cliente()
+    customers_list_page.buscar_por_cpf(cpf)
+    customers_list_page.abrir_menu_acoes(cpf)
     customers_list_page.clicar_ver_detalhes()
 
 

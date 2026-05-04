@@ -1,6 +1,6 @@
 CUSTOMER = {
-    "cpf": "350.639.935-75",
-    "nome": "Jose da silva saruo",
+    "cpf": "831.102.825-77",
+    "nome": "Aurore Teste Thiel",
 }
 
 VALID_DATA = {

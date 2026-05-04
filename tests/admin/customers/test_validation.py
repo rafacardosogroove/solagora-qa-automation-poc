@@ -1,7 +1,8 @@
 import pytest
 import allure
 from pytest_bdd import scenario, when, then
-from data.customer_data import CUSTOMER, INVALID_DATA
+import data.customer_data as customer_data_module
+from data.customer_data import INVALID_DATA
 from pages.admin.customers.customers_list_page import CustomersListPage
 from pages.admin.customers.customer_edit_page import CustomerEditPage
 
@@ -21,14 +22,17 @@ def test_c08_campos_obrigatorios():
 
 @when('busco o cliente pelo CPF para validação de campos')
 def step_buscar_cliente_validacao(customers_list_page: CustomersListPage):
-    with allure.step(f"Buscar cliente CPF: {CUSTOMER['cpf']}"):
-        customers_list_page.buscar_por_cpf(CUSTOMER['cpf'])
-        customers_list_page.verificar_badge_ausente(CUSTOMER['cpf'])
+    from tests.admin.customers.conftest import _definir_cliente_sem_status
+    with allure.step("Encontrar cliente sem status e buscar na lista"):
+        cpf = _definir_cliente_sem_status(customers_list_page)
+        customers_list_page.buscar_por_cpf(cpf)
+        customers_list_page.verificar_badge_ausente(cpf)
 
 
 @when('acesso a opção "Editar" do menu de ações para validação')
 def step_abrir_edicao_validacao(customers_list_page: CustomersListPage):
-    customers_list_page.abrir_menu_acoes(CUSTOMER['cpf'])
+    cpf = customer_data_module.CUSTOMER['cpf']
+    customers_list_page.abrir_menu_acoes(cpf)
     customers_list_page.clicar_editar()
 
 
@@ -61,6 +65,8 @@ def step_erros_obrigatorios(customer_edit_page: CustomerEditPage):
 @then('o badge de aguardando aprovação não deve aparecer após submissão inválida')
 def step_sem_badge_campos_vazios(customers_list_page: CustomersListPage,
                                   customer_edit_page: CustomerEditPage):
+    cpf = customer_data_module.CUSTOMER['cpf']
     customer_edit_page.clicar_voltar()
-    customers_list_page.buscar_por_cpf(CUSTOMER['cpf'])
-    customers_list_page.verificar_badge_ausente(CUSTOMER['cpf'])
+    customers_list_page.navegar_para_clientes()
+    customers_list_page.ir_para_pagina_cliente()
+    customers_list_page.verificar_badge_ausente(cpf)
