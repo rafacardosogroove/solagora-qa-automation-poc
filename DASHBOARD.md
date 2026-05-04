@@ -1,6 +1,6 @@
 # 📊 Dashboard de Engenharia de Qualidade — SolAgora
 
-> 👤 **Último push:** QA Bot &nbsp;|&nbsp; 🕒 **Atualizado:** 04/05/2026 às 10:06 &nbsp;|&nbsp; Status: 🟢 **Saudável**
+> 👤 **Último push:** Rafael Cardoso &nbsp;|&nbsp; 🕒 **Atualizado:** 04/05/2026 às 16:15 &nbsp;|&nbsp; Status: 🟢 **Saudável**
 
 ---
 
@@ -18,16 +18,16 @@
 
 | Categoria | Total |
 |:---|:---:|
-| 📝 Cenários BDD (incl. Esquemas) | **12** |
-| 📄 Page Objects | **27** |
-| 🧪 Scripts de Teste | **9** |
-| 🔁 Commits (humanos) | **66** |
+| 📝 Cenários BDD (incl. Esquemas) | **23** |
+| 📄 Page Objects | **30** |
+| 🧪 Scripts de Teste | **16** |
+| 🔁 Commits (humanos) | **68** |
 
 ## 🏆 Ranking de QAs
 
 | # | QA | Commits |
 |:---:|:---|:---:|
-| 🥇 | Rafael Cardoso | 64 |
+| 🥇 | Rafael Cardoso | 66 |
 | 🥈 | Eneas Silva | 2 |
 
 ## 📂 Features por Domínio
@@ -40,6 +40,12 @@
 | Gate 05 - Orquestração e Aprovações (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 04/05/2026 |
 | Gate 08 - Confirmação de Entrega e Monitoração (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 04/05/2026 |
 | Gate 07 - Upload de Notas Fiscais e Equipamentos | 1 🟦 | Rafael Cardoso Santana Costa | 04/05/2026 |
+| Aprovação e Reprovação de Alterações Cadastrais | 2 🟦🟦 | Rafael Cardoso | 04/05/2026 |
+| Edição Simultânea de E-mail e Celular do Cliente | 1 🟦 | Rafael Cardoso | 04/05/2026 |
+| Edição de E-mail do Cliente | 2 🟦🟦 | Rafael Cardoso | 04/05/2026 |
+| Histórico de Auditoria e Propagação de Alterações | 3 🟦🟦🟦 | Rafael Cardoso | 04/05/2026 |
+| Edição de Celular do Cliente | 2 🟦🟦 | Rafael Cardoso | 04/05/2026 |
+| Validação de Campos Obrigatórios no Formulário de Edição | 1 🟦 | Rafael Cardoso | 04/05/2026 |
 | Gate 04 - Documentação e Dados Cadastrais Finais | 1 🟦 | Rafael Cardoso Santana Costa | 04/05/2026 |
 | Gate 03 - Análise de Crédito e Dados Cadastrais | 1 🟦 | Rafael Cardoso Santana Costa | 04/05/2026 |
 
@@ -52,9 +58,15 @@
 
 | Tag | Ocorrências |
 |:---|:---:|
+| `@smoke_test` | 6 |
+| `@clientes` | 6 |
+| `@gestao_cadastral` | 6 |
+| `@clientes_edicao` | 6 |
 | `@auth` | 4 |
 | `@fluxo_admin` | 4 |
-| `@smoke_test` | 3 |
+| `@clientes_analise` | 4 |
+| `@fluxo_aprovacao` | 3 |
+| `@validacao_de_dados` | 3 |
 | `@simulacao` | 2 |
 | `@documentacao` | 2 |
 | `@analise_credito` | 2 |
@@ -73,10 +85,17 @@
 | `@gate08` | 1 |
 | `@faturamento` | 1 |
 | `@gate07` | 1 |
+| `@aprovacao_positiva` | 1 |
+| `@aprovacao_negativa` | 1 |
+| `@clientes_status` | 1 |
+| `@fluxo_riscos` | 1 |
+| `@aprovacao_cascata` | 1 |
+| `@historico` | 1 |
+| `@historico_auditoria` | 1 |
 | `@gate04` | 1 |
 | `@gate03` | 1 |
 
 ---
 **[Ver Allure Report Completo](https://rafacardosogroove.github.io/solagora-qa-automation-poc/)** — evidências, screenshots e steps detalhados
 
-*Gerado automaticamente pelo QA Bot — 04/05/2026 às 10:06*
+*Gerado automaticamente pelo QA Bot — 04/05/2026 às 16:15*
