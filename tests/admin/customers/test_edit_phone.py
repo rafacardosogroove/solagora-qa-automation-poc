@@ -14,6 +14,10 @@ from pages.admin.customers.customer_edit_page import CustomerEditPage
 @pytest.mark.clientes
 @pytest.mark.clientes_edicao
 @pytest.mark.fluxo_aprovacao
+@allure.epic("Portal Admin — Gestão Cadastral")
+@allure.feature("Clientes")
+@allure.story("Edição de Celular")
+@allure.severity(allure.severity_level.CRITICAL)
 @scenario('../../../features/admin/customers/edit_phone.feature',
           'C02 - Submeter alteração exclusiva de celular para aprovação')
 def test_c02_editar_celular():
@@ -74,6 +78,10 @@ def step_fechar_e_verificar_badge_celular(customer_edit_page: CustomerEditPage,
 @pytest.mark.clientes
 @pytest.mark.clientes_edicao
 @pytest.mark.validacao_de_dados
+@allure.epic("Portal Admin — Gestão Cadastral")
+@allure.feature("Clientes")
+@allure.story("Edição de Celular")
+@allure.severity(allure.severity_level.MINOR)
 @scenario('../../../features/admin/customers/edit_phone.feature',
           'C07 - Tentar submeter alteração com celular incompleto ou inválido')
 def test_c07_celular_invalido():

@@ -1,7 +1,11 @@
 import pytest
 import re
+import sys
+import platform
 import allure
 import time
+from pathlib import Path
+from datetime import datetime
 from playwright.sync_api import Page, expect
 from pytest_bdd import given, when, then, parsers
 
@@ -285,3 +289,25 @@ def pytest_runtest_makereport(item, call):
 
             except Exception as e:
                 print(f"Erro ao tentar capturar evidência de falha: {e}")
+
+
+# ==============================================================================
+# ALLURE — Informações de ambiente (aparece na aba Environment do report)
+# ==============================================================================
+
+@pytest.fixture(scope="session", autouse=True)
+def configure_allure_environment():
+    """Escreve environment.properties em allure-results antes de qualquer teste."""
+    props_path = Path(__file__).parent.parent / "allure-results" / "environment.properties"
+    props_path.parent.mkdir(exist_ok=True)
+    props_path.write_text(
+        f"Browser=Chromium\n"
+        f"Environment=Homologacao\n"
+        f"Base.URL=https://integrator.hom.solagora.com.br\n"
+        f"Admin.URL=https://admin.hom.solagora.com.br\n"
+        f"Python={sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}\n"
+        f"OS={platform.system()} {platform.release()}\n"
+        f"Viewport=1920x1080\n"
+        f"Execution.Start={datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n",
+        encoding="utf-8"
+    )

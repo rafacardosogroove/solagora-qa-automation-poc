@@ -35,6 +35,10 @@ def _criar_solicitacao_pendente(customers_list_page: CustomersListPage,
 @pytest.mark.clientes_analise
 @pytest.mark.aprovacao_positiva
 @pytest.mark.smoke_test
+@allure.epic("Portal Admin — Gestão Cadastral")
+@allure.feature("Clientes")
+@allure.story("Aprovação de Alterações")
+@allure.severity(allure.severity_level.CRITICAL)
 @scenario('../../../features/admin/customers/approval.feature',
           'C04 - Aprovar com sucesso uma solicitação de alteração de dados pendente')
 def test_c04_aprovar_solicitacao():
@@ -103,6 +107,10 @@ def step_verificar_dados_efetivados(customers_list_page: CustomersListPage):
 @pytest.mark.clientes
 @pytest.mark.clientes_analise
 @pytest.mark.aprovacao_negativa
+@allure.epic("Portal Admin — Gestão Cadastral")
+@allure.feature("Clientes")
+@allure.story("Aprovação de Alterações")
+@allure.severity(allure.severity_level.NORMAL)
 @scenario('../../../features/admin/customers/approval.feature',
           'C05 - Reprovar uma solicitação de alteração de dados pendente')
 def test_c05_reprovar_solicitacao():

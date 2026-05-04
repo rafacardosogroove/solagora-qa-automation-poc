@@ -15,6 +15,10 @@ from pages.admin.customers.customer_edit_page import CustomerEditPage
 @pytest.mark.clientes_edicao
 @pytest.mark.fluxo_aprovacao
 @pytest.mark.smoke_test
+@allure.epic("Portal Admin — Gestão Cadastral")
+@allure.feature("Clientes")
+@allure.story("Edição de E-mail")
+@allure.severity(allure.severity_level.CRITICAL)
 @scenario('../../../features/admin/customers/edit_email.feature',
           'C01 - Submeter alteração exclusiva de e-mail para aprovação')
 def test_c01_editar_email():
@@ -75,6 +79,10 @@ def step_fechar_e_verificar_badge_email(customer_edit_page: CustomerEditPage,
 @pytest.mark.clientes
 @pytest.mark.clientes_edicao
 @pytest.mark.validacao_de_dados
+@allure.epic("Portal Admin — Gestão Cadastral")
+@allure.feature("Clientes")
+@allure.story("Edição de E-mail")
+@allure.severity(allure.severity_level.MINOR)
 @scenario('../../../features/admin/customers/edit_email.feature',
           'C06 - Tentar submeter alteração com formato de e-mail inválido')
 def test_c06_email_invalido():

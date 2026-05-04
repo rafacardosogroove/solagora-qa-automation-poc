@@ -14,6 +14,10 @@ from pages.admin.customers.customer_edit_page import CustomerEditPage
 @pytest.mark.clientes
 @pytest.mark.clientes_edicao
 @pytest.mark.validacao_de_dados
+@allure.epic("Portal Admin — Gestão Cadastral")
+@allure.feature("Clientes")
+@allure.story("Validação de Dados")
+@allure.severity(allure.severity_level.MINOR)
 @scenario('../../../features/admin/customers/validation.feature',
           'C08 - Tentar submeter formulário de edição limpando campos obrigatórios')
 def test_c08_campos_obrigatorios():

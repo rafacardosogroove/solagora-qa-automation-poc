@@ -13,6 +13,10 @@ from pages.admin.customers.customer_edit_page import CustomerEditPage
 @pytest.mark.clientes
 @pytest.mark.clientes_edicao
 @pytest.mark.fluxo_aprovacao
+@allure.epic("Portal Admin — Gestão Cadastral")
+@allure.feature("Clientes")
+@allure.story("Edição de E-mail e Celular")
+@allure.severity(allure.severity_level.NORMAL)
 @scenario('../../../features/admin/customers/edit_both.feature',
           'C03 - Submeter alteração simultânea de e-mail e celular para aprovação')
 def test_c03_editar_email_e_celular():

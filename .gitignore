@@ -28,3 +28,11 @@ test-results/
 # Claude Code local settings
 .claude/settings.local.json
 utils/.token_hml
+
+# 6. Build artifacts e temporários
+build/
+dist/
+temp_*.png
+temp_evid_*.png
+evidencias_manuais/
+*.spec

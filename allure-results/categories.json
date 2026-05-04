@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Timeout / Elemento não encontrado",
+    "matchedStatuses": ["failed"],
+    "traceRegex": ".*TimeoutError.*|.*locator.*not found.*"
+  },
+  {
+    "name": "Falha de Ambiente HML (HTTP 5xx)",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*Erro ao aprovar.*500.*|.*502.*|.*503.*"
+  },
+  {
+    "name": "Dado não encontrado no portal",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*Nenhum cliente.*sem status.*|.*não encontrado.*"
+  },
+  {
+    "name": "AssertionError",
+    "matchedStatuses": ["failed"],
+    "traceRegex": ".*AssertionError.*"
+  },
+  {
+    "name": "Erro de navegação / Frame",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*ERR_ABORTED.*|.*frame.*detached.*|.*Target page.*"
+  }
+]

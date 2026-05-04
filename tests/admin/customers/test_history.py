@@ -43,6 +43,10 @@ def _criar_e_aprovar_solicitacao(customers_list_page: CustomersListPage,
 @pytest.mark.clientes
 @pytest.mark.clientes_status
 @pytest.mark.fluxo_riscos
+@allure.epic("Portal Admin — Gestão Cadastral")
+@allure.feature("Clientes")
+@allure.story("Histórico e Auditoria")
+@allure.severity(allure.severity_level.NORMAL)
 @scenario('../../../features/admin/customers/history.feature',
           'C09 - Validar nomenclatura exata do status para pedidos em atendimento')
 def test_c09_nomenclatura_status():
@@ -98,6 +102,10 @@ def step_status_visivel_listagem(customers_list_page: CustomersListPage):
 @pytest.mark.aprovacao_cascata
 @pytest.mark.historico
 @pytest.mark.smoke_test
+@allure.epic("Portal Admin — Gestão Cadastral")
+@allure.feature("Clientes")
+@allure.story("Histórico e Auditoria")
+@allure.severity(allure.severity_level.NORMAL)
 @scenario('../../../features/admin/customers/history.feature',
           'C10 - Validar propagação da alteração aprovada para os projetos do cliente')
 def test_c10_propagacao_projetos():
@@ -150,6 +158,10 @@ def step_verificar_email_projetos(customer_details_page: CustomerDetailsPage):
 @pytest.mark.clientes
 @pytest.mark.clientes_analise
 @pytest.mark.historico_auditoria
+@allure.epic("Portal Admin — Gestão Cadastral")
+@allure.feature("Clientes")
+@allure.story("Histórico e Auditoria")
+@allure.severity(allure.severity_level.NORMAL)
 @scenario('../../../features/admin/customers/history.feature',
           'C11 - Validar o registro de histórico após a decisão da equipe de riscos')
 def test_c11_historico_auditoria():

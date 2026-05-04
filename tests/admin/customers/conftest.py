@@ -1,3 +1,4 @@
+import os
 import re
 import pytest
 import allure
@@ -18,16 +19,17 @@ import data.customer_data as customer_data_module
 def _admin_storage_state(browser: Browser):
     """Faz login uma vez e salva o storage state para reuso."""
     ctx = browser.new_context()
-    p = ctx.new_page()
-    _fazer_login_admin(p)
-    state = ctx.storage_state()
-    ctx.close()
-    return state
+    try:
+        p = ctx.new_page()
+        _fazer_login_admin(p)
+        return ctx.storage_state()
+    finally:
+        ctx.close()
 
 
 @pytest.fixture
-def browser_context_args(_admin_storage_state):
-    return {"storage_state": _admin_storage_state}
+def browser_context_args(browser_context_args, _admin_storage_state):
+    return {**browser_context_args, "storage_state": _admin_storage_state}
 
 
 # ==============================================================================
@@ -78,8 +80,10 @@ def _fazer_login_admin(page: Page):
 
     if "employee-auth" in page.url:
         with allure.step("Preencher credenciais superadmin no Keycloak"):
-            page.fill("input[name='username']", "superadmin")
-            page.fill("input[type='password']", "SuperAdmin@123")
+            user = os.getenv("ADMIN_USER", "superadmin")
+            pwd = os.getenv("ADMIN_PASS", "SuperAdmin@123")
+            page.fill("input[name='username']", user)
+            page.fill("input[type='password']", pwd)
             page.locator("input[type='submit']").click()
 
         with allure.step("Aguardar redirect de volta ao portal admin"):
