@@ -1,6 +1,6 @@
 # 📊 Dashboard de Engenharia de Qualidade — SolAgora
 
-> 👤 **Último push:** Rafael Cardoso &nbsp;|&nbsp; 🕒 **Atualizado:** 04/05/2026 às 21:46 &nbsp;|&nbsp; Status: 🟢 **Saudável**
+> 👤 **Último push:** QA Bot &nbsp;|&nbsp; 🕒 **Atualizado:** 05/05/2026 às 09:55 &nbsp;|&nbsp; Status: 🟢 **Saudável**
 
 ---
 
@@ -21,33 +21,33 @@
 | 📝 Cenários BDD (incl. Esquemas) | **23** |
 | 📄 Page Objects | **30** |
 | 🧪 Scripts de Teste | **16** |
-| 🔁 Commits (humanos) | **80** |
+| 🔁 Commits (humanos) | **82** |
 
 ## 🏆 Ranking de QAs
 
 | # | QA | Commits |
 |:---:|:---|:---:|
-| 🥇 | Rafael Cardoso | 78 |
+| 🥇 | Rafael Cardoso | 80 |
 | 🥈 | Eneas Silva | 2 |
 
 ## 📂 Features por Domínio
 
 | Feature | Cenários | Autor | Modificado |
 |:---|:---:|:---|:---:|
-| Gate 02 - Simulação de Financiamento (P1) | 1 🟦 | Rafael Cardoso Santana Costa | 04/05/2026 |
-| Gate 01 - Controle de Acesso e Autenticação | 5 🟦🟦🟦🟦🟦 | Rafael Cardoso Santana Costa | 04/05/2026 |
-| Gate 06 - Assinatura Eletrônica da Proposta (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 04/05/2026 |
-| Gate 05 - Orquestração e Aprovações (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 04/05/2026 |
-| Gate 08 - Confirmação de Entrega e Monitoração (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 04/05/2026 |
-| Gate 07 - Upload de Notas Fiscais e Equipamentos | 1 🟦 | Rafael Cardoso Santana Costa | 04/05/2026 |
-| Aprovação e Reprovação de Alterações Cadastrais | 2 🟦🟦 | Rafael Cardoso | 04/05/2026 |
-| Edição Simultânea de E-mail e Celular do Cliente | 1 🟦 | Rafael Cardoso | 04/05/2026 |
-| Edição de E-mail do Cliente | 2 🟦🟦 | Rafael Cardoso | 04/05/2026 |
-| Histórico de Auditoria e Propagação de Alterações | 3 🟦🟦🟦 | Rafael Cardoso | 04/05/2026 |
-| Edição de Celular do Cliente | 2 🟦🟦 | Rafael Cardoso | 04/05/2026 |
-| Validação de Campos Obrigatórios no Formulário de Edição | 1 🟦 | Rafael Cardoso | 04/05/2026 |
-| Gate 04 - Documentação e Dados Cadastrais Finais | 1 🟦 | Rafael Cardoso Santana Costa | 04/05/2026 |
-| Gate 03 - Análise de Crédito e Dados Cadastrais | 1 🟦 | Rafael Cardoso Santana Costa | 04/05/2026 |
+| Gate 02 - Simulação de Financiamento (P1) | 1 🟦 | Rafael Cardoso Santana Costa | 05/05/2026 |
+| Gate 01 - Controle de Acesso e Autenticação | 5 🟦🟦🟦🟦🟦 | Rafael Cardoso Santana Costa | 05/05/2026 |
+| Gate 06 - Assinatura Eletrônica da Proposta (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 05/05/2026 |
+| Gate 05 - Orquestração e Aprovações (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 05/05/2026 |
+| Gate 08 - Confirmação de Entrega e Monitoração (Fluxo Admin) | 1 🟦 | Rafael Cardoso Santana Costa | 05/05/2026 |
+| Gate 07 - Upload de Notas Fiscais e Equipamentos | 1 🟦 | Rafael Cardoso Santana Costa | 05/05/2026 |
+| Aprovação e Reprovação de Alterações Cadastrais | 2 🟦🟦 | Rafael Cardoso | 05/05/2026 |
+| Edição Simultânea de E-mail e Celular do Cliente | 1 🟦 | Rafael Cardoso | 05/05/2026 |
+| Edição de E-mail do Cliente | 2 🟦🟦 | Rafael Cardoso | 05/05/2026 |
+| Histórico de Auditoria e Propagação de Alterações | 3 🟦🟦🟦 | Rafael Cardoso | 05/05/2026 |
+| Edição de Celular do Cliente | 2 🟦🟦 | Rafael Cardoso | 05/05/2026 |
+| Validação de Campos Obrigatórios no Formulário de Edição | 1 🟦 | Rafael Cardoso | 05/05/2026 |
+| Gate 04 - Documentação e Dados Cadastrais Finais | 1 🟦 | Rafael Cardoso Santana Costa | 05/05/2026 |
+| Gate 03 - Análise de Crédito e Dados Cadastrais | 1 🟦 | Rafael Cardoso Santana Costa | 05/05/2026 |
 
 ## 📜 Últimos Commits
 
@@ -98,4 +98,4 @@
 ---
 **[Ver Allure Report Completo](https://rafacardosogroove.github.io/solagora-qa-automation-poc/)** — evidências, screenshots e steps detalhados
 
-*Gerado automaticamente pelo QA Bot — 04/05/2026 às 21:46*
+*Gerado automaticamente pelo QA Bot — 05/05/2026 às 09:55*
