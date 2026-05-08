@@ -3,12 +3,11 @@ import re
 import sys
 import platform
 import allure
-import time
+from dataclasses import dataclass, field
 from pathlib import Path
 from datetime import datetime
 from playwright.sync_api import Page, expect
 from pytest_bdd import given, when, then, parsers
-
 
 # ==============================================================================
 # BROWSER — janela maximizada para todos os gates
@@ -31,7 +30,7 @@ def browser_context_args(browser_context_args):
 # Imports de Utilitários e API
 from utils.Generators import Generators
 from utils.hml_client import hml
-from utils.backend_orchestrator import OrquestradorBackend  # <--- Nosso novo Garçom
+from utils.backend_orchestrator import OrquestradorBackend
 
 # Imports das Page Objects
 from pages.login_page import LoginPage
@@ -43,14 +42,21 @@ from pages.admin.admin_page import AdminPage
 
 
 # ==============================================================================
+# CREDENCIAIS — altere aqui se precisar trocar o usuário de teste
+# ==============================================================================
+
+USUARIO_PADRAO = "qaautomacao"
+SENHA_PADRAO   = "solagora"
+
+
+# ==============================================================================
 # 1. FIXTURES DE INFRAESTRUTURA E DADOS
 # ==============================================================================
 
 @pytest.fixture(scope="session")
 def admin():
-    from pathlib import Path
     root_path = Path(__file__).parent.parent
-    env_path = root_path / ".env"
+    env_path  = root_path / ".env"
     with allure.step(f"Configurando HML Client com .env em: {env_path}"):
         hml.configure(env_file=str(env_path))
     return hml
@@ -58,63 +64,192 @@ def admin():
 
 @pytest.fixture(scope="session")
 def orquestrador(admin):
-    """Fixture que entrega o orquestrador já instanciado com o hml_client."""
     return OrquestradorBackend(admin)
 
 
 @pytest.fixture
 def context_data():
-    """Dicionário persistente para compartilhar dados entre os Gates (ex: CPF, ID)."""
+    """Dicionário persistente para compartilhar dados entre steps do mesmo teste (CPF, ID, etc.)."""
     return {}
 
 
 # ==============================================================================
 # 2. FIXTURES DAS PAGES (PAGE OBJECT MODEL)
+#    Mantidas individualmente — os arquivos de teste as usam diretamente.
 # ==============================================================================
 
 @pytest.fixture
-def login_page(page: Page) -> LoginPage: return LoginPage(page)
-
-
-@pytest.fixture
-def simulacao_page(page: Page) -> SimulacaoPage: return SimulacaoPage(page)
-
+def login_page(page: Page)      -> LoginPage:             return LoginPage(page)
 
 @pytest.fixture
-def analise_page(page: Page) -> AnaliseCreditoPage: return AnaliseCreditoPage(page)
-
-
-@pytest.fixture
-def doc_page(page: Page) -> DocumentacaoPage: return DocumentacaoPage(page)
-
+def simulacao_page(page: Page)  -> SimulacaoPage:         return SimulacaoPage(page)
 
 @pytest.fixture
-def modal_energia(page: Page) -> ModalContaEnergiaPage: return ModalContaEnergiaPage(page)
-
+def analise_page(page: Page)    -> AnaliseCreditoPage:    return AnaliseCreditoPage(page)
 
 @pytest.fixture
-def admin_page(page: Page) -> AdminPage: return AdminPage(page)
+def doc_page(page: Page)        -> DocumentacaoPage:      return DocumentacaoPage(page)
+
+@pytest.fixture
+def modal_energia(page: Page)   -> ModalContaEnergiaPage: return ModalContaEnergiaPage(page)
+
+@pytest.fixture
+def admin_page(page: Page)      -> AdminPage:             return AdminPage(page)
 
 
 # ==============================================================================
-# 3. CONTEXTOS MACRO PROGRESSIVOS (O MOTOR DO BDD)
+# 3. GATE CONTEXT — mochila única passada pela cadeia de macros
+#
+#    ctx.page          → Playwright Page
+#    ctx.login_page    → LoginPage
+#    ctx.simulacao_page → SimulacaoPage
+#    ctx.analise_page  → AnaliseCreditoPage
+#    ctx.doc_page      → DocumentacaoPage
+#    ctx.modal_energia → ModalContaEnergiaPage
+#    ctx.admin_page    → AdminPage
+#    ctx.orquestrador  → OrquestradorBackend
+#    ctx.data          → dict compartilhado (mesmo objeto que context_data)
+#
 # ==============================================================================
+
+@dataclass
+class GateContext:
+    page:           Page
+    login_page:     LoginPage
+    simulacao_page: SimulacaoPage
+    analise_page:   AnaliseCreditoPage
+    doc_page:       DocumentacaoPage
+    modal_energia:  ModalContaEnergiaPage
+    admin_page:     AdminPage
+    orquestrador:   OrquestradorBackend
+    data:           dict = field(default_factory=dict)
+
+
+@pytest.fixture
+def ctx(page, login_page, simulacao_page, analise_page,
+        doc_page, modal_energia, admin_page, orquestrador, context_data) -> GateContext:
+    """
+    Fixture central: monta o GateContext com todas as dependências.
+    ctx.data aponta para o mesmo dict que context_data — alterações em um
+    são visíveis no outro, então os arquivos de teste continuam funcionando.
+    """
+    return GateContext(
+        page=page,
+        login_page=login_page,
+        simulacao_page=simulacao_page,
+        analise_page=analise_page,
+        doc_page=doc_page,
+        modal_energia=modal_energia,
+        admin_page=admin_page,
+        orquestrador=orquestrador,
+        data=context_data,
+    )
+
+
+# ==============================================================================
+# 4. CADEIA DE MACROS PRIVADAS
 #
-# CADEIA DE HERANÇA — cada macro chama o anterior automaticamente:
+#    Cada função _macro_gateXX recebe APENAS ctx: GateContext.
+#    Cada função chama a anterior — cadeia automática e sem parâmetros extras.
 #
-#   macro_login                        → Gate 01
-#     └── macro_simulacao_aprovada     → Gate 02
-#           └── macro_analise_aprovada → Gate 03
-#                 └── macro_documentacao_enviada    → Gate 04
-#                       └── macro_aprovado_mesa_interna → Gate 05 (API)
-#                             └── macro_contrato_assinado    → Gate 06 (API)
-#                                   └── macro_notas_enviadas → Gate 07 (API)
-#                                         └── Gate 08 usa macro_notas_enviadas
+#    Para adicionar Gate 09:
+#      1. Crie _macro_gate09(ctx) chamando _macro_gate08(ctx) dentro
+#      2. Adicione o @given correspondente abaixo
+#      Pronto. Zero mudanças no resto do arquivo.
 #
-# Como usar na feature:
-#   Dado que as notas fiscais do projeto foram enviadas e aprovadas
-#   → executa Gates 01 a 07 automaticamente antes do seu cenário
+#    CADEIA:
+#      _macro_gate01  ← Gate 01 (Login)
+#        └── _macro_gate02  ← Gate 02 (Simulação)
+#              └── _macro_gate03  ← Gate 03 (Análise de Crédito)
+#                    └── _macro_gate04  ← Gate 04 (Documentação)
+#                          └── _macro_gate05  ← Gate 05 (Mesa Interna — API)
+#                                └── _macro_gate06  ← Gate 06 (Assinatura — API)
+#                                      └── _macro_gate07  ← Gate 07 (Notas Fiscais — API)
+#                                            └── _macro_gate08  ← Gate 08 (Equipamentos — API)
 #
+# ==============================================================================
+
+def _macro_gate01(ctx: GateContext):
+    """Gate 01 — Login."""
+    ctx.login_page.realizar_login_completo_e_aguardar_dashboard(USUARIO_PADRAO, SENHA_PADRAO)
+
+
+def _macro_gate02(ctx: GateContext):
+    """Gate 02 — Simulação de Financiamento. Herda Gate 01."""
+    _macro_gate01(ctx)
+    with allure.step("MACRO Gate 02: Preparar Simulação Aprovada"):
+        ctx.simulacao_page.acessar_nova_simulacao()
+        cpf_gerado = Generators.cpf()
+        ctx.data['cpf_utilizado'] = cpf_gerado
+        allure.attach(f"CPF Gerado para o Fluxo: {cpf_gerado}", name="Massa_de_Dados")
+        ctx.simulacao_page.preencher_dados_simulacao(cpf_gerado, "8000", "50000", "ALDO", "1000", "28")
+
+
+def _macro_gate03(ctx: GateContext):
+    """Gate 03 — Análise de Crédito. Herda Gates 01-02."""
+    _macro_gate02(ctx)
+    with allure.step("MACRO Gate 03: Preparar Análise de Crédito Aprovada"):
+        ctx.analise_page.realizar_analise_credito_completa(
+            "Rafael Automacao", Generators.email(), Generators.telefone(), "13282538"
+        )
+
+
+def _macro_gate04(ctx: GateContext):
+    """Gate 04 — Documentação. Herda Gates 01-03."""
+    _macro_gate03(ctx)
+    with allure.step("MACRO Gate 04: Preparar Documentação Enviada"):
+        ctx.modal_energia.realizar_upload_energia("Local", "conta.jpg")
+        ctx.doc_page.preencher_endereco("123", "Apto Macro")
+        ctx.doc_page.definir_cobranca_igual("SIM")
+        ctx.doc_page.informar_rg("223334445")
+        ctx.doc_page.preencher_contatos(
+            Generators.email(), Generators.telefone(), Generators.telefone(), "1144445555"
+        )
+        ctx.doc_page.obter_botao_enviar().click()
+        ctx.page.wait_for_timeout(5000)
+
+
+def _macro_gate05(ctx: GateContext):
+    """Gate 05 — Aprovação Mesa Interna via API. Herda Gates 01-04."""
+    _macro_gate04(ctx)
+    with allure.step("MACRO Gate 05: Orquestrar Aprovação da Mesa via API"):
+        projeto_id = ctx.admin_page.capturar_id_projeto_url()
+        ctx.data['projeto_id'] = projeto_id
+        ctx.orquestrador.orquestrar_gate_05(projeto_id)
+
+
+def _macro_gate06(ctx: GateContext):
+    """Gate 06 — Assinatura Eletrônica via API. Herda Gates 01-05."""
+    _macro_gate05(ctx)
+    with allure.step("MACRO Gate 06: Forçar Assinatura de Contrato"):
+        ctx.orquestrador.orquestrar_gate_06(ctx.data.get('projeto_id'))
+        ctx.page.reload()
+        ctx.page.wait_for_load_state("networkidle")
+
+
+def _macro_gate07(ctx: GateContext):
+    """Gate 07 — Notas Fiscais via API. Herda Gates 01-06."""
+    _macro_gate06(ctx)
+    with allure.step("MACRO Gate 07: Orquestrar Faturamento/Cessão via API"):
+        ctx.orquestrador.orquestrar_gate_07(ctx.data.get('projeto_id'))
+        ctx.page.reload()
+        ctx.page.wait_for_load_state("networkidle")
+
+
+def _macro_gate08(ctx: GateContext):
+    """Gate 08 — Equipamentos e Monitoração via API. Herda Gates 01-07."""
+    _macro_gate07(ctx)
+    with allure.step("MACRO Gate 08: Orquestrar Equipamentos e Monitoração via API"):
+        ctx.orquestrador.orquestrar_gate_08(ctx.data.get('projeto_id'))
+        ctx.page.reload()
+        ctx.page.wait_for_load_state("networkidle")
+
+
+# ==============================================================================
+# 5. PASSOS @given — wrappers finos que ativam a cadeia correta
+#
+#    O texto da .feature mapeia para o gate de entrada.
+#    O framework executa tudo até aquele gate automaticamente.
 # ==============================================================================
 
 @given('que o ambiente de homologação está respondendo na página de login')
@@ -125,110 +260,53 @@ def step_ambiente_acessivel(page: Page):
 
 
 @given(parsers.parse('que o sistema está autenticado com credenciais válidas ("{usuario}" e "{senha}")'))
-def macro_login(login_page: LoginPage, usuario: str, senha: str):
-    login_page.realizar_login_completo_e_aguardar_dashboard(usuario, senha)
+def step_login_explicito(ctx: GateContext, usuario: str, senha: str):
+    """Usado em cenários de Gate 01 que especificam credenciais na feature."""
+    ctx.login_page.realizar_login_completo_e_aguardar_dashboard(usuario, senha)
 
 
 @given('que possuo uma simulação de financiamento aprovada')
-def macro_simulacao_aprovada(page: Page, login_page: LoginPage, simulacao_page: SimulacaoPage, context_data: dict):
-    # 1. Herda o Login
-    macro_login(login_page, "qaautomacao", "solagora")
-
-    with allure.step("MACRO: Preparar Simulação Aprovada"):
-        simulacao_page.acessar_nova_simulacao()
-        cpf_gerado = Generators.cpf()
-        context_data['cpf_utilizado'] = cpf_gerado  # Fundamental para buscas futuras (ex: Gate 07)
-        allure.attach(f"CPF Gerado para o Fluxo: {cpf_gerado}", name="Massa_de_Dados")
-        simulacao_page.preencher_dados_simulacao(cpf_gerado, "8000", "50000", "ALDO", "1000", "28")
+def step_dado_gate02(ctx: GateContext):
+    _macro_gate02(ctx)
 
 
 @given('que o cliente foi aprovado na análise de crédito')
-def macro_analise_aprovada(page: Page, login_page: LoginPage, simulacao_page: SimulacaoPage,
-                           analise_page: AnaliseCreditoPage, context_data: dict):
-    # 2. Herda a Simulação
-    macro_simulacao_aprovada(page, login_page, simulacao_page, context_data)
-
-    with allure.step("MACRO: Preparar Análise de Crédito Aprovada"):
-        analise_page.realizar_analise_credito_completa("Rafael Automacao", Generators.email(), Generators.telefone(),
-                                                       "13282538")
+def step_dado_gate03(ctx: GateContext):
+    _macro_gate03(ctx)
 
 
 @given('que a documentação do projeto foi enviada com sucesso')
-def macro_documentacao_enviada(page: Page, login_page: LoginPage, simulacao_page: SimulacaoPage,
-                               analise_page: AnaliseCreditoPage, doc_page: DocumentacaoPage,
-                               modal_energia: ModalContaEnergiaPage, context_data: dict):
-    # 3. Herda a Análise
-    macro_analise_aprovada(page, login_page, simulacao_page, analise_page, context_data)
-
-    with allure.step("MACRO: Preparar Documentação Enviada"):
-        modal_energia.realizar_upload_energia("Local", "conta.jpg")
-        doc_page.preencher_endereco("123", "Apto Macro")
-        doc_page.definir_cobranca_igual("SIM")
-        doc_page.informar_rg("223334445")
-        doc_page.preencher_contatos(Generators.email(), Generators.telefone(), Generators.telefone(), "1144445555")
-        doc_page.obter_botao_enviar().click()
-        page.wait_for_timeout(5000)
+def step_dado_gate04(ctx: GateContext):
+    _macro_gate04(ctx)
 
 
 @given('que o projeto foi aprovado pela mesa interna')
-def macro_aprovado_mesa_interna(page: Page, login_page: LoginPage, simulacao_page: SimulacaoPage,
-                                analise_page: AnaliseCreditoPage, doc_page: DocumentacaoPage,
-                                modal_energia: ModalContaEnergiaPage, orquestrador: OrquestradorBackend,
-                                admin_page: AdminPage, context_data: dict):
-    # 4. Herda a Documentação
-    macro_documentacao_enviada(page, login_page, simulacao_page, analise_page, doc_page, modal_energia, context_data)
-
-    with allure.step("MACRO: Orquestrar Aprovação da Mesa via API"):
-        projeto_id = admin_page.capturar_id_projeto_url()
-        context_data['projeto_id'] = projeto_id
-
-        # DELEGA TUDO PARA O ORQUESTRADOR!
-        orquestrador.orquestrar_gate_05(projeto_id)
+def step_dado_gate05(ctx: GateContext):
+    _macro_gate05(ctx)
 
 
 @given('que o contrato do projeto foi assinado eletronicamente')
-def macro_contrato_assinado(page: Page, login_page: LoginPage, simulacao_page: SimulacaoPage,
-                            analise_page: AnaliseCreditoPage, doc_page: DocumentacaoPage,
-                            modal_energia: ModalContaEnergiaPage, orquestrador: OrquestradorBackend,
-                            admin_page: AdminPage, context_data: dict):
-    # 5. Herda a Aprovação da Mesa
-    macro_aprovado_mesa_interna(page, login_page, simulacao_page, analise_page, doc_page, modal_energia, orquestrador,
-                                admin_page, context_data)
-
-    with allure.step("MACRO: Forçar Assinatura de Contrato"):
-        projeto_id = context_data.get('projeto_id')
-
-        # DELEGA TUDO PARA O ORQUESTRADOR!
-        orquestrador.orquestrar_gate_06(projeto_id)
-        page.reload()
-        page.wait_for_load_state("networkidle")
+def step_dado_gate06(ctx: GateContext):
+    _macro_gate06(ctx)
 
 
 @given('que as notas fiscais do projeto foram enviadas e aprovadas')
-def macro_notas_enviadas(page: Page, login_page: LoginPage, simulacao_page: SimulacaoPage,
-                         analise_page: AnaliseCreditoPage, doc_page: DocumentacaoPage,
-                         modal_energia: ModalContaEnergiaPage, orquestrador: OrquestradorBackend, admin_page: AdminPage,
-                         context_data: dict):
-    # 6. Herda a Assinatura (Para uso no Gate 08)
-    macro_contrato_assinado(page, login_page, simulacao_page, analise_page, doc_page, modal_energia, orquestrador,
-                            admin_page, context_data)
+def step_dado_gate07(ctx: GateContext):
+    _macro_gate07(ctx)
 
-    with allure.step("MACRO: Orquestrar Faturamento/Cessão via API"):
-        projeto_id = context_data.get('projeto_id')
 
-        # DELEGA TUDO PARA O ORQUESTRADOR!
-        orquestrador.orquestrar_gate_07(projeto_id)
-        page.reload()
-        page.wait_for_load_state("networkidle")
+@given('que os equipamentos foram entregues e o projeto está em monitoração')
+def step_dado_gate08(ctx: GateContext):
+    _macro_gate08(ctx)
 
 
 # ==============================================================================
-# 4. PASSOS AUXILIARES GLOBAIS REUTILIZADOS PELOS TESTS (WHENS)
+# 6. PASSOS @when GLOBAIS — reutilizados por múltiplos gates
 # ==============================================================================
 
 @when('capturo o ID do projeto atual pela interface')
-def step_capturar_id_global(admin_page: AdminPage, context_data: dict):
-    context_data['projeto_id'] = admin_page.capturar_id_projeto_url()
+def step_capturar_id_global(ctx: GateContext):
+    ctx.data['projeto_id'] = ctx.admin_page.capturar_id_projeto_url()
 
 
 @when('atualizo a página do portal do integrador')
@@ -239,7 +317,7 @@ def step_atualizar_pagina_integrador_global(page: Page):
 
 
 # ==============================================================================
-# HOOKS DE INFRAESTRUTURA
+# HOOKS DE INFRAESTRUTURA — captura de evidência em falhas
 # ==============================================================================
 
 import pytest
@@ -248,51 +326,39 @@ from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
-    """
-    Hook global que intercepta falhas em QUALQUER step do teste.
-    Se houver erro, captura screenshot e detalhes do elemento/URL.
-    """
+    """Intercepta falhas e captura screenshot + detalhes no Allure."""
     outcome = yield
-    report = outcome.get_result()
+    report  = outcome.get_result()
 
-    # Só agimos se o teste falhar (durante a execução do step)
     if report.when == "call" and report.failed:
-        # Pegamos a fixture 'page' que está sendo usada no teste
         page = item.funcargs.get('page')
-
         if page:
             try:
-                # 1. Captura a URL onde o erro ocorreu
-                url_erro = page.url
+                url_erro       = page.url
+                screenshot     = page.screenshot(full_page=True)
+                erro_original  = str(call.excinfo.value)
 
-                # 2. Tira um Screenshot da tela exata do erro
-                screenshot = page.screenshot(full_page=True)
-                allure.attach(screenshot, name="SITUAÇÃO_NO_ERRO", attachment_type=allure.attachment_type.PNG)
-
-                # 3. Registra os detalhes técnicos no Allure
-                erro_original = str(call.excinfo.value)
-
-                detalhes_log = (
-                    f"🛑 FALHA DETECTADA\n"
-                    f"--------------------------------------------------\n"
-                    f"📍 URL DO ERRO: {url_erro}\n"
-                    f"📝 STEP: {item.name}\n"
-                    f"🔍 MENSAGEM: {erro_original}\n"
-                    f"--------------------------------------------------"
-                )
+                allure.attach(screenshot, name="SITUAÇÃO_NO_ERRO",
+                              attachment_type=allure.attachment_type.PNG)
 
                 allure.attach(
-                    detalhes_log,
+                    (
+                        f"🛑 FALHA DETECTADA\n"
+                        f"--------------------------------------------------\n"
+                        f"📍 URL DO ERRO: {url_erro}\n"
+                        f"📝 STEP: {item.name}\n"
+                        f"🔍 MENSAGEM: {erro_original}\n"
+                        f"--------------------------------------------------"
+                    ),
                     name="RELATÓRIO_DE_TIMEOUT_OU_FALHA",
                     attachment_type=allure.attachment_type.TEXT
                 )
-
             except Exception as e:
-                print(f"Erro ao tentar capturar evidência de falha: {e}")
+                print(f"Erro ao capturar evidência de falha: {e}")
 
 
 # ==============================================================================
-# ALLURE — Informações de ambiente (aparece na aba Environment do report)
+# ALLURE — Informações de ambiente
 # ==============================================================================
 
 @pytest.fixture(scope="session", autouse=True)
