@@ -1,5 +1,9 @@
 import os
+import json
+import base64
 import subprocess
+import urllib.request
+import urllib.error
 from collections import Counter
 from datetime import datetime
 
@@ -22,6 +26,85 @@ BOTS = {"robô da qualidade (qa bot)", "qa bot", "github-actions", "github actio
 
 # URL do Allure Report publicado no GitHub Pages
 ALLURE_REPORT_URL = "https://rafacardosogroove.github.io/solagora-qa-automation-poc/"
+
+# Azure Boards — query de bugs registrados pela automação
+AZURE_BOARDS_ORG     = "credgrid"
+AZURE_BOARDS_PROJECT = "SolAgora"
+AZURE_BOARDS_QUERY   = "e0a40e3a-6e9b-4f57-bd45-85264434eac5"
+
+SEVERITY_ORDER = ["1 - Critical", "2 - High", "3 - Medium", "4 - Low"]
+SEVERITY_EMOJI = {
+    "1 - Critical": "🔴",
+    "2 - High":     "🟠",
+    "3 - Medium":   "🟡",
+    "4 - Low":      "🔵",
+}
+SEVERITY_COLOR = {
+    "1 - Critical": "#e74c3c",
+    "2 - High":     "#e67e22",
+    "3 - Medium":   "#f39c12",
+    "4 - Low":      "#3498db",
+}
+
+
+# ==============================================================================
+# AZURE BOARDS — busca bugs via query
+# ==============================================================================
+
+def buscar_bugs_azure_boards():
+    """Consulta a query de bugs no Azure Boards e retorna lista de dicts."""
+    token = os.environ.get("AZURE_DEVOPS_TOKEN", "")
+    if not token:
+        print("Aviso: AZURE_DEVOPS_TOKEN nao definido — secao de bugs omitida.")
+        return []
+
+    b64 = base64.b64encode(f":{token}".encode()).decode()
+    headers = {
+        "Authorization": f"Basic {b64}",
+        "Content-Type": "application/json",
+    }
+
+    def _get(url):
+        req = urllib.request.Request(url, headers=headers)
+        with urllib.request.urlopen(req, timeout=15) as r:
+            return json.loads(r.read())
+
+    try:
+        base_url = f"https://dev.azure.com/{AZURE_BOARDS_ORG}/{AZURE_BOARDS_PROJECT}"
+
+        # 1) Executa a query para obter IDs
+        data = _get(f"{base_url}/_apis/wit/wiql/{AZURE_BOARDS_QUERY}?api-version=7.1")
+        ids = [str(wi["id"]) for wi in data.get("workItems", [])]
+        if not ids:
+            return []
+
+        # 2) Busca detalhes (max 200 de uma vez)
+        fields = "System.Id,System.Title,Microsoft.VSTS.Common.Severity,System.State,System.Tags"
+        bugs = []
+        for chunk_start in range(0, len(ids), 200):
+            chunk = ids[chunk_start:chunk_start + 200]
+            data2 = _get(
+                f"{base_url}/_apis/wit/workitems"
+                f"?ids={','.join(chunk)}&fields={fields}&api-version=7.1"
+            )
+            for wi in data2.get("value", []):
+                f = wi.get("fields", {})
+                bugs.append({
+                    "id":       wi["id"],
+                    "title":    f.get("System.Title", ""),
+                    "severity": f.get("Microsoft.VSTS.Common.Severity", "—"),
+                    "state":    f.get("System.State", "New"),
+                    "tags":     f.get("System.Tags", ""),
+                    "url": (
+                        f"https://dev.azure.com/{AZURE_BOARDS_ORG}/"
+                        f"{AZURE_BOARDS_PROJECT}/_workitems/edit/{wi['id']}"
+                    ),
+                })
+        return bugs
+
+    except Exception as e:
+        print(f"Aviso: falha ao buscar bugs do Azure Boards: {e}")
+        return []
 
 
 # ==============================================================================
@@ -220,6 +303,7 @@ def montar_relatorio(para_email=False):
     autor = get_last_committer()
     top_qas = get_top_contributors()
     total_commits = get_total_commits()
+    bugs = buscar_bugs_azure_boards()
 
     esteira_linha, pct, barra_pct, gates_cobertos = gerar_esteira(tags, para_email)
     agora = datetime.now().strftime("%d/%m/%Y às %H:%M")
@@ -228,19 +312,19 @@ def montar_relatorio(para_email=False):
         return montar_html_email(
             autor, agora, esteira_linha, pct, barra_pct, gates_cobertos,
             top_qas, total_commits, total_cenarios, pages, testes,
-            lista_features, commits, tags, health_badge(pct)
+            lista_features, commits, tags, health_badge(pct), bugs
         )
     else:
         return montar_markdown(
             autor, agora, esteira_linha, pct, barra_pct, gates_cobertos,
             top_qas, total_commits, total_cenarios, pages, testes,
-            lista_features, commits, tags, health_badge(pct)
+            lista_features, commits, tags, health_badge(pct), bugs
         )
 
 
 def montar_markdown(autor, agora, esteira_linha, pct, barra_pct, gates_cobertos,
                     top_qas, total_commits, total_cenarios, pages, testes,
-                    lista_features, commits, tags, badge):
+                    lista_features, commits, tags, badge, bugs=None):
     L = []
     L.append("# 📊 Dashboard de Engenharia de Qualidade — SolAgora\n")
     L.append(f"> 👤 **Último push:** {autor} &nbsp;|&nbsp; 🕒 **Atualizado:** {agora} &nbsp;|&nbsp; Status: {badge}\n")
@@ -295,6 +379,29 @@ def montar_markdown(autor, agora, esteira_linha, pct, barra_pct, gates_cobertos,
     for tag, qtd in tags.most_common():
         L.append(f"| `{tag}` | {qtd} |")
 
+    # Bugs Azure Boards
+    bugs = bugs or []
+    L.append("## 🐛 Bugs Registrados — Azure Boards\n")
+    if bugs:
+        contagem = Counter(b["severity"] for b in bugs)
+        abertos  = [b for b in bugs if b["state"] not in ("Resolved", "Closed")]
+        L.append(f"> Total: **{len(bugs)} bugs** &nbsp;|&nbsp; Abertos: **{len(abertos)}**\n")
+        L.append("| Severidade | Total |")
+        L.append("|:---|:---:|")
+        for sev in SEVERITY_ORDER:
+            if sev in contagem:
+                emoji = SEVERITY_EMOJI.get(sev, "⚪")
+                L.append(f"| {emoji} {sev} | **{contagem[sev]}** |")
+        L.append("")
+        L.append("| ID | Título | Severidade | Estado |")
+        L.append("|:---:|:---|:---|:---:|")
+        for b in sorted(bugs, key=lambda x: SEVERITY_ORDER.index(x["severity"]) if x["severity"] in SEVERITY_ORDER else 99):
+            emoji = SEVERITY_EMOJI.get(b["severity"], "⚪")
+            L.append(f"| [{b['id']}]({b['url']}) | {b['title']} | {emoji} {b['severity']} | {b['state']} |")
+        L.append("")
+    else:
+        L.append("> Nenhum bug registrado ou token Azure não configurado.\n")
+
     L.append("\n---")
     L.append(f"**[Ver Allure Report Completo]({ALLURE_REPORT_URL})** — evidências, screenshots e steps detalhados\n")
     L.append(f"*Gerado automaticamente pelo QA Bot — {agora}*")
@@ -303,7 +410,7 @@ def montar_markdown(autor, agora, esteira_linha, pct, barra_pct, gates_cobertos,
 
 def montar_html_email(autor, agora, esteira_linha, pct, barra_pct_html, gates_cobertos,
                       top_qas, total_commits, total_cenarios, pages, testes,
-                      lista_features, commits, tags, badge):
+                      lista_features, commits, tags, badge, bugs=None):
     cor_badge = "#2ecc71" if "Saudável" in badge else "#f39c12" if "Progresso" in badge else "#e74c3c"
 
     # Esteira HTML
@@ -350,6 +457,64 @@ def montar_html_email(autor, agora, esteira_linha, pct, barra_pct_html, gates_co
     commits_html = ""
     for c in commits:
         commits_html += f"<tr><td style='padding:6px 12px;color:#888;'>{c['data']}</td><td style='padding:6px 12px;font-weight:bold;'>{c['autor']}</td><td style='padding:6px 12px;'>{c['msg']}</td></tr>"
+
+    # Bugs HTML
+    bugs = bugs or []
+    contagem_bugs = Counter(b["severity"] for b in bugs)
+    abertos_bugs  = [b for b in bugs if b["state"] not in ("Resolved", "Closed")]
+
+    severidade_cards_html = ""
+    for sev in SEVERITY_ORDER:
+        if sev in contagem_bugs:
+            cor = SEVERITY_COLOR.get(sev, "#95a5a6")
+            emoji = SEVERITY_EMOJI.get(sev, "⚪")
+            label = sev.split(" - ")[-1]  # "Critical", "High" etc.
+            severidade_cards_html += f"""
+            <td style="padding:10px 16px;text-align:center;">
+              <div style="font-size:26px;font-weight:bold;color:{cor};">{contagem_bugs[sev]}</div>
+              <div style="font-size:12px;color:#888;">{emoji} {label}</div>
+            </td>"""
+
+    bugs_rows_html = ""
+    bugs_sorted = sorted(bugs,
+        key=lambda x: SEVERITY_ORDER.index(x["severity"]) if x["severity"] in SEVERITY_ORDER else 99)
+    for b in bugs_sorted:
+        cor = SEVERITY_COLOR.get(b["severity"], "#95a5a6")
+        label = b["severity"].split(" - ")[-1] if " - " in b["severity"] else b["severity"]
+        state_bg = "#27ae60" if b["state"] in ("Resolved", "Closed") else "#e74c3c" if b["state"] == "New" else "#f39c12"
+        bugs_rows_html += f"""
+        <tr>
+          <td style="padding:6px 12px;text-align:center;">
+            <a href="{b['url']}" style="color:#2980b9;text-decoration:none;font-weight:bold;">{b['id']}</a>
+          </td>
+          <td style="padding:6px 12px;font-size:13px;">{b['title']}</td>
+          <td style="padding:6px 12px;">
+            <span style="background:{cor};color:white;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:bold;">{label}</span>
+          </td>
+          <td style="padding:6px 12px;">
+            <span style="background:{state_bg};color:white;padding:2px 8px;border-radius:10px;font-size:11px;">{b['state']}</span>
+          </td>
+        </tr>"""
+
+    bugs_section_html = f"""
+    <h2 style="color:#2c3e50;border-bottom:2px solid #eee;padding-bottom:8px;margin-top:28px;">🐛 Bugs Registrados — Azure Boards</h2>
+    <p style="color:#555;font-size:13px;">Total: <b>{len(bugs)}</b> bugs &nbsp;|&nbsp; Abertos: <b>{len(abertos_bugs)}</b></p>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:16px;">
+      <tr style="background:#f8f9fa;">{severidade_cards_html}</tr>
+    </table>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <tr style="background:#f8f9fa;font-weight:bold;">
+        <th style="padding:8px 12px;text-align:center;">ID</th>
+        <th style="padding:8px 12px;text-align:left;">Título</th>
+        <th style="padding:8px 12px;text-align:left;">Severidade</th>
+        <th style="padding:8px 12px;text-align:left;">Estado</th>
+      </tr>
+      {bugs_rows_html}
+    </table>
+    """ if bugs else """
+    <h2 style="color:#2c3e50;border-bottom:2px solid #eee;padding-bottom:8px;margin-top:28px;">🐛 Bugs Registrados — Azure Boards</h2>
+    <p style="color:#888;font-size:13px;">Nenhum bug registrado ou token Azure não configurado.</p>
+    """
 
     return f"""
 <!DOCTYPE html>
@@ -433,6 +598,9 @@ def montar_html_email(autor, agora, esteira_linha, pct, barra_pct_html, gates_co
       </tr>
       {commits_html}
     </table>
+
+    <!-- BUGS -->
+    {bugs_section_html}
 
   </div>
 

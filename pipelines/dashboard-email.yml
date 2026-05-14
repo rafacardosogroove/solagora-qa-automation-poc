@@ -67,6 +67,14 @@ stages:
           - script: |
               python gerar_dashboard.py
             displayName: Gerar DASHBOARD.md e email_dashboard.html
+            env:
+              AZURE_DEVOPS_TOKEN: $(System.AccessToken)
+
+          - task: PublishBuildArtifacts@1
+            inputs:
+              pathToPublish: email_dashboard.html
+              artifactName: dashboard-html
+            displayName: Publicar Dashboard HTML como Artefato
 
           - script: |
               git config --global user.name "QA Bot"
@@ -99,6 +107,8 @@ stages:
           - script: |
               python gerar_dashboard.py
             displayName: Regerar HTML com dados frescos
+            env:
+              AZURE_DEVOPS_TOKEN: $(System.AccessToken)
 
           - script: |
               python enviar_email.py
