@@ -29,6 +29,7 @@ schedules:
 # Disparo manual pelo portal
 variables:
   - group: qa-emails    # Variable Group com EMAIL_USER e EMAIL_PASS
+  - group: qa-boards    # Variable Group com AZURE_PAT (para git push bypass policy)
   - name: pythonVersion
     value: '3.11'
 
@@ -67,10 +68,13 @@ stages:
           - script: |
               git config --global user.name "QA Bot"
               git config --global user.email "qa-bot@solagora.com.br"
+              git remote set-url origin "https://x:${AZURE_PAT}@dev.azure.com/credgrid/SolAgora/_git/Automation_e2e_testing"
               git add DASHBOARD.md email_dashboard.html
               git diff --quiet && git diff --staged --quiet \
                 || (git commit -m "docs: atualiza dashboard automatico [skip ci]" && git push origin HEAD:main)
             displayName: Commitar Dashboard Atualizado
+            env:
+              AZURE_PAT: $(AZURE_PAT)
 
   # ============================================================
   # STAGE 2 — Envia e-mail (depende do Stage 1)
