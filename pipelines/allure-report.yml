@@ -1,0 +1,95 @@
+# ============================================================
+# Pipeline: Allure Report — Azure DevOps
+# Equivalente a: .github/workflows/allure_report.yml
+#
+# Publica o Allure Report como artefato de build e
+# disponibiliza o HTML inline na aba "Extensions" do pipeline.
+#
+# PRÉ-REQUISITO (uma vez):
+#   Instalar extensão gratuita no Azure DevOps:
+#   https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud
+#   → Usar: "Publish HTML Report" da LakelandSoft (ID: LakelandSoft.publishhtmlreport)
+#     https://marketplace.visualstudio.com/items?itemName=LakelandSoft.publishhtmlreport
+# ============================================================
+
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - allure-results/**
+
+# Disparo manual pelo portal do Azure DevOps
+resources:
+  pipelines: []
+
+schedules: []
+
+variables:
+  pythonVersion: '3.11'
+  allureVersion: '2.27.0'
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+  - stage: PublishAllureReport
+    displayName: Gerar e Publicar Allure Report
+    jobs:
+      - job: GenerateReport
+        displayName: Gerar Allure Report HTML
+        steps:
+
+          - checkout: self
+            fetchDepth: 0
+
+          - script: |
+              COUNT=$(ls allure-results/*.json 2>/dev/null | wc -l)
+              if [ "$COUNT" -gt "0" ]; then
+                echo "##vso[task.setvariable variable=HAS_RESULTS]true"
+                echo "Encontrados $COUNT arquivos de resultado"
+              else
+                echo "##vso[task.setvariable variable=HAS_RESULTS]false"
+                echo "Nenhum resultado em allure-results/"
+              fi
+            displayName: Verificar se allure-results existe
+
+          - script: |
+              wget -q https://github.com/allure-framework/allure2/releases/download/$(allureVersion)/allure-$(allureVersion).tgz
+              tar -xzf allure-$(allureVersion).tgz
+              sudo mv allure-$(allureVersion) /opt/allure
+              sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure
+              allure --version
+            displayName: Instalar Allure CLI
+            condition: eq(variables['HAS_RESULTS'], 'true')
+
+          - script: |
+              allure generate allure-results --clean -o allure-report
+              echo "Report gerado com sucesso."
+              ls allure-report/
+            displayName: Gerar Allure Report HTML
+            condition: eq(variables['HAS_RESULTS'], 'true')
+
+          # Publica o HTML como artefato — acessível na aba "Artifacts" do pipeline
+          - task: PublishBuildArtifacts@1
+            displayName: Publicar Allure Report como Artefato
+            condition: eq(variables['HAS_RESULTS'], 'true')
+            inputs:
+              pathToPublish: allure-report
+              artifactName: AllureReport
+              publishLocation: Container
+
+          # Exibe o report inline na aba do pipeline (requer extensão LakelandSoft)
+          # Se a extensão não estiver instalada, comentar este bloco.
+          - task: publishhtmlreport@1
+            displayName: Exibir Allure Report inline (aba Extensions)
+            condition: eq(variables['HAS_RESULTS'], 'true')
+            inputs:
+              HtmlType: Allure
+              AllureReportPath: allure-report
+            continueOnError: true   # Não quebra o pipeline se extensão não instalada
+
+          - script: echo "Nenhum resultado para publicar. Execute os testes e commite allure-results/."
+            displayName: Sem resultados disponíveis
+            condition: eq(variables['HAS_RESULTS'], 'false')

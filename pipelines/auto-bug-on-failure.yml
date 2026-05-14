@@ -1,0 +1,106 @@
+# ============================================================
+# Pipeline: Auto-Bug no Azure Boards quando testes falham
+# BÔNUS — Não existe equivalente no GitHub Actions
+#
+# Quando os testes E2E falham, cria automaticamente um Work Item
+# Bug no Azure Boards com link para o pipeline e log do erro.
+#
+# CONFIGURAÇÃO NECESSÁRIA:
+#   Azure DevOps → Pipelines → Library → Variable Group: "qa-boards"
+#   Variável:
+#     AZURE_PAT → PAT com escopo "Work Items: Read & Write"
+#
+#   OU: usar a service connection nativa do Azure DevOps:
+#     Tasks → AzureCLI / REST inline — sem PAT necessário.
+# ============================================================
+
+trigger: none   # Acionado por outros pipelines ou manualmente
+
+# Para acionar a partir do pipeline de testes E2E:
+# resources:
+#   pipelines:
+#     - pipeline: e2e-tests
+#       source: 'E2E Tests Pipeline'
+#       trigger:
+#         branches: [main]
+
+variables:
+  - group: qa-boards
+  - name: AZURE_ORG
+    value: credgrid
+  - name: AZURE_PROJECT
+    value: SolAgora
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+  - stage: CriarBugAutomatico
+    displayName: Criar Bug Automático no Azure Boards
+    condition: failed()   # Só executa se o pipeline anterior falhou
+    jobs:
+      - job: CriarBug
+        displayName: Registrar falha como Bug no Boards
+        steps:
+
+          - checkout: none
+
+          - script: |
+              pip install requests --quiet
+
+              python - <<'PYEOF'
+              import os, json, base64, urllib.request
+
+              pat     = os.environ["AZURE_PAT"]
+              org     = os.environ["AZURE_ORG"]
+              projeto = os.environ["AZURE_PROJECT"]
+              run_id  = os.environ.get("BUILD_BUILDID", "N/A")
+              run_url = f"https://dev.azure.com/{org}/{projeto}/_build/results?buildId={run_id}"
+              branch  = os.environ.get("BUILD_SOURCEBRANCH", "unknown").replace("refs/heads/", "")
+              pipeline = os.environ.get("BUILD_DEFINITIONNAME", "Pipeline")
+
+              titulo = f"[AUTO] Falha E2E — {pipeline} — Branch {branch} — Run #{run_id}"
+
+              desc = f"""
+              <h3>Falha Detectada Automaticamente</h3>
+              <p><strong>Pipeline:</strong> {pipeline}</p>
+              <p><strong>Run ID:</strong> <a href="{run_url}">#{run_id}</a></p>
+              <p><strong>Branch:</strong> {branch}</p>
+              <p><strong>Origem:</strong> Criado automaticamente pelo pipeline ao detectar falha.</p>
+              <p>Acesse o link do run para ver o log completo e screenshot de falha (Allure Report).</p>
+              """
+
+              payload = [
+                  {"op": "add", "path": "/fields/System.Title",                    "value": titulo},
+                  {"op": "add", "path": "/fields/Microsoft.VSTS.Common.Severity",  "value": "2 - High"},
+                  {"op": "add", "path": "/fields/System.Description",              "value": desc},
+                  {"op": "add", "path": "/fields/System.Tags",                     "value": "auto-detected; e2e; pipeline-failure"},
+                  {"op": "add", "path": "/fields/System.State",                    "value": "New"},
+              ]
+
+              url   = f"https://dev.azure.com/{org}/{projeto}/_apis/wit/workitems/$Bug?api-version=7.1"
+              token = base64.b64encode(f":{pat}".encode()).decode()
+              data  = json.dumps(payload).encode()
+
+              req = urllib.request.Request(url, data=data, method="POST", headers={
+                  "Authorization": f"Basic {token}",
+                  "Content-Type":  "application/json-patch+json",
+                  "Accept":        "application/json",
+              })
+
+              import urllib.error
+              try:
+                  with urllib.request.urlopen(req) as r:
+                      res = json.loads(r.read())
+                      wi_id  = res.get("id")
+                      wi_url = res.get("_links", {}).get("html", {}).get("href", "")
+                      print(f"✅ Bug criado: Work Item #{wi_id}")
+                      print(f"   URL: {wi_url}")
+              except urllib.error.HTTPError as e:
+                  print(f"❌ Erro {e.code}: {e.read().decode()[:300]}")
+              PYEOF
+            displayName: Criar Bug no Azure Boards
+            env:
+              AZURE_PAT: $(AZURE_PAT)
+              AZURE_ORG: $(AZURE_ORG)
+              AZURE_PROJECT: $(AZURE_PROJECT)

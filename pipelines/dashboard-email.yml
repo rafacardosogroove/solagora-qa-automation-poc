@@ -1,0 +1,99 @@
+# ============================================================
+# Pipeline: Dashboard de Qualidade + E-mail
+# Equivalente a: .github/workflows/dashboard_bdd.yml
+#
+# Gera DASHBOARD.md + email_dashboard.html e envia por e-mail.
+# Seg-Sex às 8h UTC (equivalente ao cron do GitHub Actions).
+#
+# CONFIGURAÇÃO NECESSÁRIA (uma vez):
+#   Azure DevOps → Pipelines → Library → Variable Group: "qa-emails"
+#   Adicionar as variáveis secretas:
+#     EMAIL_USER  → e-mail remetente (Gmail)
+#     EMAIL_PASS  → senha de app Gmail
+# ============================================================
+
+trigger:
+  branches:
+    include:
+      - main
+
+# Agendamento: Seg-Sex às 8h UTC (mesmo do GitHub)
+schedules:
+  - cron: '0 8 * * 1-5'
+    displayName: Dashboard Diário (Seg-Sex 8h UTC)
+    branches:
+      include:
+        - main
+    always: true   # Roda mesmo sem commits novos
+
+# Disparo manual pelo portal
+variables:
+  - group: qa-emails    # Variable Group com EMAIL_USER e EMAIL_PASS
+  - name: pythonVersion
+    value: '3.11'
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+
+  # ============================================================
+  # STAGE 1 — Gera e commita dashboard
+  # ============================================================
+  - stage: AtualizarDashboard
+    displayName: Gerar e Publicar Dashboard
+    jobs:
+      - job: GerarDashboard
+        displayName: Gerar DASHBOARD.md e email_dashboard.html
+        steps:
+
+          - checkout: self
+            fetchDepth: 0
+            persistCredentials: true   # Permite git push de volta ao repo
+
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: $(pythonVersion)
+            displayName: Configurar Python
+
+          - script: |
+              python gerar_dashboard.py
+            displayName: Gerar DASHBOARD.md e email_dashboard.html
+
+          - script: |
+              git config --global user.name "QA Bot"
+              git config --global user.email "qa-bot@solagora.com.br"
+              git add DASHBOARD.md email_dashboard.html
+              git diff --quiet && git diff --staged --quiet \
+                || (git commit -m "docs: atualiza dashboard automatico [skip ci]" && git push)
+            displayName: Commitar Dashboard Atualizado
+
+  # ============================================================
+  # STAGE 2 — Envia e-mail (depende do Stage 1)
+  # ============================================================
+  - stage: EnviarEmail
+    displayName: Enviar Relatório por E-mail
+    dependsOn: AtualizarDashboard
+    jobs:
+      - job: EnviarEmail
+        displayName: Enviar E-mail com Dashboard HTML
+        steps:
+
+          - checkout: self
+            fetchDepth: 0
+
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: $(pythonVersion)
+            displayName: Configurar Python
+
+          - script: |
+              python gerar_dashboard.py
+            displayName: Regerar HTML com dados frescos
+
+          - script: |
+              python enviar_email.py
+            displayName: Enviar E-mail
+            env:
+              EMAIL_USER: $(EMAIL_USER)
+              EMAIL_PASS: $(EMAIL_PASS)
