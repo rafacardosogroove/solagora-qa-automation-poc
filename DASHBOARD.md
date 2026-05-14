@@ -1,6 +1,6 @@
 # 📊 Dashboard de Engenharia de Qualidade — SolAgora
 
-> 👤 **Último push:** Rafael Cardoso &nbsp;|&nbsp; 🕒 **Atualizado:** 14/05/2026 às 19:55 &nbsp;|&nbsp; Status: 🟢 **Saudável**
+> 👤 **Último push:** QA Bot &nbsp;|&nbsp; 🕒 **Atualizado:** 14/05/2026 às 20:45 &nbsp;|&nbsp; Status: 🟢 **Saudável**
 
 ---
 
@@ -102,4 +102,4 @@
 ---
 **[Ver Allure Report Completo](https://rafacardosogroove.github.io/solagora-qa-automation-poc/)** — evidências, screenshots e steps detalhados
 
-*Gerado automaticamente pelo QA Bot — 14/05/2026 às 19:55*
+*Gerado automaticamente pelo QA Bot — 14/05/2026 às 20:45*
