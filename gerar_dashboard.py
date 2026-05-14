@@ -59,21 +59,38 @@ def buscar_bugs_azure_boards():
         return []
 
     b64 = base64.b64encode(f":{token}".encode()).decode()
-    headers = {
+    auth_headers = {
         "Authorization": f"Basic {b64}",
         "Content-Type": "application/json",
     }
 
     def _get(url):
-        req = urllib.request.Request(url, headers=headers)
+        req = urllib.request.Request(url, headers=auth_headers)
         with urllib.request.urlopen(req, timeout=15) as r:
             return json.loads(r.read())
 
     try:
         base_url = f"https://dev.azure.com/{AZURE_BOARDS_ORG}/{AZURE_BOARDS_PROJECT}"
 
-        # 1) Executa a query para obter IDs
-        data = _get(f"{base_url}/_apis/wit/wiql/{AZURE_BOARDS_QUERY}?api-version=7.1")
+        # 1) WIQL POST direto — evita dependência de "My Queries" (pessoal)
+        #    Busca todos os Bugs com tag qa-automation (nossa automação)
+        wiql_body = json.dumps({
+            "query": (
+                "SELECT [System.Id] FROM WorkItems "
+                "WHERE [System.TeamProject] = @project "
+                "AND [System.WorkItemType] = 'Bug' "
+                "AND [System.Tags] CONTAINS 'qa-automation' "
+                "ORDER BY [Microsoft.VSTS.Common.Severity] ASC, [System.Id] ASC"
+            )
+        }).encode()
+        req = urllib.request.Request(
+            f"{base_url}/_apis/wit/wiql?api-version=7.1",
+            data=wiql_body,
+            headers=auth_headers,
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=15) as r:
+            data = json.loads(r.read())
         ids = [str(wi["id"]) for wi in data.get("workItems", [])]
         if not ids:
             return []
