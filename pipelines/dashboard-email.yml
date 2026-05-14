@@ -16,6 +16,7 @@ trigger:
   branches:
     include:
       - main
+      - qa-automation
 
 # Agendamento: Seg-Sex às 8h UTC (mesmo do GitHub)
 schedules:
@@ -24,14 +25,17 @@ schedules:
     branches:
       include:
         - main
+        - qa-automation
     always: true   # Roda mesmo sem commits novos
 
 # Disparo manual pelo portal
 variables:
   - group: qa-emails    # Variable Group com EMAIL_USER e EMAIL_PASS
-  - group: qa-boards    # Variable Group com AZURE_PAT (para git push bypass policy)
+  - group: qa-boards    # Variable Group com AZURE_PAT (para git push)
   - name: pythonVersion
     value: '3.11'
+  - name: targetBranch
+    value: 'qa-automation'   # Branch alvo para commit do dashboard
 
 pool:
   vmImage: ubuntu-latest
@@ -50,11 +54,11 @@ stages:
 
           - checkout: self
             fetchDepth: 0
-            persistCredentials: true   # Permite git push de volta ao repo
+            persistCredentials: true
 
           - script: |
-              git checkout main || git checkout -b main
-            displayName: Garantir branch main (evitar detached HEAD)
+              git checkout $(targetBranch) || git checkout -b $(targetBranch)
+            displayName: Garantir branch $(targetBranch)
 
           - task: UsePythonVersion@0
             inputs:
@@ -71,7 +75,8 @@ stages:
               git remote set-url origin "https://x:${AZURE_PAT}@dev.azure.com/credgrid/SolAgora/_git/Automation_e2e_testing"
               git add DASHBOARD.md email_dashboard.html
               git diff --quiet && git diff --staged --quiet \
-                || (git commit -m "docs: atualiza dashboard automatico [skip ci]" && git push origin HEAD:main)
+                || (git commit -m "docs: atualiza dashboard automatico [skip ci]" \
+                    && git push origin HEAD:$(targetBranch))
             displayName: Commitar Dashboard Atualizado
             env:
               AZURE_PAT: $(AZURE_PAT)
