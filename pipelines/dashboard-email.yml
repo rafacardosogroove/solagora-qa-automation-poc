@@ -51,6 +51,10 @@ stages:
             fetchDepth: 0
             persistCredentials: true   # Permite git push de volta ao repo
 
+          - script: |
+              git checkout main || git checkout -b main
+            displayName: Garantir branch main (evitar detached HEAD)
+
           - task: UsePythonVersion@0
             inputs:
               versionSpec: $(pythonVersion)
@@ -65,7 +69,7 @@ stages:
               git config --global user.email "qa-bot@solagora.com.br"
               git add DASHBOARD.md email_dashboard.html
               git diff --quiet && git diff --staged --quiet \
-                || (git commit -m "docs: atualiza dashboard automatico [skip ci]" && git push)
+                || (git commit -m "docs: atualiza dashboard automatico [skip ci]" && git push origin HEAD:main)
             displayName: Commitar Dashboard Atualizado
 
   # ============================================================
