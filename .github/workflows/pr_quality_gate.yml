@@ -1,9 +1,8 @@
 name: 🛡️ Quality Gate (BDD Linter)
-
+# DESABILITADO — migrado para Azure Pipelines (#432)
+# Para reativar: remover a linha "if: false" abaixo
 on:
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch:  # Somente disparo manual — auto-triggers desabilitados
 
 jobs:
   validar-bdd:

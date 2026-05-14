@@ -1,13 +1,8 @@
 name: 📈 Allure Report — GitHub Pages
-
+# DESABILITADO — migrado para Azure Pipelines (#430)
+# Para reativar: remover a linha "if: false" abaixo
 on:
-  push:
-    branches:
-      - main
-      - feat/**          # Publica também em feature branches (para testar)
-    paths:
-      - 'allure-results/**'   # Só dispara quando resultados forem commitados
-  workflow_dispatch:           # Disparo manual
+  workflow_dispatch:  # Somente disparo manual — auto-triggers desabilitados
 
 permissions:
   contents: write

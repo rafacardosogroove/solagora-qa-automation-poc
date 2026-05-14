@@ -1,12 +1,8 @@
 name: 📊 Dashboard de Qualidade (BDD)
-
+# DESABILITADO — migrado para Azure Pipelines (#431)
+# Para reativar: remover a linha "if: false" abaixo
 on:
-  push:
-    branches:
-      - main
-  schedule:
-    - cron: '0 8 * * 1-5'   # Seg-Sex às 8h (UTC) — e-mail diário automático
-  workflow_dispatch:          # Disparo manual pelo GitHub
+  workflow_dispatch:  # Somente disparo manual — auto-triggers desabilitados
 
 jobs:
 
